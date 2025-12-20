@@ -4,7 +4,6 @@
  */
 
 import type {
-  Graph,
   Person,
   Organization,
   WebSite,
@@ -14,12 +13,16 @@ import type {
   ListItem,
   CollectionPage,
   ItemList,
+  Thing,
 } from 'schema-dts';
 import { SITE } from '@/consts/site';
 
+// Schema.org graph structure
+type SchemaItem = Thing | Person | Organization | WebSite | WebPage | TechArticle | BreadcrumbList | CollectionPage;
+
 export type JsonLdGraph = {
   '@context': 'https://schema.org';
-  '@graph': Graph;
+  '@graph': SchemaItem[];
 };
 
 // ID stabili per riferimenti cross-entità
@@ -217,7 +220,7 @@ export function buildArticleGraph(params: {
   section?: string;
   breadcrumbs?: Array<{ name: string; url: string }>;
 }): JsonLdGraph {
-  const graph: Graph = [
+  const graph: SchemaItem[] = [
     buildPersonSchema(),
     buildOrganizationSchema(),
     buildWebSiteSchema(),

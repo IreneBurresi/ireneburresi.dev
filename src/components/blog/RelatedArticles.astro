@@ -6,10 +6,10 @@ import ArticleCard from '@/components/blog/ArticleCard.astro';
 interface Props {
   currentSlug: string;
   relatedSlugs?: string[];
-  category: string;
+  pillar: string;
 }
 
-const { currentSlug, relatedSlugs, category } = Astro.props;
+const { currentSlug, relatedSlugs, pillar } = Astro.props;
 
 // Fetch related articles
 let relatedArticles: CollectionEntry<'blog'>[] = [];
@@ -21,9 +21,9 @@ if (relatedSlugs && relatedSlugs.length > 0) {
     (post) => relatedSlugs.includes(post.slug) && post.slug !== currentSlug
   );
 } else {
-  // Fallback: get articles from same category
+  // Fallback: get articles from same pillar
   const allPosts = await getCollection('blog', ({ data }) =>
-    data.category === category && !data.draft
+    data.pillar === pillar && !data.draft
   );
   relatedArticles = allPosts
     .filter((post) => post.slug !== currentSlug)

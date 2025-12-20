@@ -1,4 +1,3 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
@@ -19,6 +18,7 @@ export default defineConfig({
     preact(),
   ],
   vite: {
+    // @ts-expect-error - Tailwind v4 plugin types not fully compatible
     plugins: [tailwindcss()],
   },
   markdown: {

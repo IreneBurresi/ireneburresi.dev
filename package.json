@@ -15,7 +15,7 @@
     "test:feeds": "vitest run tests/feeds.test.ts",
     "test:content": "vitest run tests/content.test.ts",
     "lint": "astro check",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "astro check",
     "validate": "npm run build && npm run test",
     "prepublish:check": "tsx scripts/prepublish.ts"
   },
@@ -37,6 +37,7 @@
     "turndown": "^7.2.2"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.6",
     "@types/markdown-it": "^14.1.2",
     "@types/sanitize-html": "^2.16.0",
     "@vitest/ui": "^4.0.16",
@@ -45,6 +46,7 @@
     "linkedom": "^0.18.12",
     "schema-dts": "^1.1.5",
     "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
     "vitest": "^4.0.16"
   }
 }
