@@ -1,0 +1,125 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import ArticleCard from '@/components/blog/ArticleCard.astro';
+
+interface Props {
+  currentSlug: string;
+  relatedSlugs?: string[];
+  category: string;
+}
+
+const { currentSlug, relatedSlugs, category } = Astro.props;
+
+// Fetch related articles
+let relatedArticles: CollectionEntry<'blog'>[] = [];
+
+if (relatedSlugs && relatedSlugs.length > 0) {
+  // Get specific related articles by slug
+  const allPosts = await getCollection('blog');
+  relatedArticles = allPosts.filter(
+    (post) => relatedSlugs.includes(post.slug) && post.slug !== currentSlug
+  );
+} else {
+  // Fallback: get articles from same category
+  const allPosts = await getCollection('blog', ({ data }) =>
+    data.category === category && !data.draft
+  );
+  relatedArticles = allPosts
+    .filter((post) => post.slug !== currentSlug)
+    .slice(0, 3);
+}
+
+// Ensure we have at least 3 articles
+if (relatedArticles.length < 3) {
+  const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+  const additional = allPosts
+    .filter((post) =>
+      post.slug !== currentSlug &&
+      !relatedArticles.find(r => r.slug === post.slug)
+    )
+    .slice(0, 3 - relatedArticles.length);
+  relatedArticles = [...relatedArticles, ...additional];
+}
+
+// Limit to 3 articles
+relatedArticles = relatedArticles.slice(0, 3);
+---
+
+{
+  relatedArticles.length > 0 && (
+    <section
+      class="py-24 bg-surface-container-lowest relative"
+      aria-labelledby="related-articles-title"
+    >
+      <!-- Visual Separator -->
+      <div
+        aria-hidden="true"
+        class="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-1.5 bg-surface-container-highest rounded-full"
+      />
+
+      <div class="max-w-6xl mx-auto px-4 sm:px-8">
+        <div class="flex items-center justify-between mb-16">
+          <div>
+            <span class="text-label-large font-bold text-primary mb-2 block uppercase tracking-wider">
+              Scopri di più
+            </span>
+            <h2
+              id="related-articles-title"
+              class="text-headline-medium md:text-headline-large font-bold text-on-surface"
+            >
+              Potrebbe interessarti anche
+            </h2>
+          </div>
+          <a
+            href="/blog/"
+            class="hidden md:flex items-center gap-2 text-label-large font-bold link-state rounded-lg px-2 py-1"
+          >
+            Vedi tutti
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {relatedArticles.map((article) => (
+            <ArticleCard post={article} />
+          ))}
+        </div>
+
+        <a
+          href="/blog/"
+          class="md:hidden flex items-center gap-2 text-label-large font-bold link-state mt-12 justify-center rounded-lg px-4 py-2"
+        >
+          Vedi tutti
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+    </section>
+  )
+}

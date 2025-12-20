@@ -1,0 +1,48 @@
+---
+title: "Deployment di un sistema RAG in produzione: 12 decisioni architetturali critiche"
+summary: "Analisi approfondita delle scelte architetturali fondamentali per implementare un sistema RAG scalabile e performante in ambiente di produzione."
+publishedAt: "2025-01-15"
+author:
+  name: "Irene Burresi"
+  avatar: "/images/avatar.jpg"
+  role: "AI Engineer"
+readingTime: "12 min"
+pillar: "engineering"
+subsection: "implementazioni"
+tags: ["RAG", "Production", "Architecture", "LLM"]
+featured: true
+draft: false
+---
+
+## Introduzione
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+## Decisione 1: Scelta del Vector Database
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+### Pinecone vs Weaviate vs Qdrant
+
+Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+
+## Decisione 2: Strategia di Chunking
+
+Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+
+```python
+def chunk_document(text, chunk_size=512, overlap=50):
+    chunks = []
+    for i in range(0, len(text), chunk_size - overlap):
+        chunk = text[i:i + chunk_size]
+        chunks.append(chunk)
+    return chunks
+```
+
+## Decisione 3: Gestione delle Query
+
+Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+
+## Conclusioni
+
+Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.

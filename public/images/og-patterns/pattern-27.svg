@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" preserveAspectRatio="xMidYMid slice">
+  <rect width="1200" height="630" fill="#f3edf7"/>
+  <defs>
+    <pattern id="spiral-dots" width="50" height="50" patternUnits="userSpaceOnUse">
+      <circle cx="12" cy="12" r="2" fill="#006a6a" opacity="0.25"/>
+      <circle cx="25" cy="25" r="2.5" fill="#65558f" opacity="0.2"/>
+      <circle cx="38" cy="38" r="3" fill="#8c4a60" opacity="0.15"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#spiral-dots)"/>
+  <ellipse cx="600" cy="315" rx="520" ry="280" fill="#65558f" opacity="0.03"/>
+</svg>

@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import PillarLayout from '@/layouts/PillarLayout.astro';
+import { PILLARS } from '@/lib/constants';
+
+const pillarData = PILLARS.methodology;
+
+const allPosts = await getCollection('blog', ({ data }) =>
+  !data.draft && data.pillar === 'methodology'
+);
+
+const sortedPosts = allPosts.sort((a, b) => {
+  const dateA = new Date(a.data.publishedAt);
+  const dateB = new Date(b.data.publishedAt);
+  return dateB.getTime() - dateA.getTime();
+});
+---
+
+<PillarLayout
+  pillarName={pillarData.name}
+  pillarSlug={pillarData.slug}
+  hero={pillarData.hero}
+  subsections={pillarData.subsections}
+  posts={sortedPosts}
+/>

@@ -1,0 +1,821 @@
+/* Material Design 3 Utilities */
+
+/* ============================================================================
+ * Material Design 3 Elevation System
+ * ============================================================================
+ *
+ * M3 uses a LIMITED elevation system with only 6 levels (0-5).
+ * This creates a thoughtful, intentional hierarchy.
+ *
+ * IMPORTANT: In M3, elevation is achieved through TWO components:
+ * 1. Shadow (box-shadow) - provided by these .elevation-* classes
+ * 2. Surface Tint - use surface-container-* color classes
+ *
+ * CORRECT USAGE PATTERN:
+ * <div class="bg-surface-container elevation-1">
+ *   Card at Level 1 elevation
+ * </div>
+ *
+ * WRONG USAGE:
+ * ❌ Using Tailwind shadow-* classes (shadow-sm, shadow-md, shadow-xl, etc.)
+ * ❌ Using arbitrary elevation levels (elevation-6, elevation-10, etc.)
+ * ❌ Mixing shadow-* and elevation-* classes
+ *
+ * MAPPING GUIDE (Elevation Level → Surface Container → Use Case):
+ * Level 0 → bg-surface (no container)        → Default surface, no shadow
+ * Level 1 → bg-surface-container-low         → Cards at rest, list items
+ * Level 2 → bg-surface-container             → Cards on hover, menus, search bars
+ * Level 3 → bg-surface-container-high        → Dialogs, dropdown menus, pickers
+ * Level 4 → bg-surface-container-highest     → Modal sheets, navigation drawers
+ * Level 5 → bg-surface-container-highest     → FABs, snackbars, highest priority
+ *
+ * PRACTICAL EXAMPLES:
+ *
+ * Article Card (at rest):
+ *   <div class="bg-surface-container elevation-1">
+ *
+ * Article Card (on hover):
+ *   <div class="bg-surface-container elevation-1 hover:elevation-2">
+ *
+ * Dialog / Modal:
+ *   <div class="bg-surface-container-high elevation-3">
+ *
+ * Floating Action Button:
+ *   <button class="bg-primary elevation-5 hover:elevation-4">
+ *
+ * ============================================================================
+ *
+ * BLOG-SPECIFIC SEMANTIC ELEVATION GUIDE
+ * ============================================================================
+ *
+ * For editorial/blog contexts, use softer, more natural elevation:
+ *
+ * HERO/FEATURED CONTENT:
+ * - Featured Image: elevation-2 (soft presence without being intrusive)
+ * - Newsletter Card: elevation-1 (gentle lift, color already distinguishes)
+ *
+ * ARTICLE CONTENT:
+ * - Table of Contents: elevation-1 (subtle sidebar card)
+ * - Inline Code Blocks: elevation-0 (background color is enough)
+ * - Blockquotes: elevation-0 (border + background is sufficient)
+ *
+ * ARTICLE CARDS (Related/Archive):
+ * - Card Image (at rest): elevation-1
+ * - Card Image (hover): elevation-2 + translate-y-1 (gentle lift)
+ * - Card Content: elevation-1 (always present, creates depth with overlap)
+ * - Category Badge: elevation-1 (floats above image)
+ *
+ * INTERACTIVE ELEMENTS:
+ * - Buttons (at rest): elevation-0 (flat by default)
+ * - Buttons (hover): elevation-1 (subtle feedback)
+ * - Input Fields: elevation-0 (outlined or filled background)
+ *
+ * AVOID:
+ * ❌ Hard borders (use elevation instead)
+ * ❌ Ring utilities (too app-like for editorial)
+ * ❌ elevation-3+ for content cards (too aggressive for blog)
+ * ❌ Large translate-y values on hover (max -4px for cards)
+ *
+ * ============================================================================
+ */
+
+/* ============================================================================
+ * Material Design 3 Elevation System - Shadow Definitions (M3 Spec-Compliant)
+ * ============================================================================
+ *
+ * CRITICAL REQUIREMENTS FROM M3 SPECIFICATION:
+ *
+ * 1. TWO-LIGHT SYSTEM:
+ *    - Key Light (Umbra): Directional shadow, sharper edges
+ *    - Ambient Light (Penumbra): Diffuse shadow, softer edges
+ *    - Both shadows are REQUIRED for each elevation level
+ *
+ * 2. SHADOW COLOR:
+ *    - NEVER use pure black (#000000)
+ *    - Use the Shadow token (Neutral 10/20) from the color system
+ *    - Shadows should be slightly tinted, not stark black
+ *
+ * 3. OPACITY VALUES (from M3 Android spec):
+ *    - Key Light: 30% opacity
+ *    - Ambient Light: 15% opacity
+ *    - These are FIXED values, not customizable
+ *
+ * 4. ELEVATION LEVELS (dp values from Android):
+ *    - Level 0: 0dp  (no shadow)
+ *    - Level 1: 1dp  (cards at rest)
+ *    - Level 2: 3dp  (cards on hover, standard menus)
+ *    - Level 3: 6dp  (dialogs, dropdowns, navigation)
+ *    - Level 4: 8dp  (modal sheets)
+ *    - Level 5: 12dp (FABs, snackbars, highest priority)
+ *
+ * 5. BLUR RADIUS MAPPING (approximated for CSS from dp values):
+ *    - 1dp → 2-4px blur
+ *    - 3dp → 6-8px blur
+ *    - 6dp → 10-12px blur
+ *    - 8dp → 14-16px blur
+ *    - 12dp → 20-24px blur
+ *
+ * DARK MODE BEHAVIOR:
+ * - Shadows are NEARLY INVISIBLE on dark backgrounds
+ * - Elevation is communicated PRIMARILY through surface tint (color)
+ * - Keep shadows for consistency but rely on bg-surface-container-* classes
+ *
+ * ============================================================================ */
+
+/* Level 0 - No elevation (default surface, Z=0dp) */
+.elevation-0 {
+  box-shadow: none;
+}
+
+/* Level 1 - Minimal elevation (cards at rest, list items, Z=1dp)
+ * Use case: Article cards, standard UI cards
+ * Surface: bg-surface-container-low (Neutral 96 light / Neutral 10 dark)
+ */
+.elevation-1 {
+  box-shadow:
+    /* Key Light (directional, sharp) */
+    0px 1px 3px 0px rgba(0, 0, 0, 0.30),
+    /* Ambient Light (diffuse, soft) */
+    0px 1px 2px 0px rgba(0, 0, 0, 0.15);
+}
+
+/* Level 2 - Low elevation (hover states, menus, search bars, Z=3dp)
+ * Use case: Hero cards, newsletter cards, cards on hover
+ * Surface: bg-surface-container (Neutral 94 light / Neutral 12 dark)
+ */
+.elevation-2 {
+  box-shadow:
+    /* Key Light */
+    0px 2px 6px 2px rgba(0, 0, 0, 0.30),
+    /* Ambient Light */
+    0px 1px 2px 0px rgba(0, 0, 0, 0.15);
+}
+
+/* Level 3 - Medium elevation (dialogs, dropdown menus, pickers, Z=6dp)
+ * Use case: Navbar (sticky/fixed), mega menu dropdowns
+ * Surface: bg-surface-container-high (Neutral 92 light / Neutral 17 dark)
+ */
+.elevation-3 {
+  box-shadow:
+    /* Key Light */
+    0px 4px 8px 3px rgba(0, 0, 0, 0.30),
+    /* Ambient Light */
+    0px 1px 3px 0px rgba(0, 0, 0, 0.15);
+}
+
+/* Level 4 - High elevation (modal sheets, navigation drawers, Z=8dp)
+ * Use case: Modal dialogs, side panels
+ * Surface: bg-surface-container-highest (Neutral 90 light / Neutral 22 dark)
+ */
+.elevation-4 {
+  box-shadow:
+    /* Key Light */
+    0px 6px 10px 4px rgba(0, 0, 0, 0.30),
+    /* Ambient Light */
+    0px 2px 3px 0px rgba(0, 0, 0, 0.15);
+}
+
+/* Level 5 - Highest elevation (FABs, snackbars, dragged elements, Z=12dp)
+ * Use case: Floating action buttons, toast notifications, drag-and-drop
+ * Surface: bg-surface-container-highest (Neutral 90 light / Neutral 22 dark)
+ */
+.elevation-5 {
+  box-shadow:
+    /* Key Light */
+    0px 8px 12px 6px rgba(0, 0, 0, 0.30),
+    /* Ambient Light */
+    0px 4px 4px 0px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================================================
+ * M3 Shape Utilities - Semantic Mapping
+ * ============================================================================
+ *
+ * CRITICAL M3 SHAPE PRESCRIPTION:
+ *
+ * shape-none (0px):      Full-screen views, rectangular tiles in dense grids
+ * shape-xs (4px):        Tooltips, dense dropdowns, snackbars, INPUT FIELDS
+ * shape-sm (8px):        Chips, date picker cells, minimal dialogs
+ * shape-md (12px):       STANDARD CARDS (blog posts), expanded menus
+ * shape-lg (16px):       Navigation drawer, search bars, small modals
+ * shape-xl (28px):       Alert dialogs, LARGE FEATURED CARDS, FABs, navigation rail
+ * shape-full (9999px):   BUTTONS (stadium shape), badges, switches, pills
+ *
+ * BLOG-SPECIFIC USAGE:
+ * - Article Cards (standard): shape-md (12px) OR shape-lg (16px)
+ * - Article Cards (featured): shape-xl (28px) for visual distinction
+ * - Buttons (all types): shape-full (stadium)
+ * - Input fields: shape-xs (4px) for subtle rounding
+ * - Newsletter card: shape-xl (28px) for prominence
+ * - Hero containers: rounded-[40px] (custom, larger than xl for impact)
+ * ============================================================================ */
+
+.shape-none {
+  border-radius: 0;
+}
+
+.shape-xs {
+  border-radius: var(--md-sys-shape-corner-extra-small); /* 4px */
+}
+
+.shape-sm {
+  border-radius: var(--md-sys-shape-corner-small); /* 8px */
+}
+
+.shape-md {
+  border-radius: var(--md-sys-shape-corner-medium); /* 12px - STANDARD CARDS */
+}
+
+.shape-lg {
+  border-radius: var(--md-sys-shape-corner-large); /* 16px */
+}
+
+.shape-xl {
+  border-radius: var(--md-sys-shape-corner-extra-large); /* 28px - FEATURED CARDS */
+}
+
+.shape-full {
+  border-radius: var(--md-sys-shape-corner-full); /* 9999px - BUTTONS */
+}
+
+/* ============================================================================
+ * Material Design 3 State System
+ * ============================================================================
+ *
+ * M3 uses STATE LAYERS to provide visual feedback for interactive elements.
+ * State layers are semi-transparent overlays that appear on top of components.
+ *
+ * IMPORTANT M3 STATE PRINCIPLES:
+ * 1. States have TWO visual indicators (for accessibility):
+ *    - State layer (opacity overlay)
+ *    - Focus indicator (outline/ring)
+ * 2. States can be COMBINED (e.g., hover + focus, selection + hover)
+ * 3. Apply states CONSISTENTLY across all interactive elements
+ *
+ * STATE LAYER OPACITY VALUES (from M3 spec - MANDATORY):
+ * - Hover:    0.08 (8%)  - FIXED, not customizable
+ * - Focus:    0.12 (12%) - FIXED, combined with focus indicator
+ * - Pressed:  0.12 (12%) - FIXED, active state
+ * - Dragged:  0.16 (16%) - FIXED, elevated drag state
+ *
+ * DISABLED STATE (from M3 spec - MANDATORY):
+ * - Content (text/icons):  0.38 opacity (38%)
+ * - Container:             0.12 opacity (12%)
+ *
+ * CRITICAL: These values are NOT customizable per M3 guidelines.
+ * They ensure consistent interaction feedback across all Material Design apps.
+ * Do NOT reduce these values for "softer" effects - this breaks accessibility.
+ *
+ * ============================================================================
+ */
+
+/* Base State Layer - Apply to interactive elements */
+.state-layer {
+  position: relative;
+  overflow: hidden;
+}
+
+.state-layer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-emphasized);
+  pointer-events: none;
+}
+
+/* Hover State - 0.08 opacity (M3 standard, MANDATORY) */
+.state-layer:hover::before {
+  opacity: 0.08;
+}
+
+/* Focus State - 0.12 opacity (M3 standard, MANDATORY) */
+.state-layer:focus-visible::before {
+  opacity: 0.12;
+}
+
+/* Pressed/Active State - 0.12 opacity (M3 standard, MANDATORY) */
+.state-layer:active::before {
+  opacity: 0.12;
+}
+
+/* Dragged State - 0.16 opacity (M3 standard, MANDATORY) */
+.state-layer.dragged::before,
+.state-layer[data-dragging="true"]::before {
+  opacity: 0.16;
+}
+
+/* Combined States - Hover + Focus (additive, per M3 spec) */
+.state-layer:hover:focus-visible::before {
+  opacity: 0.20; /* 0.08 + 0.12 = 0.20 */
+}
+
+/* Focus Indicator - Required for accessibility (M3 WCAG Compliant)
+ * CRITICAL: Focus ring is MANDATORY for keyboard navigation
+ * Must be clearly visible with 3:1 contrast ratio minimum
+ */
+.state-layer:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+/* Disabled State */
+.state-layer:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.state-layer:disabled::before {
+  display: none;
+}
+
+/* ============================================================================
+ * State Layer Variants
+ * ============================================================================ */
+
+/* State Layer on Surface - for buttons on surface backgrounds */
+.state-layer-on-surface::before {
+  background: var(--md-sys-color-on-surface);
+}
+
+/* State Layer on Primary - for elements on primary color backgrounds */
+.state-layer-on-primary::before {
+  background: var(--md-sys-color-on-primary);
+}
+
+/* State Layer Primary - for primary-colored interactive elements */
+.state-layer-primary::before {
+  background: var(--md-sys-color-primary);
+}
+
+/* ============================================================================
+ * Interactive Element States (Blog-Specific)
+ * ============================================================================ */
+
+/* ============================================================================
+ * Link States - M3 Minimal, Editorial Style
+ * ============================================================================
+ *
+ * M3 LINK STATE → VISUAL FEEDBACK:
+ *
+ * REST:
+ * - Color: primary
+ * - Underline: none (editorial style)
+ * - Cursor: pointer (automatically via <a>)
+ *
+ * HOVER:
+ * - Underline: appears (1px thickness, 3px offset)
+ * - Color: remains primary (no darkening in M3)
+ *
+ * FOCUS (CRITICAL FOR KEYBOARD NAV):
+ * - Outline: 2px primary ring, 2px offset
+ * - Border radius: Small (2-4px) to fit text bounds
+ * - Underline: May remain or disappear (design choice)
+ *
+ * ACTIVE/PRESSED:
+ * - Opacity: Slight reduction (0.9) for tactile feedback
+ * - Color: Remains primary
+ *
+ * VISITED (optional, often disabled for blogs):
+ * - Color: May use tertiary or remain primary
+ * ============================================================================ */
+
+.link-state {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  border-radius: 4px; /* For focus ring to wrap text properly */
+  transition:
+    color var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-emphasized),
+    text-decoration var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-emphasized),
+    outline var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-emphasized);
+}
+
+/* HOVER: Underline appears */
+.link-state:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* FOCUS: Strong outline ring (WCAG 2.4.7 - Focus Visible) */
+.link-state:focus-visible {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+  text-decoration: none; /* Remove underline in focus to reduce visual noise */
+}
+
+/* ACTIVE/PRESSED: Subtle opacity shift */
+.link-state:active {
+  opacity: 0.9;
+}
+
+/* VISITED: Optional, can use tertiary color for editorial distinction */
+.link-state:visited {
+  color: var(--md-sys-color-primary); /* Keep primary for blog consistency */
+}
+
+/* ============================================================================
+ * Card States - M3 Dynamic Elevation System
+ * ============================================================================
+ *
+ * CRITICAL M3 PRINCIPLE: State → Elevation Connection
+ *
+ * REST → Base Level (1 or 2, depends on featured status)
+ * HOVER → +1 Level (1→2 or 2→3) + translateY lift
+ * FOCUS → Base Level (elevation unchanged, only focus ring)
+ * PRESSED → Base Level (elevation returns, no lift)
+ * DISABLED → Level 0 (elevation collapses)
+ *
+ * The card uses the ArticleCard component which already applies:
+ * - Standard: elevation-1 hover:elevation-2
+ * - Featured: elevation-2 hover:elevation-3
+ *
+ * This utility adds the transform and focus ring.
+ * ============================================================================ */
+
+.card-state {
+  position: relative;
+  transition:
+    transform var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-emphasized-decelerate),
+    box-shadow var(--md-sys-motion-duration-medium1) var(--md-sys-motion-easing-emphasized-decelerate);
+}
+
+/* HOVER: Lift + Elevation increase (elevation change handled by component classes) */
+.card-state:hover {
+  transform: translateY(-2px);
+}
+
+/* FOCUS: Strong outline, no elevation change, no lift */
+.card-state:focus-visible {
+  outline: 3px solid var(--md-sys-color-primary);
+  outline-offset: 2px;
+  transform: translateY(0); /* Cancel any existing lift */
+}
+
+/* PRESSED/ACTIVE: Return to ground, elevation stays at base */
+.card-state:active {
+  transform: translateY(0);
+}
+
+/* DISABLED: Flatten completely (should be applied with elevation-0) */
+.card-state:disabled,
+.card-state[aria-disabled="true"] {
+  transform: translateY(0);
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ============================================================================
+ * Button States - M3 Dynamic Elevation System
+ * ============================================================================
+ *
+ * M3 BUTTON STATE → ELEVATION MAPPING:
+ *
+ * FILLED/TONAL BUTTONS:
+ * - REST: Level 0 (flat)
+ * - HOVER: Level 1 (subtle lift via shadow only, NOT elevation-1 class)
+ * - FOCUS: Level 0 (ring appears, no elevation)
+ * - PRESSED: Level 0 (subtle scale, no elevation)
+ * - DISABLED: Level 0 (flattened, 38% opacity)
+ *
+ * OUTLINED/TEXT BUTTONS:
+ * - Always Level 0 (state layer only, no shadow changes)
+ *
+ * CRITICAL: The button component already uses elevation-0 hover:elevation-1
+ * This utility adds the manual shadow for hover (since Tailwind elevation
+ * classes change the surface color too, which we don't want on buttons)
+ * ============================================================================ */
+
+.button-state {
+  transition:
+    box-shadow var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-emphasized),
+    transform var(--md-sys-motion-duration-short1) var(--md-sys-motion-easing-emphasized);
+}
+
+/* HOVER: Add Level 1 shadow manually (2px Key Light blur) */
+.button-state:hover {
+  box-shadow:
+    0px 1px 3px 0px rgba(0, 0, 0, 0.30),
+    0px 1px 2px 0px rgba(0, 0, 0, 0.15);
+}
+
+/* FOCUS: No shadow change, outline ring appears via state-layer */
+
+/* PRESSED/ACTIVE: Subtle tactile feedback via scale */
+.button-state:active {
+  transform: scale(0.98);
+}
+
+/* DISABLED: Remove all shadows, flatten */
+.button-state:disabled,
+.button-state[aria-disabled="true"] {
+  box-shadow: none;
+  transform: none;
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+/* ============================================================================
+ * Input Field States - M3 Text Field Specification
+ * ============================================================================
+ *
+ * M3 INPUT STATE → VISUAL FEEDBACK:
+ *
+ * REST:
+ * - Border: 1px outline-variant color
+ * - Background: surface or surface-container
+ * - Elevation: 0
+ *
+ * HOVER:
+ * - Border: Darkens to on-surface color
+ * - Cursor: text (I-beam)
+ * - State Layer: 8% on-surface overlay (optional, subtle)
+ *
+ * FOCUS (CRITICAL FOR A11Y):
+ * - Border: 2-3px thick, primary color (indicator line)
+ * - Background: Remains same
+ * - Outline: 2px primary color ring (WCAG focus indicator)
+ * - Cursor: Blinking caret appears
+ *
+ * ERROR:
+ * - Border: error color (red)
+ * - Label/Helper text: error color
+ * - Icon: error color
+ *
+ * DISABLED:
+ * - Border: 12% opacity
+ * - Text: 38% opacity
+ * - Background: May become transparent or very faint
+ * - Cursor: not-allowed
+ * ============================================================================ */
+
+.input-state {
+  transition:
+    border-color var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-emphasized),
+    outline var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-emphasized),
+    box-shadow var(--md-sys-motion-duration-short2) var(--md-sys-motion-easing-emphasized);
+  border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+/* HOVER: Border becomes more prominent */
+.input-state:hover:not(:focus):not(:disabled) {
+  border-color: var(--md-sys-color-on-surface);
+}
+
+/* FOCUS: Strong primary border + outline ring (WCAG 3:1 contrast) */
+.input-state:focus {
+  outline: 2px solid var(--md-sys-color-primary);
+  outline-offset: 0;
+  border-color: var(--md-sys-color-primary);
+  border-width: 2px;
+}
+
+/* ERROR STATE (requires aria-invalid="true" or .error class) */
+.input-state:invalid,
+.input-state[aria-invalid="true"],
+.input-state.error {
+  border-color: var(--md-sys-color-error);
+}
+
+.input-state:invalid:focus,
+.input-state[aria-invalid="true"]:focus,
+.input-state.error:focus {
+  outline-color: var(--md-sys-color-error);
+  border-color: var(--md-sys-color-error);
+}
+
+/* DISABLED: Flattened, ghosted */
+.input-state:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  border-color: var(--md-sys-color-outline);
+  background-color: transparent;
+}
+
+/* ============================================================================
+ * Ripple Effect Foundation (M3 Pressed State)
+ * ============================================================================
+ *
+ * M3 RIPPLE SPECIFICATION:
+ *
+ * The ripple is the visual feedback for the PRESSED state in M3.
+ * It's a circular wave that expands from the point of contact.
+ *
+ * CRITICAL REQUIREMENTS:
+ * 1. Origin: Must start from exact touch/click coordinates
+ * 2. Expansion: Circular wave, starts small, expands to fill container
+ * 3. Color: Same as state layer color (OnSurface, Primary, etc.)
+ * 4. Opacity: 12% (same as pressed state layer)
+ * 5. Clipping: Must be contained within component bounds (overflow: hidden)
+ * 6. Duration: 300-600ms depending on component size
+ * 7. Easing: Emphasized-decelerate (fast start, slow end)
+ *
+ * IMPLEMENTATION NOTE:
+ * Full ripple implementation requires JavaScript to:
+ * - Calculate touch/click coordinates
+ * - Dynamically create ripple element
+ * - Animate expansion from point of origin
+ * - Remove ripple element after animation
+ *
+ * This CSS provides the foundation for a JS-based ripple system.
+ * ============================================================================ */
+
+/* Ripple Container - Apply to interactive elements that need ripple */
+.ripple {
+  position: relative;
+  overflow: hidden; /* CRITICAL: Clips ripple to component bounds */
+}
+
+/* Ripple Wave - Dynamically inserted by JS on press */
+.ripple-wave {
+  position: absolute;
+  border-radius: 50%;
+  background-color: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0);
+  animation: ripple-animation var(--md-sys-motion-duration-long1) var(--md-sys-motion-easing-emphasized-decelerate) forwards;
+}
+
+/* Ripple Animation Keyframes */
+@keyframes ripple-animation {
+  0% {
+    opacity: 0.12; /* M3 pressed state opacity */
+    transform: scale(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(4); /* Expands to 4x initial size */
+  }
+}
+
+/* Ripple variant for primary-colored components */
+.ripple-primary .ripple-wave {
+  background-color: var(--md-sys-color-on-primary);
+}
+
+/* Ripple variant for surface-colored components */
+.ripple-surface .ripple-wave {
+  background-color: var(--md-sys-color-on-surface);
+}
+
+/* ============================================================================
+ * Backdrop Blur Utilities
+ * ============================================================================ */
+
+.backdrop-surface {
+  background-color: rgba(var(--md-sys-color-surface-container-high), 0.8);
+  backdrop-filter: blur(8px);
+}
+
+/* ============================================================================
+ * Transition Utilities with Material Motion
+ * ============================================================================ */
+
+.transition-emphasized {
+  transition-timing-function: var(--md-sys-motion-easing-emphasized);
+}
+
+.transition-emphasized-decelerate {
+  transition-timing-function: var(--md-sys-motion-easing-emphasized-decelerate);
+}
+
+.transition-emphasized-accelerate {
+  transition-timing-function: var(--md-sys-motion-easing-emphasized-accelerate);
+}
+
+/* MDX Content Styling with Material Design 3 Typography */
+.mdx-content p {
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-bottom: 1.5rem;
+}
+
+.mdx-content h2 {
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: 0;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.mdx-content h3 {
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: 0;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.mdx-content h4 {
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+  margin-bottom: 0.5rem;
+}
+
+.mdx-content strong {
+  font-weight: 700;
+  color: var(--md-sys-color-on-surface);
+}
+
+.mdx-content code {
+  font-size: 14px;
+  background-color: var(--md-sys-color-surface-container);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  color: var(--md-sys-color-on-surface);
+  font-family: ui-monospace, SFMono-Regular, Monaco, monospace;
+}
+
+.mdx-content pre {
+  background-color: var(--md-sys-color-surface-container-high);
+  border: 1px solid rgba(var(--md-sys-color-outline), 0.2);
+  border-radius: 1rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.mdx-content pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.mdx-content blockquote {
+  border-left: 4px solid var(--md-sys-color-primary);
+  padding-left: 1.5rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  margin: 2rem 0;
+  font-style: italic;
+  font-size: 22px;
+  line-height: 28px;
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-surface-container-low);
+  border-radius: 0 1rem 1rem 0;
+}
+
+.mdx-content blockquote p {
+  font-size: 22px;
+  line-height: 28px;
+  margin: 0;
+}
+
+.mdx-content ul,
+.mdx-content ol {
+  list-style-position: outside;
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.mdx-content ul {
+  list-style-type: disc;
+}
+
+.mdx-content ol {
+  list-style-type: decimal;
+}
+
+.mdx-content li {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--md-sys-color-on-surface-variant);
+  margin-bottom: 0.5rem;
+}
+
+.mdx-content li::marker {
+  color: var(--md-sys-color-primary);
+}
+
+.mdx-content a {
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  transition: text-decoration 200ms;
+}
+
+.mdx-content a:hover {
+  text-decoration: underline;
+}
+
+.mdx-content p:first-of-type::first-letter {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--md-sys-color-primary);
+  float: left;
+  margin-right: 1rem;
+  margin-top: -0.25rem;
+  line-height: 1;
+}

@@ -1,0 +1,350 @@
+@import "tailwindcss";
+
+/* ============================================================================
+ * Roboto Flex Variable Font (Self-Hosted)
+ * ============================================================================
+ * Variable font supporting weights 100-900 in a single file
+ * Optimized for Material Design 3 typography
+ * ============================================================================ */
+@font-face {
+  font-family: 'Roboto Flex';
+  font-style: normal;
+  font-weight: 100 900;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url('/fonts/RobotoFlex-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+
+  /* ============================================================================
+   * Material Design 3 Color Tokens - Light Mode (Blog Editorial Palette)
+   * ============================================================================
+   *
+   * BLOG-SPECIFIC ADAPTATION:
+   * - Primary (Purple): Main brand color for links, CTAs, important UI elements
+   * - Secondary (Muted slate): Subtle, recessive elements like chips and badges
+   * - Tertiary (Warm accent): Complementary color for highlights and variety
+   * - Surface hierarchy: Clean white for readability with subtle tinted containers
+   * - Content background stays pure white (#ffffff) for optimal reading
+   *
+   * ============================================================================ */
+
+  /* Primary - Main brand accent (Purple - high emphasis)
+   * Seed: #6750a4 → Generates tonal palette via M3 algorithm
+   */
+  --md-sys-color-primary: #65558f;  /* Tone 40 */
+  --md-sys-color-surface-tint: #65558f;  /* Same as primary */
+  --md-sys-color-on-primary: #ffffff;  /* White text on primary */
+  --md-sys-color-primary-container: #e9ddff;  /* Tone 90 - Light purple container */
+  --md-sys-color-on-primary-container: #4d3d75;  /* Tone 30 - Dark text on container */
+  --md-sys-color-primary-fixed: #e9ddff;  /* Tone 90 - Fixed light */
+  --md-sys-color-on-primary-fixed: #201047;  /* Tone 10 - Fixed dark */
+  --md-sys-color-primary-fixed-dim: #cfbdfe;  /* Tone 80 - Dimmed fixed */
+  --md-sys-color-on-primary-fixed-variant: #4d3d75;  /* Tone 30 */
+
+  /* Secondary - Complementary accent (Teal - fresh, modern)
+   * Seed: #006a6a → Cyan/Teal palette
+   */
+  --md-sys-color-secondary: #006a6a;  /* Tone 40 */
+  --md-sys-color-on-secondary: #ffffff;  /* White text */
+  --md-sys-color-secondary-container: #9cf1f0;  /* Tone 90 - Light teal container */
+  --md-sys-color-on-secondary-container: #004f4f;  /* Tone 30 - Dark text */
+  --md-sys-color-secondary-fixed: #9cf1f0;  /* Tone 90 */
+  --md-sys-color-on-secondary-fixed: #002020;  /* Tone 10 */
+  --md-sys-color-secondary-fixed-dim: #80d5d4;  /* Tone 80 */
+  --md-sys-color-on-secondary-fixed-variant: #004f4f;  /* Tone 30 */
+
+  /* Tertiary - Warm accent (Coral/Pink - energetic, friendly)
+   * Seed: #984061 → Pink/Rose palette
+   */
+  --md-sys-color-tertiary: #8c4a60;  /* Tone 40 */
+  --md-sys-color-on-tertiary: #ffffff;  /* White text */
+  --md-sys-color-tertiary-container: #ffd9e2;  /* Tone 90 - Light pink container */
+  --md-sys-color-on-tertiary-container: #703349;  /* Tone 30 - Dark text */
+  --md-sys-color-tertiary-fixed: #ffd9e2;  /* Tone 90 */
+  --md-sys-color-on-tertiary-fixed: #3a071d;  /* Tone 10 */
+  --md-sys-color-tertiary-fixed-dim: #ffb0c8;  /* Tone 80 */
+  --md-sys-color-on-tertiary-fixed-variant: #703349;  /* Tone 30 */
+
+  /* Error - Standard M3 error palette */
+  --md-sys-color-error: #ba1a1a;  /* Tone 40 */
+  --md-sys-color-on-error: #ffffff;  /* White text */
+  --md-sys-color-error-container: #ffdad6;  /* Tone 90 */
+  --md-sys-color-on-error-container: #93000a;  /* Tone 10 */
+
+  /* Surface & Background - Purple-tinted neutrals for blog UI
+   * M3 generates neutral palette with primary color tint
+   */
+  --md-sys-color-background: #fdf7ff;  /* Neutral 99 - Soft purple-white */
+  --md-sys-color-on-background: #1d1b20;  /* Neutral 10 - Deep purple-black text */
+  --md-sys-color-surface: #fef7ff;  /* Neutral 99 - Article content background */
+  --md-sys-color-on-surface: #1d1b20;  /* Neutral 10 - High contrast text */
+  --md-sys-color-surface-variant: #e7e0eb;  /* Neutral-Variant 90 */
+  --md-sys-color-on-surface-variant: #49454e;  /* Neutral-Variant 30 */
+
+  /* Surface Containers - Progressive purple tint (M3 official values)
+   * CRITICAL: These carry the primary color tint for visual cohesion
+   */
+  --md-sys-color-surface-dim: #ded8e0;  /* Neutral 87 - Dimmed surface */
+  --md-sys-color-surface-bright: #fef7ff;  /* Neutral 99 - Brightest */
+  --md-sys-color-surface-container-lowest: #ffffff;  /* Neutral 100 - Pure white */
+  --md-sys-color-surface-container-low: #f8f1fa;  /* Neutral 96 - Subtle purple tint */
+  --md-sys-color-surface-container: #f2ecf4;  /* Neutral 94 - Light purple tint (cards) */
+  --md-sys-color-surface-container-high: #ede6ee;  /* Neutral 92 - Medium purple tint */
+  --md-sys-color-surface-container-highest: #e7e0e8;  /* Neutral 90 - Strong purple tint */
+
+  /* Outline Colors - Borders and dividers */
+  --md-sys-color-outline: #7a757f;  /* Neutral-Variant 50 */
+  --md-sys-color-outline-variant: #cac4cf;  /* Neutral-Variant 80 */
+
+  /* Shadow & Scrim - For elevation system */
+  --md-sys-color-shadow: #000000;  /* Pure black for shadows */
+  --md-sys-color-scrim: #000000;  /* Pure black for modal overlays */
+
+  /* Inverse Colors - Dark purple surface for footer/inversions */
+  --md-sys-color-inverse-surface: #322f35;  /* Neutral 20 - Dark purple */
+  --md-sys-color-inverse-on-surface: #f5eff7;  /* Neutral 95 - Light text */
+  --md-sys-color-inverse-primary: #cfbdfe;  /* Primary Tone 80 - Light purple */
+
+  /* Material 3 Shape - Corner Radius Scale
+   * Extra Small (4px):  Tooltips, dense dropdowns, snackbars
+   * Small (8px):        Chips, date picker cells, minimal dialogs
+   * Medium (12px):      CARDS (blog posts), expanded menus
+   * Large (16px):       Navigation drawer, search bar, small modals
+   * Extra Large (28px): Alert dialogs, large FABs, navigation rail
+   * Full (9999px):      BUTTONS, badges, switches, sliders (stadium shape)
+   */
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-full: 9999px;
+
+  /* Material 3 Spacing - 8dp Grid System (4dp base)
+   * CRITICAL: All spacing must be multiples of 4dp (or 8dp preferably)
+   * Never use arbitrary values like 5px, 13px, 17px
+   *
+   * Spacing 0 (0px):   None
+   * Spacing 1 (4px):   Icon-text gap inside buttons
+   * Spacing 2 (8px):   Dense padding, small gaps
+   * Spacing 3 (12px):  Medium padding
+   * Spacing 4 (16px):  STANDARD PADDING (cards, mobile margins)
+   * Spacing 5 (20px):  Related elements (title-subtitle)
+   * Spacing 6 (24px):  GRID GUTTER (desktop), button horizontal padding
+   * Spacing 8 (32px):  Section separation
+   * Spacing 12 (48px): TOUCH TARGET MINIMUM (accessibility)
+   * Spacing 16 (64px): Macro-section separation
+   */
+  --md-sys-spacing-0: 0px;
+  --md-sys-spacing-1: 4px;
+  --md-sys-spacing-2: 8px;
+  --md-sys-spacing-3: 12px;
+  --md-sys-spacing-4: 16px;
+  --md-sys-spacing-5: 20px;
+  --md-sys-spacing-6: 24px;
+  --md-sys-spacing-8: 32px;
+  --md-sys-spacing-10: 40px;
+  --md-sys-spacing-12: 48px;
+  --md-sys-spacing-14: 56px;
+  --md-sys-spacing-16: 64px;
+  --md-sys-spacing-20: 80px;
+  --md-sys-spacing-24: 96px;
+
+  /* Material 3 Motion */
+  --md-sys-motion-easing-emphasized: cubic-bezier(0.2, 0.0, 0.0, 1.0);
+  --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1.0);
+  --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0.0, 0.8, 0.15);
+  --md-sys-motion-duration-short1: 50ms;
+  --md-sys-motion-duration-short2: 100ms;
+  --md-sys-motion-duration-medium1: 250ms;
+  --md-sys-motion-duration-medium2: 300ms;
+  --md-sys-motion-duration-long1: 400ms;
+  --md-sys-motion-duration-long2: 500ms;
+
+  /* Material 3 Elevation Tokens
+   * M3 uses a limited set of elevation levels (0-5)
+   * Each level combines shadow + surface tint color
+   * Surface tint opacity increases with elevation level
+   */
+  --md-sys-elevation-level0: 0;
+  --md-sys-elevation-level1: 1;
+  --md-sys-elevation-level2: 2;
+  --md-sys-elevation-level3: 3;
+  --md-sys-elevation-level4: 4;
+  --md-sys-elevation-level5: 5;
+
+  /* Tailwind compatibility vars */
+  --radius: 1.5rem;
+}
+
+.dark {
+  /* Material Design 3 - Dark Mode (M3 Official Palette)
+   * Generated from same seeds: Purple (#6750a4), Teal (#006a6a), Pink (#984061)
+   */
+
+  /* Primary - Purple palette (dark mode uses Tone 80) */
+  --md-sys-color-primary: #cfbdfe;  /* Tone 80 - Light purple for dark bg */
+  --md-sys-color-surface-tint: #cfbdfe;  /* Same as primary */
+  --md-sys-color-on-primary: #362766;  /* Tone 20 - Dark purple text */
+  --md-sys-color-primary-container: #4d3d75;  /* Tone 30 - Purple container */
+  --md-sys-color-on-primary-container: #e9ddff;  /* Tone 90 - Light text */
+  --md-sys-color-primary-fixed: #e9ddff;  /* Tone 90 - Fixed light */
+  --md-sys-color-on-primary-fixed: #201047;  /* Tone 10 - Fixed dark */
+  --md-sys-color-primary-fixed-dim: #cfbdfe;  /* Tone 80 - Dimmed */
+  --md-sys-color-on-primary-fixed-variant: #4d3d75;  /* Tone 30 */
+
+  /* Secondary - Teal palette (dark mode) */
+  --md-sys-color-secondary: #80d5d4;  /* Tone 80 - Light teal */
+  --md-sys-color-on-secondary: #003737;  /* Tone 20 - Dark teal text */
+  --md-sys-color-secondary-container: #004f4f;  /* Tone 30 - Teal container */
+  --md-sys-color-on-secondary-container: #9cf1f0;  /* Tone 90 - Light text */
+  --md-sys-color-secondary-fixed: #9cf1f0;  /* Tone 90 */
+  --md-sys-color-on-secondary-fixed: #002020;  /* Tone 10 */
+  --md-sys-color-secondary-fixed-dim: #80d5d4;  /* Tone 80 */
+  --md-sys-color-on-secondary-fixed-variant: #004f4f;  /* Tone 30 */
+
+  /* Tertiary - Pink palette (dark mode) */
+  --md-sys-color-tertiary: #ffb0c8;  /* Tone 80 - Light pink */
+  --md-sys-color-on-tertiary: #541d32;  /* Tone 20 - Dark pink text */
+  --md-sys-color-tertiary-container: #703349;  /* Tone 30 - Pink container */
+  --md-sys-color-on-tertiary-container: #ffd9e2;  /* Tone 90 - Light text */
+  --md-sys-color-tertiary-fixed: #ffd9e2;  /* Tone 90 */
+  --md-sys-color-on-tertiary-fixed: #3a071d;  /* Tone 10 */
+  --md-sys-color-tertiary-fixed-dim: #ffb0c8;  /* Tone 80 */
+  --md-sys-color-on-tertiary-fixed-variant: #703349;  /* Tone 30 */
+
+  /* Error - Standard M3 error (dark mode) */
+  --md-sys-color-error: #ffb4ab;  /* Tone 80 - Light red */
+  --md-sys-color-on-error: #690005;  /* Tone 20 - Dark red text */
+  --md-sys-color-error-container: #93000a;  /* Tone 30 - Red container */
+  --md-sys-color-on-error-container: #ffdad6;  /* Tone 90 - Light text */
+
+  /* Surface & Background - Purple-tinted dark neutrals */
+  --md-sys-color-background: #141218;  /* Neutral 6 - Deep purple-black */
+  --md-sys-color-on-background: #e6e0e8;  /* Neutral 90 - Light text */
+  --md-sys-color-surface: #151218;  /* Neutral 6 - Base surface */
+  --md-sys-color-on-surface: #e7e0e8;  /* Neutral 90 - Primary text */
+  --md-sys-color-surface-variant: #49454e;  /* Neutral-Variant 30 */
+  --md-sys-color-on-surface-variant: #cac4cf;  /* Neutral-Variant 80 */
+
+  /* Surface Containers - Progressive purple tint (dark mode)
+   * CRITICAL: M3 official values with primary color tint
+   */
+  --md-sys-color-surface-dim: #151218;  /* Neutral 6 - Dimmed */
+  --md-sys-color-surface-bright: #3b383e;  /* Neutral 24 - Brightest dark */
+  --md-sys-color-surface-container-lowest: #0f0d13;  /* Neutral 4 - Darkest */
+  --md-sys-color-surface-container-low: #1d1b20;  /* Neutral 10 - Dark purple tint */
+  --md-sys-color-surface-container: #211f24;  /* Neutral 12 - Base container (cards) */
+  --md-sys-color-surface-container-high: #2c292f;  /* Neutral 17 - Elevated */
+  --md-sys-color-surface-container-highest: #37343a;  /* Neutral 22 - Highest */
+
+  /* Outline Colors - Dark mode borders */
+  --md-sys-color-outline: #948f99;  /* Neutral-Variant 60 */
+  --md-sys-color-outline-variant: #49454e;  /* Neutral-Variant 30 */
+
+  /* Shadow & Scrim */
+  --md-sys-color-shadow: #000000;  /* Pure black */
+  --md-sys-color-scrim: #000000;  /* Pure black */
+
+  /* Inverse Colors - Light surface for dark mode inversions */
+  --md-sys-color-inverse-surface: #e7e0e8;  /* Neutral 90 - Light surface */
+  --md-sys-color-inverse-on-surface: #322f35;  /* Neutral 20 - Dark text */
+  --md-sys-color-inverse-primary: #65558f;  /* Primary Tone 40 - Original primary */
+}
+
+/* Map Material Design 3 tokens to Tailwind CSS variables */
+@theme inline {
+  /* Primary colors */
+  --color-primary: var(--md-sys-color-primary);
+  --color-surface-tint: var(--md-sys-color-surface-tint);
+  --color-on-primary: var(--md-sys-color-on-primary);
+  --color-primary-container: var(--md-sys-color-primary-container);
+  --color-on-primary-container: var(--md-sys-color-on-primary-container);
+  --color-primary-fixed: var(--md-sys-color-primary-fixed);
+  --color-on-primary-fixed: var(--md-sys-color-on-primary-fixed);
+  --color-primary-fixed-dim: var(--md-sys-color-primary-fixed-dim);
+  --color-on-primary-fixed-variant: var(--md-sys-color-on-primary-fixed-variant);
+
+  /* Secondary colors */
+  --color-secondary: var(--md-sys-color-secondary);
+  --color-on-secondary: var(--md-sys-color-on-secondary);
+  --color-secondary-container: var(--md-sys-color-secondary-container);
+  --color-on-secondary-container: var(--md-sys-color-on-secondary-container);
+  --color-secondary-fixed: var(--md-sys-color-secondary-fixed);
+  --color-on-secondary-fixed: var(--md-sys-color-on-secondary-fixed);
+  --color-secondary-fixed-dim: var(--md-sys-color-secondary-fixed-dim);
+  --color-on-secondary-fixed-variant: var(--md-sys-color-on-secondary-fixed-variant);
+
+  /* Tertiary colors */
+  --color-tertiary: var(--md-sys-color-tertiary);
+  --color-on-tertiary: var(--md-sys-color-on-tertiary);
+  --color-tertiary-container: var(--md-sys-color-tertiary-container);
+  --color-on-tertiary-container: var(--md-sys-color-on-tertiary-container);
+  --color-tertiary-fixed: var(--md-sys-color-tertiary-fixed);
+  --color-on-tertiary-fixed: var(--md-sys-color-on-tertiary-fixed);
+  --color-tertiary-fixed-dim: var(--md-sys-color-tertiary-fixed-dim);
+  --color-on-tertiary-fixed-variant: var(--md-sys-color-on-tertiary-fixed-variant);
+
+  /* Error colors */
+  --color-error: var(--md-sys-color-error);
+  --color-on-error: var(--md-sys-color-on-error);
+  --color-error-container: var(--md-sys-color-error-container);
+  --color-on-error-container: var(--md-sys-color-on-error-container);
+
+  /* Surface colors */
+  --color-background: var(--md-sys-color-background);
+  --color-on-background: var(--md-sys-color-on-background);
+  --color-surface: var(--md-sys-color-surface);
+  --color-on-surface: var(--md-sys-color-on-surface);
+  --color-surface-variant: var(--md-sys-color-surface-variant);
+  --color-on-surface-variant: var(--md-sys-color-on-surface-variant);
+
+  /* Surface containers */
+  --color-surface-dim: var(--md-sys-color-surface-dim);
+  --color-surface-bright: var(--md-sys-color-surface-bright);
+  --color-surface-container-lowest: var(--md-sys-color-surface-container-lowest);
+  --color-surface-container-low: var(--md-sys-color-surface-container-low);
+  --color-surface-container: var(--md-sys-color-surface-container);
+  --color-surface-container-high: var(--md-sys-color-surface-container-high);
+  --color-surface-container-highest: var(--md-sys-color-surface-container-highest);
+
+  /* Outline colors */
+  --color-outline: var(--md-sys-color-outline);
+  --color-outline-variant: var(--md-sys-color-outline-variant);
+
+  /* Shadow & Scrim */
+  --color-shadow: var(--md-sys-color-shadow);
+  --color-scrim: var(--md-sys-color-scrim);
+
+  /* Inverse colors */
+  --color-inverse-surface: var(--md-sys-color-inverse-surface);
+  --color-inverse-on-surface: var(--md-sys-color-inverse-on-surface);
+  --color-inverse-primary: var(--md-sys-color-inverse-primary);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-outline/20;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-surface-container-lowest text-on-surface;
+    font-family: 'Roboto Flex', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+}

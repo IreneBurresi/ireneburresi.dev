@@ -1,0 +1,37 @@
+---
+import { cn } from '@/lib/utils';
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'span'> {
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'surface';
+  class?: string;
+}
+
+const { variant = 'surface', class: className, ...rest } = Astro.props;
+
+// Material Design 3 Badge variants
+const variantStyles = {
+  // Primary: High emphasis, brand color
+  primary: 'bg-primary-container text-on-primary-container border border-primary/20',
+
+  // Secondary: Medium emphasis, recessive elements (categories, metadata)
+  secondary: 'bg-secondary-container text-on-secondary-container border border-secondary/20',
+
+  // Tertiary: Special emphasis, featured/highlighted content
+  tertiary: 'bg-tertiary-container text-on-tertiary-container border border-tertiary/20',
+
+  // Surface: Low emphasis, neutral badges
+  surface: 'bg-surface-container text-on-surface border border-outline/20',
+};
+---
+
+<span
+  class={cn(
+    'inline-flex items-center px-3 py-1 shape-sm text-label-medium font-medium',
+    variantStyles[variant],
+    className
+  )}
+  {...rest}
+>
+  <slot />
+</span>

@@ -1,0 +1,121 @@
+---
+import { PILLARS } from '@/lib/constants';
+---
+
+<div class="hidden md:flex items-center gap-1 bg-surface/90 backdrop-blur-sm px-2 py-1.5 rounded-full">
+  <!-- Articoli Dropdown with all 6 Pillars -->
+  <div class="relative group">
+    <button
+      class="px-4 py-2 shape-full text-label-large text-on-surface-variant font-medium state-layer state-layer-on-surface hover:text-on-surface"
+    >
+      Articoli
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="inline-block ml-1 transition-transform group-hover:rotate-180"
+      >
+        <path d="m6 9 6 6 6-6"></path>
+      </svg>
+    </button>
+
+    <!-- Mega Menu Dropdown - Level 4 (Z=8dp, Modal-like priority) -->
+    <div
+      class="absolute left-0 top-full mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50"
+    >
+      <div class="grid grid-cols-2 gap-3 p-4 w-[700px] bg-surface-container-lowest shape-xl elevation-4">
+        <!-- Pillar 1: Ingegneria AI -->
+        <a
+          href={`/${PILLARS.engineering.slug}/`}
+          class="block select-none space-y-1 shape-lg p-4 hover:bg-surface-container transition-colors group/item"
+        >
+          <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
+            {PILLARS.engineering.name}
+          </div>
+          <p class="text-label-small text-on-surface-variant/80">
+            {PILLARS.engineering.menuLabel}
+          </p>
+        </a>
+
+        <!-- Pillar 2: Ricerca e Frontiere -->
+        <a
+          href={`/${PILLARS.research.slug}/`}
+          class="block select-none space-y-1 shape-lg p-4 hover:bg-surface-container transition-colors group/item"
+        >
+          <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
+            {PILLARS.research.name}
+          </div>
+          <p class="text-label-small text-on-surface-variant/80">
+            {PILLARS.research.menuLabel}
+          </p>
+        </a>
+
+        <!-- Pillar 3: Business e ROI -->
+        <a
+          href={`/${PILLARS.business.slug}/`}
+          class="block select-none space-y-1 shape-lg p-4 hover:bg-surface-container transition-colors group/item"
+        >
+          <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
+            {PILLARS.business.name}
+          </div>
+          <p class="text-label-small text-on-surface-variant/80">
+            {PILLARS.business.menuLabel}
+          </p>
+        </a>
+
+        <!-- Pillar 4: Governance e Sicurezza -->
+        <a
+          href={`/${PILLARS.governance.slug}/`}
+          class="block select-none space-y-1 shape-lg p-4 hover:bg-surface-container transition-colors group/item"
+        >
+          <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
+            {PILLARS.governance.name}
+          </div>
+          <p class="text-label-small text-on-surface-variant/80">
+            {PILLARS.governance.menuLabel}
+          </p>
+        </a>
+
+        <!-- Pillar 5: Metodologia e Produttività -->
+        <a
+          href={`/${PILLARS.methodology.slug}/`}
+          class="block select-none space-y-1 shape-lg p-4 hover:bg-surface-container transition-colors group/item"
+        >
+          <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
+            {PILLARS.methodology.name}
+          </div>
+          <p class="text-label-small text-on-surface-variant/80">
+            {PILLARS.methodology.menuLabel}
+          </p>
+        </a>
+
+        <!-- Pillar 6: Sintesi e Analisi Cross-Domain -->
+        <a
+          href={`/${PILLARS.synthesis.slug}/`}
+          class="block select-none space-y-1 shape-lg p-4 hover:bg-surface-container transition-colors group/item"
+        >
+          <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
+            {PILLARS.synthesis.name}
+          </div>
+          <p class="text-label-small text-on-surface-variant/80">
+            {PILLARS.synthesis.menuLabel}
+          </p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simple Link: Chi sono -->
+  <a
+    href="/about/"
+    class="px-4 py-2 shape-full text-label-large text-on-surface-variant font-medium state-layer state-layer-on-surface hover:text-on-surface"
+  >
+    Chi sono
+  </a>
+</div>

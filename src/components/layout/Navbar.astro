@@ -1,0 +1,72 @@
+---
+import ThemeToggle from '@/components/ui/ThemeToggle';
+import DesktopMenu from './DesktopMenu.astro';
+import { PERSON } from '@/consts/schema';
+---
+
+<nav class="flex items-center justify-between py-6 px-4 md:px-8 relative z-50">
+  <!-- Logo -->
+  <a href="/" class="flex items-center gap-2 group rounded-lg p-2 -m-2" tabindex="0">
+    <div
+      class="w-8 h-8 bg-primary shape-md flex items-center justify-center text-on-primary font-bold text-lg transition-all elevation-0 group-hover:elevation-1"
+    >
+      {PERSON.givenName.charAt(0)}
+    </div>
+    <span class="text-title-large font-bold text-on-surface hidden md:block transition-colors">
+      {PERSON.name}
+    </span>
+  </a>
+
+  <!-- Desktop Menu with Mega Menus - Level 1 (Z=1dp, Subtle elevation) -->
+  <div
+    class="hidden md:flex items-center gap-1 bg-surface-container-high/95 backdrop-blur-md px-2 py-1.5 shape-full elevation-1"
+  >
+    <DesktopMenu />
+  </div>
+
+  <!-- Actions -->
+  <div class="flex items-center gap-2">
+    <button
+      class="md:hidden p-2 text-on-surface-variant shape-full state-layer state-layer-on-surface"
+      aria-label="Menu"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="4" x2="20" y1="12" y2="12"></line>
+        <line x1="4" x2="20" y1="6" y2="6"></line>
+        <line x1="4" x2="20" y1="18" y2="18"></line>
+      </svg>
+    </button>
+
+    <button
+      class="hidden md:block p-2 text-on-surface-variant shape-full state-layer state-layer-on-surface"
+      aria-label="Search"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.3-4.3"></path>
+      </svg>
+    </button>
+
+    <ThemeToggle client:load />
+  </div>
+</nav>

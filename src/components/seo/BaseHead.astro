@@ -1,0 +1,163 @@
+---
+/**
+ * Componente SEO completo per <head>
+ * Include: meta, canonical, OG, Twitter, robots, feeds, licensing, JSON-LD
+ */
+import { SITE } from '@/consts/site';
+import { canonicalFromPath, toAbsoluteUrl } from '@/lib/seo/url';
+
+export type RobotsPolicy = {
+  index?: boolean;
+  follow?: boolean;
+  maxSnippet?: number;
+  maxImagePreview?: 'none' | 'standard' | 'large';
+  maxVideoPreview?: number;
+};
+
+export interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+
+  // Preview
+  ogType?: 'website' | 'article';
+  ogImage?: string;
+
+  // Article metadata
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
+  section?: string;
+
+  // Controlli
+  robots?: RobotsPolicy;
+
+  // JSON-LD
+  jsonLd?: unknown | unknown[];
+
+  // Feed alternativo per pillar/sezioni
+  alternateRss?: { title: string; href: string };
+}
+
+const props = Astro.props;
+const site = Astro.site;
+if (!site) throw new Error('Astro.site mancante: configura `site` in astro.config.mjs');
+
+const description = props.description ?? SITE.description;
+
+const canonicalUrl = props.canonical
+  ? toAbsoluteUrl(props.canonical, site)
+  : canonicalFromPath(Astro.url.pathname, site);
+
+const ogType = props.ogType ?? 'website';
+const ogImageUrl = toAbsoluteUrl(props.ogImage ?? SITE.og.defaultImagePath, site);
+
+// Robots policy per massima visibilita in SERP
+const robots: RobotsPolicy = {
+  index: true,
+  follow: true,
+  maxSnippet: -1,
+  maxImagePreview: 'large',
+  maxVideoPreview: -1,
+  ...props.robots,
+};
+
+const robotsContent = [
+  robots.index ? 'index' : 'noindex',
+  robots.follow ? 'follow' : 'nofollow',
+  robots.maxSnippet !== undefined ? `max-snippet:${robots.maxSnippet}` : null,
+  robots.maxImagePreview ? `max-image-preview:${robots.maxImagePreview}` : null,
+  robots.maxVideoPreview !== undefined ? `max-video-preview:${robots.maxVideoPreview}` : null,
+]
+  .filter(Boolean)
+  .join(',');
+
+const jsonLdPayload = props.jsonLd
+  ? Array.isArray(props.jsonLd)
+    ? props.jsonLd
+    : [props.jsonLd]
+  : [];
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>{props.title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl.toString()} />
+
+<!-- Robots: massima visibilita -->
+<meta name="robots" content={robotsContent} />
+<meta name="googlebot" content={robotsContent} />
+
+<!-- Feeds autodiscovery -->
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={`${SITE.name} RSS`}
+  href={new URL(SITE.feeds.rssPath, site).toString()}
+/>
+<link
+  rel="alternate"
+  type="application/atom+xml"
+  title={`${SITE.name} Atom`}
+  href={new URL(SITE.feeds.atomPath, site).toString()}
+/>
+<link
+  rel="alternate"
+  type="application/feed+json"
+  title={`${SITE.name} JSON Feed`}
+  href={new URL(SITE.feeds.jsonFeedPath, site).toString()}
+/>
+{props.alternateRss && (
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={props.alternateRss.title}
+    href={new URL(props.alternateRss.href, site).toString()}
+  />
+)}
+
+<!-- Licensing -->
+<link rel="license" href={SITE.license.humanUrl} />
+<link rel="license" type="application/rsl+xml" href={SITE.license.rslUrl} />
+
+<!-- OpenSearch -->
+<link
+  rel="search"
+  type="application/opensearchdescription+xml"
+  title={`Cerca su ${SITE.name}`}
+  href={new URL('/opensearch.xml', site).toString()}
+/>
+
+<!-- Identity -->
+<link rel="author" href={SITE.author.url} />
+{SITE.author.sameAs?.map((u) => <link rel="me" href={u} />)}
+
+<!-- OpenGraph -->
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={SITE.name} />
+<meta property="og:title" content={props.title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl.toString()} />
+<meta property="og:image" content={ogImageUrl.toString()} />
+<meta property="og:image:alt" content={props.title} />
+<meta property="og:locale" content={SITE.locale.replace('-', '_')} />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+{SITE.social.twitter && <meta name="twitter:site" content={SITE.social.twitter} />}
+<meta name="twitter:title" content={props.title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl.toString()} />
+
+<!-- Article extras (per og:type article) -->
+{props.publishedTime && <meta property="article:published_time" content={props.publishedTime} />}
+{props.modifiedTime && <meta property="article:modified_time" content={props.modifiedTime} />}
+{props.section && <meta property="article:section" content={props.section} />}
+{props.tags?.map((t) => <meta property="article:tag" content={t} />)}
+
+<!-- JSON-LD Structured Data -->
+{jsonLdPayload.map((obj) => (
+  <script type="application/ld+json" set:html={JSON.stringify(obj)} />
+))}

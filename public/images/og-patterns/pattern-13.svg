@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" preserveAspectRatio="xMidYMid slice">
+  <rect width="1200" height="630" fill="#f3edf7"/>
+  <defs>
+    <pattern id="plus" width="40" height="40" patternUnits="userSpaceOnUse">
+      <line x1="20" y1="8" x2="20" y2="32" stroke="#65558f" stroke-width="1.5" opacity="0.18"/>
+      <line x1="8" y1="20" x2="32" y2="20" stroke="#65558f" stroke-width="1.5" opacity="0.18"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#plus)"/>
+  <rect x="280" y="140" width="640" height="350" rx="30" fill="#65558f" opacity="0.05"/>
+</svg>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Really Simple Licensing (RSL)
+  https://rslstandard.org/
+
+  Licenza machine-readable per AI crawler e sistemi di ingestion
+-->
+<rsl xmlns="https://rslstandard.org/rsl" version="1.0">
+  <meta>
+    <publisher>Irene Burresi</publisher>
+    <contact>https://ireneburresi.dev/about/</contact>
+    <updated>2025-01-01</updated>
+  </meta>
+
+  <!-- Default policy per tutto il sito -->
+  <content url="/">
+    <license>
+      <!-- Permessi: search, citazione in RAG, indicizzazione AI -->
+      <permits type="usage">search ai-input ai-index</permits>
+
+      <!-- Proibizioni: training su dataset (richiede accordo separato) -->
+      <prohibits type="usage">ai-train</prohibits>
+
+      <!-- Attribuzione richiesta (CC BY 4.0) -->
+      <payment type="attribution">
+        <standard>https://creativecommons.org/licenses/by/4.0/</standard>
+        <terms>Attribution required: cite author name and link to original article</terms>
+      </payment>
+
+      <!-- Garanzie legali -->
+      <legal type="warranty">ownership authority</legal>
+    </license>
+  </content>
+
+  <!-- Policy specifica per blog posts -->
+  <content url="/blog/">
+    <license>
+      <permits type="usage">search ai-input ai-index quote excerpt</permits>
+      <prohibits type="usage">ai-train</prohibits>
+      <payment type="attribution">
+        <standard>https://creativecommons.org/licenses/by/4.0/</standard>
+      </payment>
+    </license>
+  </content>
+</rsl>

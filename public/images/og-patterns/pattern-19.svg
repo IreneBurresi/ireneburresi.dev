@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" preserveAspectRatio="xMidYMid slice">
+  <rect width="1200" height="630" fill="#f3edf7"/>
+  <defs>
+    <pattern id="arrows" width="50" height="50" patternUnits="userSpaceOnUse">
+      <polyline points="18,35 25,18 32,35" fill="none" stroke="#65558f" stroke-width="1.5" opacity="0.18"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#arrows)"/>
+  <polygon points="600,60 1080,570 120,570" fill="none" stroke="#65558f" stroke-width="1.5" opacity="0.15"/>
+</svg>

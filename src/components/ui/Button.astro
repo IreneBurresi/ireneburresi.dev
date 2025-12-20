@@ -1,0 +1,49 @@
+---
+import { cn } from '@/lib/utils';
+
+interface Props {
+  variant?: 'filled' | 'outlined' | 'text' | 'tonal' | 'secondary' | 'tertiary';
+  href?: string;
+  class?: string;
+  disabled?: boolean;
+  type?: 'button' | 'submit' | 'reset';
+}
+
+const { variant = 'filled', href, class: className, disabled = false, ...rest } = Astro.props;
+
+// Base styles with M3 state system
+const baseStyles =
+  'inline-flex items-center justify-center gap-2 px-6 py-2.5 shape-full text-label-large font-medium state-layer button-state relative overflow-hidden';
+
+// Variant styles following M3 specifications
+const variantStyles = {
+  // Filled Button: Primary color, highest emphasis
+  filled: 'bg-primary text-on-primary elevation-0 hover:elevation-1',
+
+  // Tonal Button: Primary container, high emphasis but softer
+  tonal: 'bg-primary-container text-on-primary-container elevation-0 hover:elevation-1',
+
+  // Secondary Button: Secondary color, medium emphasis
+  secondary: 'bg-secondary-container text-on-secondary-container elevation-0 hover:elevation-1',
+
+  // Tertiary Button: Tertiary color, special emphasis
+  tertiary: 'bg-tertiary-container text-on-tertiary-container elevation-0 hover:elevation-1',
+
+  // Outlined Button: Transparent with outline, uses state layer for hover
+  outlined: 'bg-transparent border border-outline text-primary state-layer-primary',
+
+  // Text Button: Transparent, minimal, uses state layer for hover
+  text: 'bg-transparent text-primary px-3 state-layer-primary',
+};
+
+const Component = href ? 'a' : 'button';
+---
+
+<Component
+  href={href}
+  class={cn(baseStyles, variantStyles[variant], className)}
+  disabled={disabled}
+  {...rest}
+>
+  <slot />
+</Component>

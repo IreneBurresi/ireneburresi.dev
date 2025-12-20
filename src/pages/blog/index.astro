@@ -1,0 +1,59 @@
+---
+/**
+ * Blog Index - Lista di tutti gli articoli
+ * Include JSON-LD CollectionPage per SEO
+ */
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Navbar from '@/components/layout/Navbar.astro';
+import ArticleCard from '@/components/blog/ArticleCard.astro';
+import { SITE } from '@/consts/site';
+import { buildCollectionSchema } from '@/lib/seo/structuredData';
+import { canonicalFromPath } from '@/lib/seo/url';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime());
+
+const title = 'Blog';
+const description = 'Tutti gli articoli su AI Engineering, ricerca, business e governance dell\'intelligenza artificiale.';
+const canonicalUrl = canonicalFromPath('/blog/', new URL(SITE.url)).toString();
+
+// JSON-LD per la collection page
+const collectionJsonLd = buildCollectionSchema({
+  canonicalUrl,
+  title,
+  description,
+  items: posts.map((p) => ({
+    title: p.data.title,
+    url: `${SITE.url}/blog/${p.slug}/`,
+  })),
+});
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonicalUrl}
+  jsonLd={collectionJsonLd}
+>
+  <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6">
+    <div class="bg-surface-container-low rounded-[40px] px-6 pt-2 pb-16 relative overflow-hidden elevation-0">
+      <Navbar />
+
+      <div class="mt-12 max-w-6xl mx-auto md:px-12 relative z-10">
+        <h1 class="text-display-small md:text-display-medium font-bold text-on-surface mb-4">
+          {title}
+        </h1>
+        <p class="text-headline-small text-on-surface-variant mb-12 max-w-3xl">
+          {description}
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {posts.map((post) => (
+            <ArticleCard post={post} />
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

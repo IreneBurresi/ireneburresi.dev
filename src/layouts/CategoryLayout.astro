@@ -1,0 +1,297 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Navbar from '@/components/layout/Navbar.astro';
+import ArticleCard from '@/components/blog/ArticleCard.astro';
+
+interface Props {
+  category: string;
+  categoryTitle: string;
+  categoryDescription: string;
+  categoryIcon: string;
+  featuredPosts: CollectionEntry<'blog'>[];
+  posts: CollectionEntry<'blog'>[];
+  currentPage: number;
+  totalPages: number;
+}
+
+const {
+  category,
+  categoryTitle,
+  categoryDescription,
+  categoryIcon,
+  featuredPosts,
+  posts,
+  currentPage,
+  totalPages,
+} = Astro.props;
+
+// Color mapping for categories
+const categoryColors = {
+  engineering: 'primary',
+  design: 'tertiary',
+  workflow: 'secondary',
+};
+
+const colorClass = categoryColors[category as keyof typeof categoryColors] || 'primary';
+---
+
+<BaseLayout
+  title={`${categoryTitle} | Irene Burresi`}
+  description={categoryDescription}
+>
+  <!-- Hero Header - Level 0 with tinted surface (no shadow, just color) -->
+  <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6 mb-8 md:mb-12">
+    <div
+      class="bg-surface-container-low rounded-[40px] px-6 pt-2 pb-20 md:pb-24 relative overflow-hidden transition-colors duration-500 elevation-0"
+    >
+      <!-- Geometric Background Pattern -->
+      <div class="absolute inset-0 opacity-[0.03] pointer-events-none">
+        <!-- Dot Grid Pattern -->
+        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="dot-grid-category" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.5" fill="currentColor" class="text-primary"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#dot-grid-category)"/>
+        </svg>
+      </div>
+
+      <!-- Abstract Wave Shape -->
+      <div class="absolute bottom-0 left-0 right-0 h-[50%] pointer-events-none">
+        <svg class="w-full h-full" viewBox="0 0 1200 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M0,80 C300,150 500,40 800,120 C1000,180 1100,80 1200,120 L1200,300 L0,300 Z"
+            fill="currentColor"
+            class="text-primary opacity-[0.03]"
+          />
+        </svg>
+      </div>
+
+      <!-- Radial Gradient Accent (top right) -->
+      <div
+        class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/3 translate-x-1/3 pointer-events-none"
+      >
+      </div>
+
+      <!-- Navbar inside container -->
+      <Navbar />
+
+      <!-- Category Header Content - Centered -->
+      <div class="mt-8 md:mt-12 max-w-4xl mx-auto px-4 md:px-8 relative z-10 text-center">
+        <!-- Category Icon -->
+        <div class="flex justify-center mb-4">
+          <div
+            class={`w-16 h-16 md:w-20 md:h-20 rounded-3xl bg-${colorClass}-container/30 border border-${colorClass}/20 flex items-center justify-center text-${colorClass}`}
+          >
+            <Fragment set:html={categoryIcon} />
+          </div>
+        </div>
+
+        <!-- Category Label & Title -->
+        <div class="mb-4">
+          <span
+            class={`text-label-large font-bold text-${colorClass} uppercase tracking-wider block mb-2`}
+          >
+            Categoria
+          </span>
+          <h1
+            class="text-display-small md:text-display-large font-bold text-on-surface tracking-tight"
+          >
+            {categoryTitle}
+          </h1>
+        </div>
+
+        <!-- Category Description -->
+        <p
+          class="text-body-large md:text-title-medium text-on-surface-variant leading-relaxed max-w-2xl mx-auto"
+        >
+          {categoryDescription}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-8 pb-16 md:pb-20">
+    <!-- Featured Articles -->
+    {
+      featuredPosts.length > 0 && (
+        <section class="mb-16 md:mb-20">
+          <div class="flex items-center gap-3 mb-8">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class={`text-${colorClass}`}
+            >
+              <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+            </svg>
+            <h2 class="text-headline-large font-bold text-on-surface">
+              In Evidenza
+            </h2>
+          </div>
+
+          {/* Featured Grid Layout - M3 Spacing: gap-4 (16dp mobile), md:gap-6 (24dp desktop) */}
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {featuredPosts.map((post) => (
+              <ArticleCard post={post} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <!-- All Articles - Chronological -->
+    <section>
+      <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+        <div>
+          <h2 class="text-headline-large font-bold text-on-surface mb-2">
+            Tutti gli articoli
+          </h2>
+          <p class="text-body-medium text-on-surface-variant">
+            Esplora {posts.length} {posts.length === 1 ? 'articolo' : 'articoli'} in ordine cronologico
+          </p>
+        </div>
+        <span class="text-label-large font-medium text-on-surface-variant bg-surface-container px-4 py-2 rounded-full">
+          Pagina {currentPage} di {totalPages}
+        </span>
+      </div>
+
+      {/* Article Grid - M3 Spacing: gap-4 (16dp mobile), md:gap-6 (24dp desktop) */}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        {posts.map((post) => (
+          <ArticleCard post={post} />
+        ))}
+      </div>
+
+      <!-- Pagination -->
+      {
+        totalPages > 1 && (
+          <div class="flex items-center justify-center gap-4 mt-16">
+            {/* Previous Button */}
+            {currentPage > 1 ? (
+              <a
+                href={
+                  currentPage === 2
+                    ? `/${category}/`
+                    : `/${category}/${currentPage - 1}/`
+                }
+                class="inline-flex items-center justify-center gap-2 px-6 py-2.5 shape-full text-label-large font-medium bg-surface-container text-on-surface state-layer button-state elevation-0 hover:elevation-1"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M19 12H5" />
+                  <path d="m12 19-7-7 7-7" />
+                </svg>
+                Precedente
+              </a>
+            ) : (
+              <button
+                disabled
+                class="inline-flex items-center justify-center gap-2 px-6 py-2.5 shape-full text-label-large font-medium bg-surface-container text-on-surface/40 cursor-not-allowed"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M19 12H5" />
+                  <path d="m12 19-7-7 7-7" />
+                </svg>
+                Precedente
+              </button>
+            )}
+
+            {/* Page Numbers */}
+            <div class="flex items-center gap-2">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <a
+                    href={
+                      page === 1 ? `/${category}/` : `/${category}/${page}/`
+                    }
+                    class={`w-10 h-10 shape-full flex items-center justify-center text-label-large font-medium transition-colors ${
+                      page === currentPage
+                        ? `bg-${colorClass} text-on-${colorClass}`
+                        : 'bg-surface-container text-on-surface state-layer hover:bg-surface-container-high'
+                    }`}
+                  >
+                    {page}
+                  </a>
+                )
+              )}
+            </div>
+
+            {/* Next Button */}
+            {currentPage < totalPages ? (
+              <a
+                href={`/${category}/${currentPage + 1}/`}
+                class="inline-flex items-center justify-center gap-2 px-6 py-2.5 shape-full text-label-large font-medium bg-surface-container text-on-surface state-layer button-state elevation-0 hover:elevation-1"
+              >
+                Successiva
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </a>
+            ) : (
+              <button
+                disabled
+                class="inline-flex items-center justify-center gap-2 px-6 py-2.5 shape-full text-label-large font-medium bg-surface-container text-on-surface/40 cursor-not-allowed"
+              >
+                Successiva
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </button>
+            )}
+          </div>
+        )
+      }
+    </section>
+  </div>
+</BaseLayout>

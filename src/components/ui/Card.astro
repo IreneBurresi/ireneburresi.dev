@@ -1,0 +1,17 @@
+---
+import { cn } from '@/lib/utils';
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div
+  class={cn('shape-xl bg-surface-container overflow-hidden', className)}
+  {...rest}
+>
+  <slot />
+</div>

@@ -1,0 +1,67 @@
+---
+title: "Prompt injection: classificazione degli attacchi e architetture resistenti"
+summary: "Analisi sistematica delle vulnerabilità di prompt injection nei sistemi LLM con pattern architetturali per la mitigazione dei rischi."
+publishedAt: "2025-01-07"
+author:
+  name: "Irene Burresi"
+  avatar: "/images/avatar.jpg"
+  role: "AI Security Researcher"
+readingTime: "17 min"
+pillar: "governance"
+subsection: "sicurezza"
+tags: ["Security", "Prompt Injection", "LLM", "Vulnerabilities"]
+featured: false
+draft: false
+---
+
+## Tassonomia degli Attacchi
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec rutrum congue leo eget malesuada.
+
+### Direct Injection
+
+Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vivamus suscipit tortor eget felis porttitor volutpat.
+
+### Indirect Injection
+
+Pellentesque in ipsum id orci porta dapibus. Vestibulum ac diam sit amet quam vehicula elementum.
+
+## Pattern di Difesa
+
+Nulla porttitor accumsan tincidunt. Curabitur aliquet quam id dui posuere blandit.
+
+```python
+class PromptGuard:
+    def __init__(self):
+        self.blacklist_patterns = []
+        self.whitelist_patterns = []
+
+    def sanitize_input(self, user_input):
+        # Input validation
+        if self.contains_injection(user_input):
+            raise SecurityException("Potential injection detected")
+
+        # Apply sandboxing
+        return self.apply_sandbox(user_input)
+
+    def contains_injection(self, text):
+        # Pattern matching for common injection attempts
+        patterns = [
+            r"ignore previous instructions",
+            r"system prompt",
+            r"disregard all"
+        ]
+        return any(re.search(p, text, re.I) for p in patterns)
+```
+
+## Architetture Resistenti
+
+Donec sollicitudin molestie malesuada. Proin eget tortor risus.
+
+## Case Study: Produzione
+
+Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.
+
+## Conclusioni
+
+Vestibulum ante ipsum primis in faucibus orci luctus.

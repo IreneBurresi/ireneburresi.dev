@@ -1,43 +1,165 @@
-# Astro Starter Kit: Minimal
+# ireneburresi.dev
 
-```sh
-npm create astro@latest -- --template minimal
+Technical blog on AI Engineering, RAG architectures, scientific research, and artificial intelligence governance.
+
+[![Built with Astro](https://astro.badg.es/v2/built-with-astro/small.svg)](https://astro.build)
+
+## Tech Stack
+
+- **Framework**: [Astro](https://astro.build) v5 with static rendering
+- **UI**: [Tailwind CSS](https://tailwindcss.com) v4 + Material Design 3
+- **Components**: [Preact](https://preactjs.com) for interactivity
+- **Content**: MDX with typed content collections
+- **SEO**: Schema.org/JSON-LD, Open Graph, automatic sitemap
+- **Feeds**: RSS, Atom, JSON Feed
+- **Testing**: Vitest with SEO, link, and content validation
+
+## Project Structure
+
+```
+src/
+├── components/
+│   ├── blog/          # Article components
+│   ├── icons/         # SVG icons
+│   ├── layout/        # Navbar, Footer, Hero
+│   ├── seo/           # Meta tags, JSON-LD
+│   └── ui/            # Badge, Button, Card
+├── consts/
+│   ├── schema.ts      # Schema.org data (Person, Organization)
+│   └── site.ts        # Site configuration
+├── content/
+│   └── blog/          # MDX articles
+├── layouts/           # Page layouts
+├── lib/
+│   ├── constants.ts   # Pillars and subsections
+│   ├── feed.ts        # Feed utilities
+│   ├── seo/           # Structured data builders
+│   └── utils.ts       # Shared utilities
+├── pages/             # Astro routes
+└── styles/            # Global CSS
+tests/
+├── content.test.ts    # Frontmatter validation
+├── feeds.test.ts      # RSS/Atom/JSON tests
+├── links.test.ts      # Internal links and assets
+├── seo.test.ts        # Meta, sitemap, schema.org
+└── setup.ts           # Test utilities
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Blog Pillars
 
-## 🚀 Project Structure
+The blog is organized into 6 thematic areas:
 
-Inside of your Astro project, you'll see the following folders and files:
+| Pillar | Description |
+|--------|-------------|
+| **AI Engineering** | Architectures, implementations, and deployment |
+| **Research** | Paper analysis and technological breakthroughs |
+| **Business** | ROI, TCO, and strategic frameworks |
+| **Governance** | Compliance, security, and AI ethics |
+| **Methodology** | Workflow, deep work, and tooling |
+| **Synthesis** | Quarterly reviews and scenario planning |
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+## Development
+
+### Requirements
+
+- Node.js 20+
+- npm 10+
+
+### Setup
+
+```bash
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Commands
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Dev server on `localhost:4321` |
+| `npm run build` | Production build in `./dist/` |
+| `npm run preview` | Preview local build |
+| `npm run test` | Run all tests |
+| `npm run test:watch` | Tests in watch mode |
+| `npm run test:seo` | SEO tests only |
+| `npm run test:links` | Link tests only |
+| `npm run test:feeds` | Feed tests only |
+| `npm run test:content` | Content tests only |
+| `npm run lint` | Astro check |
+| `npm run typecheck` | TypeScript check |
+| `npm run validate` | Build + full test suite |
 
-Any static assets, like images, can be placed in the `public/` directory.
+### Testing
 
-## 🧞 Commands
+The test suite validates:
 
-All commands are run from the root of the project, from a terminal:
+- **SEO**: robots.txt, sitemap, meta tags, JSON-LD
+- **Feeds**: RSS, Atom, JSON Feed structure and consistency
+- **Links**: Internal links, assets, canonical URLs
+- **Content**: Frontmatter, valid pillars, schema.ts
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+```bash
+# Run all tests
+npm run test
 
-## 👀 Want to learn more?
+# Expected output: 86 tests passed
+```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Configuration
+
+### Author Data
+
+Edit `src/consts/schema.ts` to update:
+
+- Name, role, bio
+- Social links (GitHub, LinkedIn)
+- Skills (knowsAbout with Wikidata)
+
+### Adding an Article
+
+Create an `.mdx` file in `src/content/blog/`:
+
+```yaml
+---
+title: "Article title"
+summary: "Description 120-160 characters"
+publishedAt: "2024-12-20"
+author:
+  name: "Irene Burresi"
+  avatar: "/images/avatar.jpg"
+  role: "AI Engineer"
+pillar: "engineering"
+subsection: "implementations"
+tags: ["RAG", "LLM"]
+draft: false
+---
+
+MDX content...
+```
+
+## Deploy
+
+The site is configured for static deployment. Compatible with:
+
+- Vercel
+- Netlify
+- Cloudflare Pages
+- GitHub Pages
+
+```bash
+# Production build
+npm run build
+
+# Static files are in ./dist/
+```
+
+## License
+
+MIT License - see [LICENSE](LICENSE)
+
+---
+
+Developed by [Irene Burresi](https://ireneburresi.dev)

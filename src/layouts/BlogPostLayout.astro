@@ -1,0 +1,270 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Navbar from '@/components/layout/Navbar.astro';
+import RelatedArticles from '@/components/blog/RelatedArticles.astro';
+import { SITE } from '@/consts/site';
+import { buildArticleGraph } from '@/lib/seo/structuredData';
+import { canonicalFromPath, toAbsoluteUrl } from '@/lib/seo/url';
+import { PILLARS } from '@/lib/constants';
+import { getOgImage, hasValidCoverImage } from '@/lib/og-pattern';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const { post, headings } = Astro.props;
+const { data, slug } = post;
+
+// Costruisci URL canonico (usa slug, non id, per evitare estensione .mdx)
+const canonicalUrl = canonicalFromPath(`/blog/${slug}/`, new URL(SITE.url)).toString();
+
+// Date ISO per SEO
+const pubDateISO = new Date(data.publishedAt).toISOString();
+const modDateISO = data.updatedAt ? new Date(data.updatedAt).toISOString() : undefined;
+
+// Immagine: usa coverImage se esiste, altrimenti pattern generato
+const displayImage = getOgImage(data.coverImage, slug);
+const hasCover = hasValidCoverImage(data.coverImage);
+
+// OG Image assoluto
+const ogImage = toAbsoluteUrl(displayImage, new URL(SITE.url)).toString();
+
+// Pillar name per section
+const pillarData = PILLARS[data.pillar as keyof typeof PILLARS];
+const sectionName = pillarData?.name ?? data.pillar;
+
+// JSON-LD strutturato per l'articolo
+const articleJsonLd = buildArticleGraph({
+  canonicalUrl,
+  title: data.title,
+  description: data.summary,
+  datePublished: pubDateISO,
+  dateModified: modDateISO,
+  imageUrl: ogImage,
+  tags: data.tags,
+  section: sectionName,
+  breadcrumbs: [
+    { name: 'Home', url: `${SITE.url}/` },
+    { name: sectionName, url: `${SITE.url}/${pillarData?.slug ?? data.pillar}/` },
+    { name: data.title, url: canonicalUrl },
+  ],
+});
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.summary}
+  image={displayImage}
+  type="article"
+  canonical={canonicalUrl}
+  jsonLd={articleJsonLd}
+  publishedTime={pubDateISO}
+  modifiedTime={modDateISO}
+  tags={data.tags}
+  section={sectionName}
+>
+  <!-- Big Colored Container - Level 0 with tinted surface (no shadow, just color) -->
+  <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6">
+    <div
+      class="bg-surface-container-low rounded-[40px] px-6 pt-2 pb-32 md:pb-64 relative overflow-hidden transition-colors duration-500 elevation-0"
+    >
+      <!-- Background decoration blob -->
+      <div
+        class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"
+      >
+      </div>
+
+      <!-- Navbar inside container -->
+      <Navbar />
+
+      <!-- Post Header Content -->
+      <div class="mt-12 md:mt-20 max-w-5xl mx-auto md:px-12 relative z-10">
+        <!-- Category + Meta Info -->
+        <div class="flex flex-wrap items-center gap-4 mb-6">
+          <a
+            href={`/${pillarData?.slug ?? data.pillar}/`}
+            class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-large font-bold border border-secondary/20 flex items-center gap-2 hover:bg-secondary-container/80 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="m7.5 4.27 9 5.15M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"
+              ></path>
+            </svg>
+            {sectionName}
+          </a>
+          <span
+            class="text-label-medium text-on-surface-variant flex items-center gap-2"
+          >
+            <time datetime={pubDateISO}>{data.publishedAt}</time>
+            <span class="w-1 h-1 rounded-full bg-on-surface-variant/50"></span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            {data.readingTime}
+          </span>
+        </div>
+
+        <!-- Title -->
+        <h1
+          class="text-display-small md:text-display-large font-bold text-on-surface mb-6 leading-[1.1] tracking-tight max-w-4xl"
+        >
+          {data.title}
+        </h1>
+
+        <!-- Summary/Description -->
+        <p
+          class="text-headline-small text-on-surface-variant mb-8 line-clamp-2 max-w-3xl"
+        >
+          {data.summary}
+        </p>
+
+        <!-- Author Info -->
+        <div class="flex items-center gap-4">
+          <img
+            src={data.author.avatar}
+            alt={data.author.name}
+            class="w-12 h-12 rounded-full border-2 border-surface-container-high object-cover"
+            width="48"
+            height="48"
+          />
+          <div class="flex flex-col">
+            <span class="text-title-medium text-on-surface"
+              >{data.author.name}</span
+            >
+            <span class="text-body-small text-on-surface-variant"
+              >{data.author.role}</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- The Overlap Zone - Image overlaps the container above -->
+    <div class="max-w-6xl mx-auto px-2 sm:px-8 -mt-24 md:-mt-56 relative z-20">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Left: Featured Image (8 cols) -->
+        <div class="lg:col-span-8">
+          <div
+            class="rounded-3xl overflow-hidden elevation-2 bg-surface-container-low aspect-[16/9] relative group"
+          >
+            <img
+              src={displayImage}
+              alt={data.title}
+              class:list={[
+                "w-full h-full transition-transform duration-700 group-hover:scale-105",
+                hasCover ? "object-cover" : "object-contain"
+              ]}
+              width="800"
+              height="450"
+              loading="eager"
+            />
+            <!-- Overlay gradient for depth (solo per foto reali) -->
+            {hasCover && (
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              >
+              </div>
+            )}
+          </div>
+        </div>
+
+        <!-- Right: Newsletter Card - Level 2 (Z=3dp, Hero card priority, sticky) -->
+        <div class="lg:col-span-4 lg:sticky lg:top-8 mt-4 lg:mt-0">
+          <div
+            class="shape-xl p-8 bg-primary-container text-on-primary-container elevation-2"
+          >
+            <h3 class="text-title-large font-bold mb-3">
+              Non perdere i prossimi articoli
+            </h3>
+            <p class="text-body-medium mb-6 opacity-90">
+              Iscriviti alla newsletter per ricevere aggiornamenti settimanali
+              su AI, engineering e produttività.
+            </p>
+            <!-- M3 Spacing: space-y-3 (12dp gap between input and button) -->
+            <div class="space-y-3">
+              <!-- M3 Input: shape-xs (4px rounded corners) -->
+              <input
+                type="email"
+                placeholder="La tua email"
+                class="w-full px-4 py-3 shape-xs bg-surface text-on-surface input-state"
+              />
+              <button
+                class="w-full px-6 py-3 shape-full bg-primary text-on-primary text-label-large font-medium state-layer button-state elevation-0 hover:elevation-1"
+              >
+                Iscriviti
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Article Content with Sidebar TOC -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-8 mt-16 md:mt-24 mb-32">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- Main Content -->
+      <article class="lg:col-span-8 lg:col-start-1 mdx-content">
+        <slot />
+      </article>
+
+      <!-- Table of Contents Sidebar (Desktop) -->
+      {
+        headings.length > 0 && (
+          <aside class="hidden lg:block lg:col-span-4 space-y-8 mt-24">
+            <nav class="bg-surface-container-low rounded-2xl p-6 sticky top-24 -mt-24 elevation-1" aria-label="Indice dei contenuti">
+              <h2 class="text-title-medium font-bold mb-4">Indice</h2>
+              <ul class="flex flex-col space-y-1">
+                {headings.map((heading, index) => (
+                  <li>
+                    <a
+                      href={`#${heading.slug}`}
+                      class:list={[
+                        'py-1.5 px-2 -mx-2 block rounded-md link-state',
+                        heading.depth === 2 && 'text-body-medium font-medium',
+                        heading.depth === 3 && 'text-body-medium pl-4 border-l border-outline ml-1',
+                        index === 0 ? 'text-primary' : 'text-on-surface-variant hover:text-primary'
+                      ]}
+                    >
+                      {heading.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </aside>
+        )
+      }
+    </div>
+  </div>
+
+  <!-- Related Articles -->
+  <RelatedArticles
+    currentSlug={slug}
+    relatedSlugs={data.relatedSlugs}
+    category={sectionName}
+  />
+</BaseLayout>

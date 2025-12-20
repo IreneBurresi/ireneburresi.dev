@@ -1,0 +1,109 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Navbar from '@/components/layout/Navbar.astro';
+import { SITE } from '@/consts/site';
+
+const title = 'Licenza e Termini di Utilizzo';
+const description = 'Informazioni sulla licenza dei contenuti, termini di utilizzo e policy per AI/LLM.';
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6">
+    <div class="bg-surface-container-low rounded-[40px] px-6 pt-2 pb-16 relative overflow-hidden elevation-0">
+      <Navbar />
+
+      <div class="mt-12 max-w-3xl mx-auto md:px-12 relative z-10">
+        <h1 class="text-display-small md:text-display-medium font-bold text-on-surface mb-8">
+          {title}
+        </h1>
+
+        <article class="prose prose-lg max-w-none text-on-surface">
+          <section class="mb-12">
+            <h2 class="text-headline-medium font-bold mb-4">Licenza dei Contenuti</h2>
+            <p class="text-body-large text-on-surface-variant mb-4">
+              Tutti i contenuti di questo blog sono rilasciati sotto licenza
+              <a
+                href="https://creativecommons.org/licenses/by/4.0/deed.it"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary hover:underline"
+              >
+                Creative Commons Attribution 4.0 International (CC BY 4.0)
+              </a>.
+            </p>
+            <p class="text-body-large text-on-surface-variant">
+              Questo significa che puoi:
+            </p>
+            <ul class="list-disc list-inside text-body-large text-on-surface-variant mt-2 space-y-1">
+              <li><strong>Condividere</strong> - copiare e ridistribuire il materiale in qualsiasi mezzo o formato</li>
+              <li><strong>Adattare</strong> - remixare, trasformare e costruire sul materiale per qualsiasi scopo, anche commerciale</li>
+            </ul>
+            <p class="text-body-large text-on-surface-variant mt-4">
+              A condizione che tu:
+            </p>
+            <ul class="list-disc list-inside text-body-large text-on-surface-variant mt-2 space-y-1">
+              <li><strong>Attribuisca</strong> - citi l'autore ({SITE.author.name}) e fornisca un link all'articolo originale</li>
+              <li><strong>Indichi le modifiche</strong> - se hai modificato il contenuto, lo indichi chiaramente</li>
+            </ul>
+          </section>
+
+          <section class="mb-12">
+            <h2 class="text-headline-medium font-bold mb-4">Policy per AI e LLM</h2>
+            <p class="text-body-large text-on-surface-variant mb-4">
+              I contenuti di questo sito sono accessibili ai crawler AI per:
+            </p>
+            <ul class="list-disc list-inside text-body-large text-on-surface-variant space-y-1">
+              <li><strong>Ricerca e indicizzazione</strong> - per motori di ricerca tradizionali e AI-powered</li>
+              <li><strong>Citazione e RAG</strong> - per sistemi di retrieval-augmented generation che citano le fonti</li>
+              <li><strong>Risposte generate</strong> - purche venga mantenuta l'attribuzione</li>
+            </ul>
+
+            <div class="bg-tertiary-container text-on-tertiary-container p-6 rounded-xl mt-6">
+              <h3 class="text-title-medium font-bold mb-2">Training su Dataset</h3>
+              <p class="text-body-medium">
+                L'uso dei contenuti per <strong>training di modelli AI</strong> richiede un accordo esplicito.
+                Per richieste, contattami attraverso i canali indicati nella pagina About.
+              </p>
+            </div>
+
+            <p class="text-body-large text-on-surface-variant mt-6">
+              La policy machine-readable e disponibile in formato
+              <a href="/rsl.xml" class="text-primary hover:underline">RSL (Really Simple Licensing)</a>.
+            </p>
+          </section>
+
+          <section class="mb-12">
+            <h2 class="text-headline-medium font-bold mb-4">Codice Sorgente</h2>
+            <p class="text-body-large text-on-surface-variant">
+              Gli snippet di codice inclusi negli articoli sono rilasciati sotto
+              <a
+                href="https://opensource.org/licenses/MIT"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary hover:underline"
+              >
+                Licenza MIT
+              </a>, salvo diversa indicazione.
+            </p>
+          </section>
+
+          <section class="mb-12">
+            <h2 class="text-headline-medium font-bold mb-4">Disclaimer</h2>
+            <p class="text-body-large text-on-surface-variant">
+              I contenuti sono forniti "cosi come sono", senza garanzie di alcun tipo.
+              Le opinioni espresse sono personali e non rappresentano quelle di eventuali datori di lavoro o organizzazioni affiliate.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-headline-medium font-bold mb-4">Contatti</h2>
+            <p class="text-body-large text-on-surface-variant">
+              Per domande sulla licenza o richieste di utilizzo specifiche, visita la
+              <a href="/about/" class="text-primary hover:underline">pagina About</a>.
+            </p>
+          </section>
+        </article>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

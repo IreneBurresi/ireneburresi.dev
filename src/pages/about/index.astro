@@ -1,0 +1,144 @@
+---
+/**
+ * Pagina About - E-E-A-T forte per SEO
+ * Include JSON-LD Person per disambiguazione e authority
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Navbar from '@/components/layout/Navbar.astro';
+import { SITE } from '@/consts/site';
+import { buildSiteGraph, buildWebPageSchema } from '@/lib/seo/structuredData';
+import { canonicalFromPath } from '@/lib/seo/url';
+
+const title = 'Chi Sono';
+const description = `${SITE.author.name} - ${SITE.author.jobTitle}. Blog tecnico su AI Engineering, architetture RAG, e governance dell'intelligenza artificiale.`;
+const canonicalUrl = canonicalFromPath('/about/', new URL(SITE.url)).toString();
+
+// JSON-LD: grafo sito + WebPage
+const siteGraph = buildSiteGraph();
+const webPage = buildWebPageSchema({
+  canonicalUrl,
+  title,
+  description,
+});
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [...siteGraph['@graph'], webPage],
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonicalUrl}
+  jsonLd={jsonLd}
+>
+  <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6">
+    <div class="bg-surface-container-low rounded-[40px] px-6 pt-2 pb-16 relative overflow-hidden elevation-0">
+      <Navbar />
+
+      <div class="mt-12 max-w-3xl mx-auto md:px-12 relative z-10">
+        <!-- Header con avatar -->
+        <div class="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
+          <img
+            src="/images/avatar.jpg"
+            alt={SITE.author.name}
+            class="w-32 h-32 rounded-full border-4 border-surface-container-high object-cover"
+            width="128"
+            height="128"
+            loading="eager"
+          />
+          <div>
+            <h1 class="text-display-small md:text-display-medium font-bold text-on-surface mb-2">
+              {SITE.author.name}
+            </h1>
+            <p class="text-headline-small text-on-surface-variant mb-4">
+              {SITE.author.jobTitle}
+            </p>
+            <div class="flex gap-4">
+              {SITE.author.sameAs.map((url) => {
+                const isGithub = url.includes('github');
+                const isLinkedin = url.includes('linkedin');
+                const label = isGithub ? 'GitHub' : isLinkedin ? 'LinkedIn' : 'Profile';
+                return (
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="me noopener noreferrer"
+                    class="px-4 py-2 rounded-full bg-secondary-container text-on-secondary-container text-label-large font-medium hover:bg-secondary-container/80 transition-colors"
+                  >
+                    {label}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <article class="prose prose-lg max-w-none text-on-surface">
+          <section class="mb-12">
+            <h2 class="text-headline-medium font-bold mb-4">Di cosa scrivo</h2>
+            <p class="text-body-large text-on-surface-variant mb-4">
+              Questo blog esplora l'intelligenza artificiale da prospettive multiple:
+              implementazione tecnica, ricerca scientifica, impatto economico e governance.
+            </p>
+            <p class="text-body-large text-on-surface-variant">
+              Mi concentro su contenuti <strong>actionable</strong>: guide implementative,
+              analisi di paper, framework decisionali e casi studio reali.
+              Ogni articolo e pensato per essere utile sia a chi implementa che a chi decide.
+            </p>
+          </section>
+
+          <section class="mb-12">
+            <h2 class="text-headline-medium font-bold mb-4">Competenze</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {SITE.author.knowsAbout.map((topic) => (
+                <a
+                  href={topic.wikidata}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="p-4 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors"
+                >
+                  <span class="text-title-medium font-medium">{topic.name}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+
+          <section class="mb-12">
+            <h2 class="text-headline-medium font-bold mb-4">Struttura del Blog</h2>
+            <p class="text-body-large text-on-surface-variant mb-4">
+              I contenuti sono organizzati in sei pillar tematici:
+            </p>
+            <ul class="list-disc list-inside text-body-large text-on-surface-variant space-y-2">
+              <li><strong>Ingegneria AI</strong> - Architetture, implementazioni e deployment</li>
+              <li><strong>Ricerca e Frontiere</strong> - Analisi paper e breakthrough</li>
+              <li><strong>Business e ROI</strong> - Economia e strategia AI</li>
+              <li><strong>Governance e Sicurezza</strong> - Compliance, ethics, security</li>
+              <li><strong>Metodologia</strong> - Workflow e produttivita</li>
+              <li><strong>Sintesi</strong> - Analisi cross-domain e trend</li>
+            </ul>
+          </section>
+
+          <section class="mb-12">
+            <h2 class="text-headline-medium font-bold mb-4">Contatti</h2>
+            <p class="text-body-large text-on-surface-variant">
+              Per collaborazioni, domande tecniche o feedback sui contenuti,
+              puoi trovarmi sui profili social linkati sopra.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-headline-medium font-bold mb-4">Licenza</h2>
+            <p class="text-body-large text-on-surface-variant">
+              I contenuti di questo blog sono rilasciati sotto
+              <a href="/licenza/" class="text-primary hover:underline">Creative Commons BY 4.0</a>.
+              Per dettagli su utilizzo AI e training, consulta la
+              <a href="/licenza/" class="text-primary hover:underline">pagina licenza</a>.
+            </p>
+          </section>
+        </article>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,50 @@
+---
+title: "Bias detection in produzione: framework metodologico e tooling"
+summary: "Implementazione pratica di sistemi di rilevamento e mitigazione del bias in modelli AI deployati in ambiente di produzione."
+publishedAt: "2025-01-06"
+author:
+  name: "Irene Burresi"
+  avatar: "/images/avatar.jpg"
+  role: "AI Ethics Engineer"
+readingTime: "15 min"
+pillar: "governance"
+subsection: "ethics"
+tags: ["Bias", "Ethics", "Fairness", "Production"]
+featured: false
+draft: false
+---
+
+## Framework di Rilevamento
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec rutrum congue leo eget malesuada.
+
+## Metriche di Fairness
+
+Curabitur non nulla sit amet nisl tempus convallis quis ac lectus.
+
+### Demographic Parity
+
+```python
+def demographic_parity(predictions, sensitive_attribute):
+    groups = predictions.groupby(sensitive_attribute)
+    positive_rates = groups.mean()
+
+    # Calculate disparity
+    max_rate = positive_rates.max()
+    min_rate = positive_rates.min()
+
+    disparity = max_rate - min_rate
+    return disparity
+```
+
+## Tooling
+
+Vivamus suscipit tortor eget felis porttitor volutpat.
+
+## Mitigazione
+
+Pellentesque in ipsum id orci porta dapibus.
+
+## Conclusioni
+
+Nulla porttitor accumsan tincidunt.
