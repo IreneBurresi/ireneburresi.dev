@@ -37,6 +37,10 @@ export interface Props {
 
   // Feed alternativo per pillar/sezioni
   alternateRss?: { title: string; href: string };
+
+  // i18n
+  locale?: 'it' | 'en';
+  alternateUrls?: Array<{ locale: 'it' | 'en'; url: string }>;
 }
 
 const props = Astro.props;
@@ -85,6 +89,22 @@ const jsonLdPayload = props.jsonLd
 <title>{props.title}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalUrl.toString()} />
+
+<!-- hreflang tags for multilingual SEO -->
+{props.alternateUrls?.map(({ locale, url }) => (
+  <link
+    rel="alternate"
+    hreflang={locale === 'en' ? 'en' : 'it'}
+    href={toAbsoluteUrl(url, site).toString()}
+  />
+))}
+{props.alternateUrls && props.alternateUrls.length > 0 && (
+  <link
+    rel="alternate"
+    hreflang="x-default"
+    href={toAbsoluteUrl(props.alternateUrls.find(u => u.locale === 'it')?.url ?? '/', site).toString()}
+  />
+)}
 
 <!-- Robots: massima visibilita -->
 <meta name="robots" content={robotsContent} />
@@ -142,7 +162,12 @@ const jsonLdPayload = props.jsonLd
 <meta property="og:url" content={canonicalUrl.toString()} />
 <meta property="og:image" content={ogImageUrl.toString()} />
 <meta property="og:image:alt" content={props.title} />
-<meta property="og:locale" content={SITE.locale.replace('-', '_')} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:locale" content={(props.locale === 'en' ? 'en_US' : SITE.locale).replace('-', '_')} />
+{props.locale === 'it' && <meta property="og:locale:alternate" content="en_US" />}
+{props.locale === 'en' && <meta property="og:locale:alternate" content="it_IT" />}
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
@@ -150,6 +175,7 @@ const jsonLdPayload = props.jsonLd
 <meta name="twitter:title" content={props.title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImageUrl.toString()} />
+<meta name="twitter:image:alt" content={props.title} />
 
 <!-- Article extras (per og:type article) -->
 {props.publishedTime && <meta property="article:published_time" content={props.publishedTime} />}

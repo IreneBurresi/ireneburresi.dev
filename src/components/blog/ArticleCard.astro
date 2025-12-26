@@ -1,20 +1,33 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import Badge from '@/components/ui/Badge.astro';
-import { PILLARS } from '@/lib/constants';
 import { getOgImage, hasValidCoverImage } from '@/lib/og-pattern';
+import { calculateReadingTime } from '@/lib/utils';
+import { useTranslations, type Locale } from '@/lib/i18n/translations';
+import { getLocaleFromUrl } from '@/lib/i18n/utils';
 
 interface Props {
   post: CollectionEntry<'blog'>;
   featured?: boolean;
+  locale?: Locale;
 }
 
-const { post, featured = false } = Astro.props;
-const { data } = post;
+const { post, featured = false, locale } = Astro.props;
+const { data, body } = post;
 
-// Get pillar name from pillar key
-const pillarData = PILLARS[data.pillar as keyof typeof PILLARS];
-const pillarName = pillarData?.name || data.pillar;
+// Determine current locale
+const currentLocale: Locale = locale ?? getLocaleFromUrl(Astro.url);
+const t = useTranslations(currentLocale);
+const baseUrl = currentLocale === 'en' ? '/en' : '';
+
+// Calcola reading time dinamicamente dal contenuto
+const readingTime = calculateReadingTime(body);
+
+// Get pillar name from translations
+const pillarName = t.pillars[data.pillar as keyof typeof t.pillars]?.name || data.pillar;
+
+// Normalize slug (remove .en suffix for URL)
+const normalizedSlug = post.slug.replace(/\.en$/, '');
 
 // Immagine: usa coverImage se esiste, altrimenti pattern generato
 const displayImage = getOgImage(data.coverImage, post.slug);
@@ -22,7 +35,7 @@ const hasCover = hasValidCoverImage(data.coverImage);
 ---
 
 <a
-  href={`/blog/${post.slug}/`}
+  href={`${baseUrl}/blog/${normalizedSlug}/`}
   class:list={[
     /* M3 Shape & Elevation Hierarchy:
      * STANDARD CARDS:
@@ -91,7 +104,7 @@ const hasCover = hasValidCoverImage(data.coverImage);
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
-          {data.readingTime}
+          {readingTime}
         </span>
       </div>
 
@@ -111,20 +124,29 @@ const hasCover = hasValidCoverImage(data.coverImage);
       </p>
     </div>
 
-    <!-- Author & CTA -->
+    <!-- Footer: Metadata + CTA -->
     <div class="flex items-center justify-between mt-auto">
-      <div class="flex items-center gap-2">
-        <img
-          src={data.author.avatar}
-          alt={data.author.name}
-          class="w-8 h-8 shape-full border border-surface"
-        />
-        <span class="text-sm font-medium text-on-surface">
-          {data.author.name}
+      <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+        <span>{data.publishedAt}</span>
+        <span>•</span>
+        <span class="flex items-center gap-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          {readingTime}
         </span>
       </div>
-
-      <!-- CTA Button - Starts at Level 0, elevates to Level 1 on hover -->
       <span
         class="w-10 h-10 flex items-center justify-center shape-full bg-primary-container text-on-primary-container group-hover:bg-primary group-hover:text-on-primary transition-all duration-300 elevation-0 group-hover:elevation-1"
         aria-label="Read article"

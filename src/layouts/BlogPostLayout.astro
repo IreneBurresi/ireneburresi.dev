@@ -3,26 +3,48 @@ import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import Navbar from '@/components/layout/Navbar.astro';
 import RelatedArticles from '@/components/blog/RelatedArticles.astro';
+import FallbackBanner from '@/components/i18n/FallbackBanner.astro';
 import { SITE } from '@/consts/site';
 import { buildArticleGraph } from '@/lib/seo/structuredData';
 import { canonicalFromPath, toAbsoluteUrl } from '@/lib/seo/url';
-import { PILLARS } from '@/lib/constants';
 import { getOgImage, hasValidCoverImage } from '@/lib/og-pattern';
+import { calculateContentMetrics } from '@/lib/utils';
+import { useTranslations, getPillarSlug, type Locale } from '@/lib/i18n/translations';
+import { getLocaleFromUrl } from '@/lib/i18n/utils';
+import { getBaseSlug } from '@/lib/content';
 
 interface Props {
   post: CollectionEntry<'blog'>;
   headings: { depth: number; slug: string; text: string }[];
+  locale?: Locale;
+  isFallback?: boolean;
 }
 
-const { post, headings } = Astro.props;
-const { data, slug } = post;
+const { post, headings, locale, isFallback = false } = Astro.props;
+const { data, slug, body } = post;
 
-// Costruisci URL canonico (usa slug, non id, per evitare estensione .mdx)
-const canonicalUrl = canonicalFromPath(`/blog/${slug}/`, new URL(SITE.url)).toString();
+// Determine current locale
+const currentLocale: Locale = locale ?? data.locale ?? getLocaleFromUrl(Astro.url);
+const t = useTranslations(currentLocale);
+const baseUrl = currentLocale === 'en' ? '/en' : '';
+
+// Get normalized slug (without .en)
+const normalizedSlug = getBaseSlug(slug);
+
+// Calcola reading time e word count dinamicamente dal contenuto
+const { readingTime, wordCount } = calculateContentMetrics(body);
+
+// Costruisci URL canonico con locale (usa normalized slug)
+const canonicalUrl = canonicalFromPath(
+  `${baseUrl}/blog/${normalizedSlug}/`,
+  new URL(SITE.url),
+).toString();
 
 // Date ISO per SEO
 const pubDateISO = new Date(data.publishedAt).toISOString();
-const modDateISO = data.updatedAt ? new Date(data.updatedAt).toISOString() : undefined;
+const modDateISO = data.updatedAt
+  ? new Date(data.updatedAt).toISOString()
+  : undefined;
 
 // Immagine: usa coverImage se esiste, altrimenti pattern generato
 const displayImage = getOgImage(data.coverImage, slug);
@@ -31,23 +53,29 @@ const hasCover = hasValidCoverImage(data.coverImage);
 // OG Image assoluto
 const ogImage = toAbsoluteUrl(displayImage, new URL(SITE.url)).toString();
 
-// Pillar name per section
-const pillarData = PILLARS[data.pillar as keyof typeof PILLARS];
-const sectionName = pillarData?.name ?? data.pillar;
+// Pillar data from translations
+const pillarSlug = getPillarSlug(data.pillar as keyof typeof t.pillars, currentLocale);
+const sectionName = t.pillars[data.pillar as keyof typeof t.pillars]?.name ?? data.pillar;
 
 // JSON-LD strutturato per l'articolo
 const articleJsonLd = buildArticleGraph({
   canonicalUrl,
   title: data.title,
   description: data.summary,
+  abstract: data.abstract,
   datePublished: pubDateISO,
   dateModified: modDateISO,
   imageUrl: ogImage,
   tags: data.tags,
   section: sectionName,
+  wordCount,
+  readingTime,
+  inLanguage: data.inLanguage,
+  genre: data.genre,
+  citation: data.citation,
   breadcrumbs: [
-    { name: 'Home', url: `${SITE.url}/` },
-    { name: sectionName, url: `${SITE.url}/${pillarData?.slug ?? data.pillar}/` },
+    { name: 'Home', url: `${SITE.url}${baseUrl}/` },
+    { name: sectionName, url: `${SITE.url}${baseUrl}/${pillarSlug}/` },
     { name: data.title, url: canonicalUrl },
   ],
 });
@@ -64,6 +92,7 @@ const articleJsonLd = buildArticleGraph({
   modifiedTime={modDateISO}
   tags={data.tags}
   section={sectionName}
+  locale={currentLocale}
 >
   <!-- Big Colored Container - Level 0 with tinted surface (no shadow, just color) -->
   <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6">
@@ -77,14 +106,14 @@ const articleJsonLd = buildArticleGraph({
       </div>
 
       <!-- Navbar inside container -->
-      <Navbar />
+      <Navbar locale={currentLocale} />
 
       <!-- Post Header Content -->
       <div class="mt-12 md:mt-20 max-w-5xl mx-auto md:px-12 relative z-10">
         <!-- Category + Meta Info -->
         <div class="flex flex-wrap items-center gap-4 mb-6">
           <a
-            href={`/${pillarData?.slug ?? data.pillar}/`}
+            href={`${baseUrl}/${pillarSlug}/`}
             class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-large font-bold border border-secondary/20 flex items-center gap-2 hover:bg-secondary-container/80 transition-colors"
           >
             <svg
@@ -123,13 +152,14 @@ const articleJsonLd = buildArticleGraph({
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
-            {data.readingTime}
+            {readingTime}
           </span>
         </div>
 
         <!-- Title -->
         <h1
           class="text-display-small md:text-display-large font-bold text-on-surface mb-6 leading-[1.1] tracking-tight max-w-4xl"
+          data-pagefind-meta="title"
         >
           {data.title}
         </h1>
@@ -197,24 +227,25 @@ const articleJsonLd = buildArticleGraph({
             class="shape-xl p-8 bg-primary-container text-on-primary-container elevation-2"
           >
             <h3 class="text-title-large font-bold mb-3">
-              Non perdere i prossimi articoli
+              {t.article.newsletterTitle}
             </h3>
             <p class="text-body-medium mb-6 opacity-90">
-              Iscriviti alla newsletter per ricevere aggiornamenti settimanali
-              su AI, engineering e produttività.
+              {t.article.newsletterDescription}
             </p>
             <!-- M3 Spacing: space-y-3 (12dp gap between input and button) -->
             <div class="space-y-3">
               <!-- M3 Input: shape-xs (4px rounded corners) -->
               <input
                 type="email"
-                placeholder="La tua email"
-                class="w-full px-4 py-3 shape-xs bg-surface text-on-surface input-state"
+                placeholder={t.footer.newsletterPlaceholder}
+                disabled
+                class="w-full px-4 py-3 shape-xs bg-surface text-on-surface input-state opacity-50 cursor-not-allowed"
               />
               <button
-                class="w-full px-6 py-3 shape-full bg-primary text-on-primary text-label-large font-medium state-layer button-state elevation-0 hover:elevation-1"
+                disabled
+                class="w-full px-6 py-3 shape-full bg-on-primary-container/30 text-on-primary-container/50 text-label-large font-medium cursor-not-allowed"
               >
-                Iscriviti
+                {t.footer.comingSoon}
               </button>
             </div>
           </div>
@@ -224,10 +255,15 @@ const articleJsonLd = buildArticleGraph({
   </div>
 
   <!-- Article Content with Sidebar TOC -->
-  <div class="max-w-6xl mx-auto px-4 sm:px-8 mt-16 md:mt-24 mb-32">
+  <div class="max-w-6xl mx-auto px-4 sm:px-8 mt-16 md:mt-24 mb-16">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <!-- Main Content -->
-      <article class="lg:col-span-8 lg:col-start-1 mdx-content">
+      <article
+        class="lg:col-span-8 lg:col-start-1 mdx-content"
+        data-pagefind-body
+        data-pagefind-lang={currentLocale}
+      >
+        <FallbackBanner show={isFallback} />
         <slot />
       </article>
 
@@ -235,8 +271,11 @@ const articleJsonLd = buildArticleGraph({
       {
         headings.length > 0 && (
           <aside class="hidden lg:block lg:col-span-4 space-y-8 mt-24">
-            <nav class="bg-surface-container-low rounded-2xl p-6 sticky top-24 -mt-24 elevation-1" aria-label="Indice dei contenuti">
-              <h2 class="text-title-medium font-bold mb-4">Indice</h2>
+            <nav
+              class="bg-surface-container-low rounded-2xl p-6 sticky top-24 -mt-24 elevation-1"
+              aria-label={t.article.tocLabel}
+            >
+              <h2 class="text-title-medium font-bold mb-4">{t.ui.toc}</h2>
               <ul class="flex flex-col space-y-1">
                 {headings.map((heading, index) => (
                   <li>
@@ -261,10 +300,102 @@ const articleJsonLd = buildArticleGraph({
     </div>
   </div>
 
+  <!-- Share Section -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-8 mb-32">
+    <div class="lg:max-w-[66.666%]">
+      <div class="border-t border-outline/20 pt-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h3 class="text-title-medium font-bold text-on-surface mb-1">
+              {t.article.shareTitle}
+            </h3>
+            <p class="text-body-medium text-on-surface-variant">
+              {t.article.shareDescription}
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <!-- LinkedIn Share -->
+            <a
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(canonicalUrl)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center w-11 h-11 rounded-full bg-[#0A66C2] text-white hover:bg-[#0A66C2]/90 transition-colors elevation-1 hover:elevation-2"
+              aria-label={t.article.shareLinkedIn}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+            </a>
+
+            <!-- X (Twitter) Share -->
+            <a
+              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(canonicalUrl)}&text=${encodeURIComponent(data.title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center w-11 h-11 rounded-full bg-[#000000] text-white hover:bg-[#000000]/80 transition-colors elevation-1 hover:elevation-2"
+              aria-label={t.article.shareTwitter}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+
+            <!-- Copy Link -->
+            <button
+              id="copy-link-btn"
+              class="inline-flex items-center justify-center w-11 h-11 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors elevation-1 hover:elevation-2"
+              aria-label={t.article.copyLink}
+              data-url={canonicalUrl}
+            >
+              <svg id="copy-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+              </svg>
+              <svg id="check-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      const copyBtn = document.getElementById('copy-link-btn');
+      const copyIcon = document.getElementById('copy-icon');
+      const checkIcon = document.getElementById('check-icon');
+
+      if (copyBtn) {
+        copyBtn.addEventListener('click', async () => {
+          const url = copyBtn.getAttribute('data-url');
+          if (url) {
+            try {
+              await navigator.clipboard.writeText(url);
+              // Show success state
+              copyIcon?.classList.add('hidden');
+              checkIcon?.classList.remove('hidden');
+
+              // Reset after 2 seconds
+              setTimeout(() => {
+                copyIcon?.classList.remove('hidden');
+                checkIcon?.classList.add('hidden');
+              }, 2000);
+            } catch (err) {
+              console.error('Failed to copy:', err);
+            }
+          }
+        });
+      }
+    });
+  </script>
+
   <!-- Related Articles -->
   <RelatedArticles
     currentSlug={slug}
     relatedSlugs={data.relatedSlugs}
     pillar={data.pillar}
+    locale={currentLocale}
   />
 </BaseLayout>

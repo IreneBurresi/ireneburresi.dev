@@ -4,6 +4,8 @@ import Navbar from '@/components/layout/Navbar.astro';
 import ArticleCard from '@/components/blog/ArticleCard.astro';
 import type { CollectionEntry } from 'astro:content';
 import type { Subsection } from '@/lib/constants';
+import { useTranslations, type Locale } from '@/lib/i18n/translations';
+import { getLocaleFromUrl } from '@/lib/i18n/utils';
 
 interface Props {
   pillarName: string;
@@ -12,22 +14,28 @@ interface Props {
   subsections: Record<string, Subsection>;
   posts: CollectionEntry<'blog'>[];
   currentSubsection?: string;
+  locale?: Locale;
 }
 
-const { pillarName, pillarSlug, hero, subsections, posts, currentSubsection } = Astro.props;
+const { pillarName, pillarSlug, hero, subsections, posts, currentSubsection, locale } = Astro.props;
+
+// Determine current locale
+const currentLocale: Locale = locale ?? getLocaleFromUrl(Astro.url);
+const t = useTranslations(currentLocale);
+const baseUrl = currentLocale === 'en' ? '/en' : '';
 
 const currentSubData = currentSubsection
   ? Object.values(subsections).find((s) => s.slug === currentSubsection)
   : null;
 
-// Feed RSS specifico per questo pillar
+// Feed RSS specifico per questo pillar (con baseUrl)
 const pillarRss = {
   title: `${pillarName} | RSS`,
-  href: `/${pillarSlug}/rss.xml`,
+  href: `${baseUrl}/${pillarSlug}/rss.xml`,
 };
 ---
 
-<BaseLayout title={pillarName} description={hero} alternateRss={pillarRss}>
+<BaseLayout title={pillarName} description={hero} alternateRss={pillarRss} locale={currentLocale}>
   <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6">
     <div class="bg-surface-container-low rounded-[40px] px-6 pt-2 pb-16 relative overflow-hidden elevation-0">
       <div class="absolute inset-0 opacity-[0.03] pointer-events-none">
@@ -41,13 +49,29 @@ const pillarRss = {
         </svg>
       </div>
 
-      <Navbar />
+      <Navbar locale={currentLocale} />
 
       <div class="max-w-7xl mx-auto pt-12 pb-8 px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="mb-8">
-          <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-on-surface mb-4 leading-[1.1]">
-            {pillarName}
-          </h1>
+          <div class="flex items-center gap-4 mb-4">
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-on-surface leading-[1.1]">
+              {pillarName}
+            </h1>
+            <a
+              href={`${baseUrl}/${pillarSlug}/rss.xml`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+              aria-label={`${t.ui.rssFeed} ${pillarName}`}
+              title={`${t.ui.subscribeRss} ${pillarName}`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 11a9 9 0 0 1 9 9"/>
+                <path d="M4 4a16 16 0 0 1 16 16"/>
+                <circle cx="5" cy="19" r="1"/>
+              </svg>
+            </a>
+          </div>
           <p class="text-xl text-on-surface-variant max-w-3xl">
             {hero}
           </p>
@@ -71,7 +95,7 @@ const pillarRss = {
 
         {posts.length > 0 ? (
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {posts.map((post) => <ArticleCard post={post} />)}
+            {posts.map((post) => <ArticleCard post={post} locale={currentLocale} />)}
           </div>
         ) : (
           <div class="text-center py-20">
@@ -92,9 +116,9 @@ const pillarRss = {
                 <polyline points="14 2 14 8 20 8"></polyline>
               </svg>
             </div>
-            <p class="text-title-medium text-on-surface-variant mb-2">Nessun articolo disponibile</p>
+            <p class="text-title-medium text-on-surface-variant mb-2">{t.ui.noArticles}</p>
             <p class="text-body-medium text-on-surface-variant/60">
-              Gli articoli per questa sezione saranno pubblicati presto
+              {t.ui.noArticlesYet}
             </p>
           </div>
         )}
@@ -118,10 +142,10 @@ const pillarRss = {
                   </p>
                 </div>
                 <a
-                  href={`/${pillarSlug}/${subsection.slug}/`}
+                  href={`${baseUrl}/${pillarSlug}/${subsection.slug}/`}
                   class="flex items-center gap-2 px-4 py-2 text-label-large font-medium text-primary hover:bg-primary/10 shape-full transition-colors"
                 >
-                  Vedi tutti
+                  {t.ui.viewAll}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -144,11 +168,11 @@ const pillarRss = {
                 <!-- Layout 1: Featured + Grid -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div class="lg:row-span-2">
-                    <ArticleCard post={subsectionPosts[0]} featured />
+                    <ArticleCard post={subsectionPosts[0]} featured locale={currentLocale} />
                   </div>
                   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
                     {subsectionPosts.slice(1, 5).map((post) => (
-                      <ArticleCard post={post} />
+                      <ArticleCard post={post} locale={currentLocale} />
                     ))}
                   </div>
                 </div>
@@ -157,7 +181,7 @@ const pillarRss = {
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {subsectionPosts.slice(0, 6).map((post, i) => (
                     <div class={i === 0 ? 'sm:col-span-2 lg:col-span-1' : ''}>
-                      <ArticleCard post={post} />
+                      <ArticleCard post={post} locale={currentLocale} />
                     </div>
                   ))}
                 </div>
@@ -165,7 +189,7 @@ const pillarRss = {
                 <!-- Layout 3: Equal Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
                   {subsectionPosts.slice(0, 6).map((post) => (
-                    <ArticleCard post={post} />
+                    <ArticleCard post={post} locale={currentLocale} />
                   ))}
                 </div>
               )}

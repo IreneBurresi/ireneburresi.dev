@@ -1,44 +1,73 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { getCollection } from 'astro:content';
 import ArticleCard from '@/components/blog/ArticleCard.astro';
+import { getLocalizedPosts, getBaseSlug } from '@/lib/content';
+import { useTranslations, type Locale } from '@/lib/i18n/translations';
+import { getLocaleFromUrl } from '@/lib/i18n/utils';
 
 interface Props {
   currentSlug: string;
   relatedSlugs?: string[];
   pillar: string;
+  locale?: Locale;
 }
 
-const { currentSlug, relatedSlugs, pillar } = Astro.props;
+const { currentSlug, relatedSlugs, pillar, locale } = Astro.props;
 
-// Fetch related articles
+// Determine current locale
+const currentLocale: Locale = locale ?? getLocaleFromUrl(Astro.url);
+const t = useTranslations(currentLocale);
+const baseUrl = currentLocale === 'en' ? '/en' : '';
+
+// Get base slug for comparison (remove .en suffix)
+const currentBaseSlug = getBaseSlug(currentSlug);
+
+// Utility function to shuffle array randomly
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+// Fetch related articles (filtered by locale)
 let relatedArticles: CollectionEntry<'blog'>[] = [];
 
+// Get all posts in current locale
+const allLocalePosts = await getLocalizedPosts(currentLocale);
+
 if (relatedSlugs && relatedSlugs.length > 0) {
-  // Get specific related articles by slug
-  const allPosts = await getCollection('blog');
-  relatedArticles = allPosts.filter(
-    (post) => relatedSlugs.includes(post.slug) && post.slug !== currentSlug
-  );
+  // Get specific related articles by base slug (filters out invalid slugs automatically)
+  relatedArticles = allLocalePosts.filter((post) => {
+    const postBaseSlug = getBaseSlug(post.slug);
+    return (
+      relatedSlugs.includes(postBaseSlug) && postBaseSlug !== currentBaseSlug
+    );
+  });
 } else {
-  // Fallback: get articles from same pillar
-  const allPosts = await getCollection('blog', ({ data }) =>
-    data.pillar === pillar && !data.draft
-  );
-  relatedArticles = allPosts
-    .filter((post) => post.slug !== currentSlug)
-    .slice(0, 3);
+  // Fallback: get articles from same pillar, randomized
+  const samePillarPosts = allLocalePosts.filter((post) => {
+    const postBaseSlug = getBaseSlug(post.slug);
+    return post.data.pillar === pillar && postBaseSlug !== currentBaseSlug;
+  });
+  relatedArticles = shuffleArray(samePillarPosts).slice(0, 3);
 }
 
-// Ensure we have at least 3 articles
+// Ensure we have at least 3 articles with random selection
 if (relatedArticles.length < 3) {
-  const allPosts = await getCollection('blog', ({ data }) => !data.draft);
-  const additional = allPosts
-    .filter((post) =>
-      post.slug !== currentSlug &&
-      !relatedArticles.find(r => r.slug === post.slug)
-    )
-    .slice(0, 3 - relatedArticles.length);
+  const available = allLocalePosts.filter((post) => {
+    const postBaseSlug = getBaseSlug(post.slug);
+    return (
+      postBaseSlug !== currentBaseSlug &&
+      !relatedArticles.find((r) => getBaseSlug(r.slug) === postBaseSlug)
+    );
+  });
+  const additional = shuffleArray(available).slice(
+    0,
+    3 - relatedArticles.length,
+  );
   relatedArticles = [...relatedArticles, ...additional];
 }
 
@@ -62,20 +91,20 @@ relatedArticles = relatedArticles.slice(0, 3);
         <div class="flex items-center justify-between mb-16">
           <div>
             <span class="text-label-large font-bold text-primary mb-2 block uppercase tracking-wider">
-              Scopri di più
+              {t.ui.discoverMore}
             </span>
             <h2
               id="related-articles-title"
               class="text-headline-medium md:text-headline-large font-bold text-on-surface"
             >
-              Potrebbe interessarti anche
+              {t.ui.relatedArticles}
             </h2>
           </div>
           <a
-            href="/blog/"
+            href={`${baseUrl}/blog/`}
             class="hidden md:flex items-center gap-2 text-label-large font-bold link-state rounded-lg px-2 py-1"
           >
-            Vedi tutti
+            {t.ui.viewAll}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -95,15 +124,15 @@ relatedArticles = relatedArticles.slice(0, 3);
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {relatedArticles.map((article) => (
-            <ArticleCard post={article} />
+            <ArticleCard post={article} locale={currentLocale} />
           ))}
         </div>
 
         <a
-          href="/blog/"
+          href={`${baseUrl}/blog/`}
           class="md:hidden flex items-center gap-2 text-label-large font-bold link-state mt-12 justify-center rounded-lg px-4 py-2"
         >
-          Vedi tutti
+          {t.ui.viewAll}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"

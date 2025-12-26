@@ -193,8 +193,13 @@ export const translations = {
       featured: 'In evidenza',
       recent: 'Articoli Recenti',
       related: 'Articoli Correlati',
+      discoverMore: 'Scopri di più',
+      relatedArticles: 'Potrebbe interessarti anche',
       viewAll: 'Vedi tutti',
       noArticles: 'Nessun articolo disponibile',
+      noArticlesYet: 'Gli articoli per questa sezione saranno pubblicati presto',
+      rssFeed: 'Feed RSS per',
+      subscribeRss: 'Iscriviti al feed RSS di',
       search: 'Cerca',
       searchPlaceholder: 'Cerca articoli...',
       close: 'Chiudi',
@@ -213,8 +218,11 @@ export const translations = {
       license: 'Licenza',
       rss: 'RSS Feed',
       newsletter: 'Newsletter',
+      newsletterDescription:
+        'Ricevi aggiornamenti settimanali su tech e design. No spam.',
       newsletterPlaceholder: 'La tua email...',
       subscribe: 'Iscriviti',
+      comingSoon: 'Prossimamente',
       copyright: 'Tutti i contenuti sono pubblicati sotto licenza',
       madeWith: 'Realizzato con',
     },
@@ -242,6 +250,19 @@ export const translations = {
       title: 'Chi Sono',
       role: 'Lead AI Professional',
       bio: 'Specializzata in progettazione e implementazione di sistemi AI in produzione, con focus su architetture RAG, analisi tecnica e strategia aziendale.',
+    },
+
+    // Article/Blog post specific
+    article: {
+      newsletterTitle: 'Non perdere i prossimi articoli',
+      newsletterDescription:
+        'Iscriviti alla newsletter per ricevere aggiornamenti settimanali su AI, engineering e produttività.',
+      tocLabel: 'Indice dei contenuti',
+      shareTitle: 'Ti è piaciuto questo articolo?',
+      shareDescription: 'Condividilo con chi potrebbe trovarlo utile',
+      shareLinkedIn: 'Condividi su LinkedIn',
+      shareTwitter: 'Condividi su X',
+      copyLink: 'Copia link',
     },
   },
 
@@ -434,8 +455,13 @@ export const translations = {
       featured: 'Featured',
       recent: 'Recent Articles',
       related: 'Related Articles',
+      discoverMore: 'Discover more',
+      relatedArticles: 'You might also like',
       viewAll: 'View all',
       noArticles: 'No articles available',
+      noArticlesYet: 'Articles for this section will be published soon',
+      rssFeed: 'RSS feed for',
+      subscribeRss: 'Subscribe to the RSS feed of',
       search: 'Search',
       searchPlaceholder: 'Search articles...',
       close: 'Close',
@@ -454,8 +480,11 @@ export const translations = {
       license: 'License',
       rss: 'RSS Feed',
       newsletter: 'Newsletter',
+      newsletterDescription:
+        'Get weekly updates on tech and design. No spam.',
       newsletterPlaceholder: 'Your email...',
       subscribe: 'Subscribe',
+      comingSoon: 'Coming soon',
       copyright: 'All content is published under',
       madeWith: 'Made with',
     },
@@ -483,6 +512,19 @@ export const translations = {
       title: 'About',
       role: 'Lead AI Professional',
       bio: 'Specialized in designing and implementing production AI systems, with focus on RAG architectures, technical analysis, and business strategy.',
+    },
+
+    // Article/Blog post specific
+    article: {
+      newsletterTitle: 'Don\'t miss future articles',
+      newsletterDescription:
+        'Subscribe to the newsletter for weekly updates on AI, engineering, and productivity.',
+      tocLabel: 'Table of contents',
+      shareTitle: 'Did you like this article?',
+      shareDescription: 'Share it with someone who might find it useful',
+      shareLinkedIn: 'Share on LinkedIn',
+      shareTwitter: 'Share on X',
+      copyLink: 'Copy link',
     },
   },
 } as const;

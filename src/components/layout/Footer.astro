@@ -1,21 +1,29 @@
 ---
 import { PERSON } from '@/consts/schema';
-import ArrowRight from '@/components/icons/ArrowRight.astro';
+import { useTranslations, type Locale } from '@/lib/i18n/translations';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'it' } = Astro.props;
+const t = useTranslations(locale);
+const baseUrl = locale === 'en' ? '/en' : '';
 
 // Estrai i link social da sameAs
-const githubUrl = PERSON.sameAs.find(url => url.includes('github.com'));
-const linkedinUrl = PERSON.sameAs.find(url => url.includes('linkedin.com'));
+const githubUrl = PERSON.sameAs.find((url) => url.includes('github.com'));
+const linkedinUrl = PERSON.sameAs.find((url) => url.includes('linkedin.com'));
 ---
 
-<footer class="bg-inverse-surface text-inverse-on-surface py-16 px-6 mt-auto">
+<footer class="bg-footer-surface text-footer-on-surface py-16 px-6 mt-auto">
   <div class="max-w-6xl mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
       <!-- Column 1: Brand & Bio -->
       <div class="col-span-1">
-        <h2 class="text-xl font-bold text-inverse-on-surface mb-4 tracking-tight">
+        <h2 class="text-xl font-bold text-footer-on-surface mb-4 tracking-tight">
           {PERSON.name}
         </h2>
-        <p class="text-inverse-on-surface/70 text-sm leading-relaxed mb-6">
+        <p class="text-footer-on-surface/70 text-sm leading-relaxed mb-6">
           {PERSON.description}
         </p>
         <div class="flex items-center gap-4">
@@ -24,7 +32,7 @@ const linkedinUrl = PERSON.sameAs.find(url => url.includes('linkedin.com'));
               href={githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="p-2 rounded-full bg-inverse-on-surface/10 text-inverse-on-surface state-layer hover:bg-inverse-primary hover:text-inverse-surface transition-all duration-300"
+              class="p-2 rounded-full bg-footer-on-surface/10 text-footer-on-surface state-layer hover:bg-footer-primary hover:text-footer-surface transition-all duration-300"
               aria-label="GitHub"
             >
               <svg
@@ -50,7 +58,7 @@ const linkedinUrl = PERSON.sameAs.find(url => url.includes('linkedin.com'));
               href={linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="p-2 rounded-full bg-inverse-on-surface/10 text-inverse-on-surface state-layer hover:bg-inverse-primary hover:text-inverse-surface transition-all duration-300"
+              class="p-2 rounded-full bg-footer-on-surface/10 text-footer-on-surface state-layer hover:bg-footer-primary hover:text-footer-surface transition-all duration-300"
               aria-label="LinkedIn"
             >
               <svg
@@ -75,78 +83,76 @@ const linkedinUrl = PERSON.sameAs.find(url => url.includes('linkedin.com'));
         </div>
       </div>
 
-      <!-- Column 2: Esplora -->
+      <!-- Column 2: Explore -->
       <div class="col-span-1">
-        <h3 class="text-sm font-bold text-inverse-on-surface uppercase tracking-wider mb-6">
-          Esplora
+        <h3 class="text-sm font-bold text-footer-on-surface uppercase tracking-wider mb-6">
+          {t.footer.explore}
         </h3>
         <ul class="space-y-4">
           <li>
             <a
-              href="/ingegneria-ai/"
-              class="text-inverse-on-surface/70 hover:text-inverse-primary transition-colors flex items-center gap-2 group link-state"
+              href={`${baseUrl}/${t.pillars.engineering.slug}/`}
+              class="text-footer-on-surface/70 hover:text-footer-primary transition-colors flex items-center gap-2 group link-state"
             >
               <span
-                class="w-1.5 h-1.5 rounded-full bg-inverse-on-surface/30 group-hover:bg-inverse-primary transition-colors"
+                class="w-1.5 h-1.5 rounded-full bg-footer-on-surface/30 group-hover:bg-footer-primary transition-colors"
               ></span>
-              Ingegneria AI
+              {t.pillars.engineering.name}
             </a>
           </li>
           <li>
             <a
-              href="/ricerca/"
-              class="text-inverse-on-surface/70 hover:text-inverse-primary transition-colors flex items-center gap-2 group link-state"
+              href={`${baseUrl}/${t.pillars.research.slug}/`}
+              class="text-footer-on-surface/70 hover:text-footer-primary transition-colors flex items-center gap-2 group link-state"
             >
               <span
-                class="w-1.5 h-1.5 rounded-full bg-inverse-on-surface/30 group-hover:bg-inverse-primary transition-colors"
+                class="w-1.5 h-1.5 rounded-full bg-footer-on-surface/30 group-hover:bg-footer-primary transition-colors"
               ></span>
-              Ricerca
+              {t.pillars.research.name}
             </a>
           </li>
           <li>
             <a
-              href="/business/"
-              class="text-inverse-on-surface/70 hover:text-inverse-primary transition-colors flex items-center gap-2 group link-state"
+              href={`${baseUrl}/${t.pillars.business.slug}/`}
+              class="text-footer-on-surface/70 hover:text-footer-primary transition-colors flex items-center gap-2 group link-state"
             >
               <span
-                class="w-1.5 h-1.5 rounded-full bg-inverse-on-surface/30 group-hover:bg-inverse-primary transition-colors"
+                class="w-1.5 h-1.5 rounded-full bg-footer-on-surface/30 group-hover:bg-footer-primary transition-colors"
               ></span>
-              Business
+              {t.pillars.business.name}
             </a>
           </li>
         </ul>
       </div>
 
-      <!-- Column 3: Risorse -->
+      <!-- Column 3: Info & Resources -->
       <div class="col-span-1">
-        <h3 class="text-sm font-bold text-inverse-on-surface uppercase tracking-wider mb-6">
-          Info & Risorse
+        <h3 class="text-sm font-bold text-footer-on-surface uppercase tracking-wider mb-6">
+          {t.footer.infoResources}
         </h3>
         <ul class="space-y-4">
           <li>
             <a
-              href="/about/"
-              class="text-inverse-on-surface/70 hover:text-inverse-primary transition-colors link-state"
+              href={`${baseUrl}/about/`}
+              class="text-footer-on-surface/70 hover:text-footer-primary transition-colors link-state"
             >
-              Chi Sono
-            </a>
-          </li>
-          <li>
-            <a href="#" class="text-inverse-on-surface/70 hover:text-inverse-primary transition-colors">
-              Setup & Gear
-            </a>
-          </li>
-          <li>
-            <a href="#" class="text-inverse-on-surface/70 hover:text-inverse-primary transition-colors">
-              Contatti
+              {t.footer.about}
             </a>
           </li>
           <li>
             <a
-              href="/rss.xml"
-              class="text-inverse-on-surface/70 hover:text-inverse-primary transition-colors link-state"
+              href={`${baseUrl}/privacy/`}
+              class="text-footer-on-surface/70 hover:text-footer-primary transition-colors link-state"
             >
-              RSS Feed
+              {t.footer.privacy}
+            </a>
+          </li>
+          <li>
+            <a
+              href={`${baseUrl}/rss/`}
+              class="text-footer-on-surface/70 hover:text-footer-primary transition-colors link-state"
+            >
+              {t.footer.rss}
             </a>
           </li>
         </ul>
@@ -154,24 +160,25 @@ const linkedinUrl = PERSON.sameAs.find(url => url.includes('linkedin.com'));
 
       <!-- Column 4: Newsletter -->
       <div class="col-span-1">
-        <h3 class="text-sm font-bold text-inverse-on-surface uppercase tracking-wider mb-6">
-          Newsletter
+        <h3 class="text-sm font-bold text-footer-on-surface uppercase tracking-wider mb-6">
+          {t.footer.newsletter}
         </h3>
-        <p class="text-inverse-on-surface/70 text-sm mb-4">
-          Ricevi aggiornamenti settimanali su tech e design. No spam.
+        <p class="text-footer-on-surface/70 text-sm mb-4">
+          {t.footer.newsletterDescription}
         </p>
         <form class="flex flex-col gap-3">
           <input
             type="email"
-            placeholder="La tua email"
-            class="w-full px-4 py-2.5 rounded-lg bg-inverse-on-surface/10 border border-inverse-on-surface/20 text-inverse-on-surface placeholder:text-inverse-on-surface/50 input-state"
+            placeholder={t.footer.newsletterPlaceholder}
+            disabled
+            class="w-full px-4 py-2.5 rounded-lg bg-footer-on-surface/10 border border-footer-on-surface/20 text-footer-on-surface placeholder:text-footer-on-surface/50 input-state opacity-50 cursor-not-allowed"
           />
           <button
             type="submit"
-            class="w-full px-4 py-2.5 rounded-lg bg-inverse-primary text-inverse-surface text-label-large font-bold state-layer button-state elevation-0 hover:elevation-1 flex items-center justify-center gap-2"
+            disabled
+            class="w-full px-4 py-2.5 rounded-lg bg-footer-on-surface/30 text-footer-on-surface/50 text-label-large font-bold flex items-center justify-center gap-2 cursor-not-allowed"
           >
-            Iscriviti
-            <ArrowRight size={16} />
+            {t.footer.comingSoon}
           </button>
         </form>
       </div>
@@ -179,17 +186,27 @@ const linkedinUrl = PERSON.sameAs.find(url => url.includes('linkedin.com'));
 
     <!-- Sub-footer -->
     <div
-      class="pt-8 border-t border-inverse-on-surface/20 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-inverse-on-surface/50"
+      class="pt-8 border-t border-footer-on-surface/20 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-footer-on-surface/50"
     >
-      <div class="flex items-center gap-6">
-        <span>© {new Date().getFullYear()} Irene Burresi. Tutti i diritti riservati.</span>
+      <div class="flex items-center gap-2">
+        <span>© {new Date().getFullYear()} {PERSON.name}</span>
+        <span>·</span>
+        <a
+          href={`${baseUrl}/licenza/`}
+          class="hover:text-footer-primary transition-colors link-state">CC BY 4.0</a
+        >
       </div>
       <div class="flex items-center gap-6">
-        <a href="#" class="hover:text-inverse-primary transition-colors link-state">Privacy Policy</a>
-        <a href="#" class="hover:text-inverse-primary transition-colors link-state">Cookie Policy</a>
-        <a href="/licenza/" class="hover:text-inverse-primary transition-colors link-state">
-          Credits
-        </a>
+        <a
+          href={`${baseUrl}/privacy/`}
+          class="hover:text-footer-primary transition-colors link-state"
+          >{t.footer.privacy}</a
+        >
+        <a
+          href={`${baseUrl}/licenza/`}
+          class="hover:text-footer-primary transition-colors link-state"
+          >{t.footer.license}</a
+        >
       </div>
     </div>
   </div>

@@ -1,12 +1,25 @@
 ---
 import ThemeToggle from '@/components/ui/ThemeToggle';
+import SearchTrigger from '@/components/search/SearchTrigger';
 import DesktopMenu from './DesktopMenu.astro';
 import { PERSON } from '@/consts/schema';
+import { getLocaleFromUrl, getAlternateLanguageUrl } from '@/lib/i18n/utils';
+import type { Locale } from '@/lib/i18n/translations';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale } = Astro.props;
+const currentLocale: Locale = locale ?? getLocaleFromUrl(Astro.url);
+const alternateLocale: Locale = currentLocale === 'it' ? 'en' : 'it';
+const alternateUrl = getAlternateLanguageUrl(Astro.url, alternateLocale);
+const homeUrl = currentLocale === 'en' ? '/en/' : '/';
 ---
 
 <nav class="flex items-center justify-between py-6 px-4 md:px-8 relative z-50">
   <!-- Logo -->
-  <a href="/" class="flex items-center gap-2 group rounded-lg p-2 -m-2" tabindex="0">
+  <a href={homeUrl} class="flex items-center gap-2 group rounded-lg p-2 -m-2" tabindex="0">
     <div
       class="w-8 h-8 bg-primary shape-md flex items-center justify-center text-on-primary font-bold text-lg transition-all elevation-0 group-hover:elevation-1"
     >
@@ -21,7 +34,7 @@ import { PERSON } from '@/consts/schema';
   <div
     class="hidden md:flex items-center gap-1 bg-surface-container-high/95 backdrop-blur-md px-2 py-1.5 shape-full elevation-1"
   >
-    <DesktopMenu />
+    <DesktopMenu locale={currentLocale} />
   </div>
 
   <!-- Actions -->
@@ -47,25 +60,19 @@ import { PERSON } from '@/consts/schema';
       </svg>
     </button>
 
-    <button
-      class="hidden md:block p-2 text-on-surface-variant shape-full state-layer state-layer-on-surface"
-      aria-label="Search"
+    <!-- Language Switcher -->
+    <a
+      href={alternateUrl}
+      class="p-2 text-on-surface-variant hover:text-primary shape-full state-layer state-layer-on-surface transition-colors"
+      aria-label={currentLocale === 'it' ? 'Switch to English' : 'Passa all\'italiano'}
+      title={currentLocale === 'it' ? 'English' : 'Italiano'}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <circle cx="11" cy="11" r="8"></circle>
-        <path d="m21 21-4.3-4.3"></path>
-      </svg>
-    </button>
+      <span class="text-label-large font-medium">
+        {alternateLocale.toUpperCase()}
+      </span>
+    </a>
+
+    <SearchTrigger client:load />
 
     <ThemeToggle client:load />
   </div>

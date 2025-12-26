@@ -1,5 +1,13 @@
 ---
-import { PILLARS } from '@/lib/constants';
+import { useTranslations, type Locale } from '@/lib/i18n/translations';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'it' } = Astro.props;
+const t = useTranslations(locale);
+const baseUrl = locale === 'en' ? '/en' : '';
 ---
 
 <div class="hidden md:flex items-center gap-1 bg-surface/90 backdrop-blur-sm px-2 py-1.5 rounded-full">
@@ -8,7 +16,7 @@ import { PILLARS } from '@/lib/constants';
     <button
       class="px-4 py-2 shape-full text-label-large text-on-surface-variant font-medium state-layer state-layer-on-surface hover:text-on-surface"
     >
-      Articoli
+      {t.nav.articles}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -30,92 +38,145 @@ import { PILLARS } from '@/lib/constants';
       class="absolute left-0 top-full mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50"
     >
       <div class="grid grid-cols-2 gap-3 p-4 w-[700px] bg-surface-container-lowest shape-xl elevation-4">
-        <!-- Pillar 1: Ingegneria AI -->
+        <!-- Pillar 1: Engineering -->
         <a
-          href={`/${PILLARS.engineering.slug}/`}
-          class="block select-none space-y-1 shape-lg p-4 hover:bg-surface-container transition-colors group/item"
+          href={`${baseUrl}/${t.pillars.engineering.slug}/`}
+          class="flex items-start gap-3 select-none shape-lg p-4 hover:bg-surface-container transition-colors group/item"
         >
-          <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
-            {PILLARS.engineering.name}
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-primary/20 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
           </div>
-          <p class="text-label-small text-on-surface-variant/80">
-            {PILLARS.engineering.menuLabel}
-          </p>
+          <div class="flex-1">
+            <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
+              {t.pillars.engineering.name}
+            </div>
+            <p class="text-label-small text-on-surface-variant/80">
+              {t.pillars.engineering.menuLabel}
+            </p>
+          </div>
         </a>
 
-        <!-- Pillar 2: Ricerca e Frontiere -->
+        <!-- Pillar 2: Research -->
         <a
-          href={`/${PILLARS.research.slug}/`}
-          class="block select-none space-y-1 shape-lg p-4 hover:bg-surface-container transition-colors group/item"
+          href={`${baseUrl}/${t.pillars.research.slug}/`}
+          class="flex items-start gap-3 select-none shape-lg p-4 hover:bg-surface-container transition-colors group/item"
         >
-          <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
-            {PILLARS.research.name}
+          <div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-secondary/20 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary">
+              <path d="M10 2v7.31"></path>
+              <path d="M14 9.3V1.99"></path>
+              <path d="M8.5 2h7"></path>
+              <path d="M14 9.3a6.5 6.5 0 1 1-4 0"></path>
+              <path d="M5.52 16h12.96"></path>
+            </svg>
           </div>
-          <p class="text-label-small text-on-surface-variant/80">
-            {PILLARS.research.menuLabel}
-          </p>
+          <div class="flex-1">
+            <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
+              {t.pillars.research.name}
+            </div>
+            <p class="text-label-small text-on-surface-variant/80">
+              {t.pillars.research.menuLabel}
+            </p>
+          </div>
         </a>
 
-        <!-- Pillar 3: Business e ROI -->
+        <!-- Pillar 3: Business -->
         <a
-          href={`/${PILLARS.business.slug}/`}
-          class="block select-none space-y-1 shape-lg p-4 hover:bg-surface-container transition-colors group/item"
+          href={`${baseUrl}/${t.pillars.business.slug}/`}
+          class="flex items-start gap-3 select-none shape-lg p-4 hover:bg-surface-container transition-colors group/item"
         >
-          <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
-            {PILLARS.business.name}
+          <div class="w-10 h-10 rounded-lg bg-tertiary/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-tertiary/20 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-tertiary">
+              <line x1="12" x2="12" y1="20" y2="10"></line>
+              <line x1="18" x2="18" y1="20" y2="4"></line>
+              <line x1="6" x2="6" y1="20" y2="16"></line>
+            </svg>
           </div>
-          <p class="text-label-small text-on-surface-variant/80">
-            {PILLARS.business.menuLabel}
-          </p>
+          <div class="flex-1">
+            <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
+              {t.pillars.business.name}
+            </div>
+            <p class="text-label-small text-on-surface-variant/80">
+              {t.pillars.business.menuLabel}
+            </p>
+          </div>
         </a>
 
-        <!-- Pillar 4: Governance e Sicurezza -->
+        <!-- Pillar 4: Governance -->
         <a
-          href={`/${PILLARS.governance.slug}/`}
-          class="block select-none space-y-1 shape-lg p-4 hover:bg-surface-container transition-colors group/item"
+          href={`${baseUrl}/${t.pillars.governance.slug}/`}
+          class="flex items-start gap-3 select-none shape-lg p-4 hover:bg-surface-container transition-colors group/item"
         >
-          <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
-            {PILLARS.governance.name}
+          <div class="w-10 h-10 rounded-lg bg-error/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-error/20 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-error">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path>
+            </svg>
           </div>
-          <p class="text-label-small text-on-surface-variant/80">
-            {PILLARS.governance.menuLabel}
-          </p>
+          <div class="flex-1">
+            <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
+              {t.pillars.governance.name}
+            </div>
+            <p class="text-label-small text-on-surface-variant/80">
+              {t.pillars.governance.menuLabel}
+            </p>
+          </div>
         </a>
 
-        <!-- Pillar 5: Metodologia e Produttività -->
+        <!-- Pillar 5: Methodology -->
         <a
-          href={`/${PILLARS.methodology.slug}/`}
-          class="block select-none space-y-1 shape-lg p-4 hover:bg-surface-container transition-colors group/item"
+          href={`${baseUrl}/${t.pillars.methodology.slug}/`}
+          class="flex items-start gap-3 select-none shape-lg p-4 hover:bg-surface-container transition-colors group/item"
         >
-          <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
-            {PILLARS.methodology.name}
+          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-primary/20 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+            </svg>
           </div>
-          <p class="text-label-small text-on-surface-variant/80">
-            {PILLARS.methodology.menuLabel}
-          </p>
+          <div class="flex-1">
+            <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
+              {t.pillars.methodology.name}
+            </div>
+            <p class="text-label-small text-on-surface-variant/80">
+              {t.pillars.methodology.menuLabel}
+            </p>
+          </div>
         </a>
 
-        <!-- Pillar 6: Sintesi e Analisi Cross-Domain -->
+        <!-- Pillar 6: Synthesis -->
         <a
-          href={`/${PILLARS.synthesis.slug}/`}
-          class="block select-none space-y-1 shape-lg p-4 hover:bg-surface-container transition-colors group/item"
+          href={`${baseUrl}/${t.pillars.synthesis.slug}/`}
+          class="flex items-start gap-3 select-none shape-lg p-4 hover:bg-surface-container transition-colors group/item"
         >
-          <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
-            {PILLARS.synthesis.name}
+          <div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0 group-hover/item:bg-secondary/20 transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary">
+              <rect width="7" height="7" x="3" y="3" rx="1"></rect>
+              <rect width="7" height="7" x="14" y="3" rx="1"></rect>
+              <rect width="7" height="7" x="14" y="14" rx="1"></rect>
+              <rect width="7" height="7" x="3" y="14" rx="1"></rect>
+            </svg>
           </div>
-          <p class="text-label-small text-on-surface-variant/80">
-            {PILLARS.synthesis.menuLabel}
-          </p>
+          <div class="flex-1">
+            <div class="text-title-small font-bold text-on-surface mb-1 group-hover/item:text-primary transition-colors">
+              {t.pillars.synthesis.name}
+            </div>
+            <p class="text-label-small text-on-surface-variant/80">
+              {t.pillars.synthesis.menuLabel}
+            </p>
+          </div>
         </a>
       </div>
     </div>
   </div>
 
-  <!-- Simple Link: Chi sono -->
+  <!-- Simple Link: About -->
   <a
-    href="/about/"
+    href={`${baseUrl}/about/`}
     class="px-4 py-2 shape-full text-label-large text-on-surface-variant font-medium state-layer state-layer-on-surface hover:text-on-surface"
   >
-    Chi sono
+    {t.nav.about}
   </a>
 </div>

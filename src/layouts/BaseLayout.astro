@@ -3,8 +3,11 @@ import { ViewTransitions } from 'astro:transitions';
 import BaseHead from '@/components/seo/BaseHead.astro';
 import type { RobotsPolicy } from '@/components/seo/BaseHead.astro';
 import Footer from '@/components/layout/Footer.astro';
+import SearchModal from '@/components/search/SearchModal';
 import { SITE } from '@/consts/site';
 import { buildSiteGraph } from '@/lib/seo/structuredData';
+import { getLocaleFromUrl } from '@/lib/i18n/utils';
+import type { Locale } from '@/lib/i18n/translations';
 import '@/styles/global.css';
 import '@/styles/typography.css';
 import '@/styles/material.css';
@@ -24,6 +27,9 @@ interface Props {
   section?: string;
   // Feed alternativo per pillar
   alternateRss?: { title: string; href: string };
+  // i18n
+  locale?: Locale;
+  alternateUrls?: Array<{ locale: Locale; url: string }>;
 }
 
 const {
@@ -39,16 +45,24 @@ const {
   tags,
   section,
   alternateRss,
+  locale,
+  alternateUrls,
 } = Astro.props;
 
+// Determine current locale from props or URL
+const currentLocale: Locale = locale ?? getLocaleFromUrl(Astro.url);
+
 const fullTitle = title === SITE.name ? title : `${title} | ${SITE.name}`;
+
+// HTML lang attribute
+const htmlLang = currentLocale === 'en' ? 'en' : SITE.lang;
 
 // JSON-LD: usa quello passato o il default del sito
 const structuredData = jsonLd ?? buildSiteGraph();
 ---
 
 <!doctype html>
-<html lang={SITE.lang}>
+<html lang={htmlLang}>
   <head>
     <BaseHead
       title={fullTitle}
@@ -63,6 +77,8 @@ const structuredData = jsonLd ?? buildSiteGraph();
       tags={tags}
       section={section}
       alternateRss={alternateRss}
+      locale={currentLocale}
+      alternateUrls={alternateUrls}
     />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -82,6 +98,7 @@ const structuredData = jsonLd ?? buildSiteGraph();
     <main class="min-h-screen">
       <slot />
     </main>
-    <Footer />
+    <Footer locale={currentLocale} />
+    <SearchModal client:load />
   </body>
 </html>
