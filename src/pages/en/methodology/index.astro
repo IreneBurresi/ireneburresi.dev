@@ -1,0 +1,27 @@
+---
+import PillarLayout from '@/layouts/PillarLayout.astro';
+import { getLocalizedPosts } from '@/lib/content';
+import { useTranslations } from '@/lib/i18n/translations';
+
+const t = useTranslations('en');
+const pillarData = t.pillars.methodology;
+
+const allPosts = await getLocalizedPosts('en', ({ data }) =>
+  data.pillar === 'methodology'
+);
+
+const sortedPosts = allPosts.sort((a, b) => {
+  const dateA = new Date(a.data.publishedAt);
+  const dateB = new Date(b.data.publishedAt);
+  return dateB.getTime() - dateA.getTime();
+});
+---
+
+<PillarLayout
+  pillarName={pillarData.name}
+  pillarSlug={pillarData.slug}
+  hero={pillarData.description}
+  subsections={pillarData.subsections}
+  posts={sortedPosts}
+  locale="en"
+/>

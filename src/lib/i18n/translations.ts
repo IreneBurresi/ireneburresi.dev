@@ -539,7 +539,7 @@ export type TranslationKeys = typeof translations.it;
  * @returns Translation object for the specified locale
  */
 export function useTranslations(locale: Locale = 'it'): TranslationKeys {
-  return translations[locale];
+  return translations[locale] as TranslationKeys;
 }
 
 /**

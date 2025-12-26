@@ -1,0 +1,301 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Navbar from '@/components/layout/Navbar.astro';
+import ArticleCard from '@/components/blog/ArticleCard.astro';
+import { getLocalizedPosts } from '@/lib/content';
+import { sortPostsByDate } from '@/lib/utils';
+import { useTranslations } from '@/lib/i18n/translations';
+import { SITE } from '@/consts/site';
+
+const t = useTranslations('en');
+const baseUrl = '/en';
+
+// Fetch and sort all English blog posts
+const allPosts = await getLocalizedPosts('en');
+const sortedPosts = sortPostsByDate(allPosts);
+
+// Get featured post and recent posts
+const featuredPost = sortedPosts.find((p) => p.data.featured) || sortedPosts[0];
+const recentPosts = sortedPosts.slice(0, 3);
+---
+
+<BaseLayout title={SITE.name} description={t.hero.description} locale="en">
+  <!-- Unified container wrapping Navbar + Hero - Level 0 with tinted surface (no shadow, just color) -->
+  <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6">
+    <div class="bg-surface-container-low rounded-[40px] px-6 pt-2 pb-16 relative overflow-hidden elevation-0">
+      <!-- Geometric Background Pattern -->
+      <div class="absolute inset-0 opacity-[0.03] pointer-events-none">
+        <!-- Dot Grid Pattern -->
+        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="dot-grid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.5" fill="currentColor" class="text-primary"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#dot-grid)"/>
+        </svg>
+      </div>
+
+      <!-- Abstract Wave Shape -->
+      <div class="absolute bottom-0 left-0 right-0 h-[60%] pointer-events-none">
+        <svg class="w-full h-full" viewBox="0 0 1200 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M0,100 C300,200 500,50 800,150 C1000,220 1100,100 1200,150 L1200,400 L0,400 Z"
+            fill="currentColor"
+            class="text-primary opacity-[0.03]"
+          />
+        </svg>
+      </div>
+
+      <!-- Radial Gradient Accent (top right) -->
+      <div
+        class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/3 translate-x-1/3 pointer-events-none"
+      >
+      </div>
+
+      <!-- Navbar inside the unified container -->
+      <Navbar locale="en" />
+
+      <!-- Hero Content -->
+      <div class="max-w-7xl mx-auto pt-12 pb-8 px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-3xl">
+          <!-- Badge -->
+          <div
+            class="inline-flex items-center gap-2 px-3 py-1 shape-full mb-6 border border-outline/25 bg-surface"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="text-yellow-500"
+            >
+              <path
+                d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+              ></path>
+            </svg>
+            <span class="text-xs font-medium uppercase tracking-wide text-on-surface-variant">
+              AI Research & Engineering Blog
+            </span>
+          </div>
+
+          <!-- Title -->
+          <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-on-surface mb-6 leading-[1.1]">
+            AI Engineering,
+            <br />
+            <span class="text-primary">Research</span> & Strategy.
+          </h1>
+
+          <!-- Description -->
+          <p class="text-xl md:text-2xl text-on-surface-variant mb-8 max-w-2xl font-light">
+            {t.hero.description}
+          </p>
+
+          <!-- CTAs -->
+          <div class="flex flex-wrap gap-4">
+            <a
+              href={`${baseUrl}/${t.pillars.engineering.slug}/`}
+              class="inline-flex items-center justify-center h-12 px-8 text-label-large shape-full bg-primary text-on-primary font-medium state-layer button-state elevation-0 hover:elevation-1"
+            >
+              {t.hero.exploreCta}
+            </a>
+            <a
+              href={`${baseUrl}/${t.pillars.research.slug}/`}
+              class="inline-flex items-center justify-center h-12 px-8 text-label-large shape-full bg-secondary-container text-on-secondary-container font-medium state-layer button-state elevation-0 hover:elevation-1"
+            >
+              {t.hero.researchCta}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content sections -->
+  <div class="space-y-16 pb-20">
+    <!-- Featured Story -->
+    {featuredPost && (
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center gap-4 mb-8">
+          <h2 class="text-2xl font-bold text-on-surface">{t.ui.featuredStory}</h2>
+          <div class="h-px flex-grow bg-outline/20"></div>
+        </div>
+        <ArticleCard post={featuredPost} featured locale="en" />
+      </section>
+    )}
+
+    <!-- Browse by Pillar -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-2xl font-bold mb-8 text-on-surface">{t.ui.browseByPillar}</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a
+          href={`${baseUrl}/${t.pillars.engineering.slug}/`}
+          class="p-6 shape-lg bg-surface-container card-state elevation-1 hover:elevation-2 group"
+        >
+          <h3
+            class="font-bold text-lg mb-2 text-on-surface group-hover:text-primary transition-colors"
+          >
+            {t.pillars.engineering.name}
+          </h3>
+          <p class="text-sm text-on-surface-variant mb-3">
+            {t.pillars.engineering.description}
+          </p>
+          <p class="text-xs text-on-surface-variant/60">
+            {t.pillars.engineering.subsectionsLabel}
+          </p>
+        </a>
+
+        <a
+          href={`${baseUrl}/${t.pillars.research.slug}/`}
+          class="p-6 shape-lg bg-surface-container card-state elevation-1 hover:elevation-2 group"
+        >
+          <h3
+            class="font-bold text-lg mb-2 text-on-surface group-hover:text-primary transition-colors"
+          >
+            {t.pillars.research.name}
+          </h3>
+          <p class="text-sm text-on-surface-variant mb-3">
+            {t.pillars.research.description}
+          </p>
+          <p class="text-xs text-on-surface-variant/60">
+            {t.pillars.research.subsectionsLabel}
+          </p>
+        </a>
+
+        <a
+          href={`${baseUrl}/${t.pillars.business.slug}/`}
+          class="p-6 shape-lg bg-surface-container card-state elevation-1 hover:elevation-2 group"
+        >
+          <h3
+            class="font-bold text-lg mb-2 text-on-surface group-hover:text-primary transition-colors"
+          >
+            {t.pillars.business.name}
+          </h3>
+          <p class="text-sm text-on-surface-variant mb-3">
+            {t.pillars.business.description}
+          </p>
+          <p class="text-xs text-on-surface-variant/60">
+            {t.pillars.business.subsectionsLabel}
+          </p>
+        </a>
+
+        <a
+          href={`${baseUrl}/${t.pillars.governance.slug}/`}
+          class="p-6 shape-lg bg-surface-container card-state elevation-1 hover:elevation-2 group"
+        >
+          <h3
+            class="font-bold text-lg mb-2 text-on-surface group-hover:text-primary transition-colors"
+          >
+            {t.pillars.governance.name}
+          </h3>
+          <p class="text-sm text-on-surface-variant mb-3">
+            {t.pillars.governance.description}
+          </p>
+          <p class="text-xs text-on-surface-variant/60">
+            {t.pillars.governance.subsectionsLabel}
+          </p>
+        </a>
+
+        <a
+          href={`${baseUrl}/${t.pillars.methodology.slug}/`}
+          class="p-6 shape-lg bg-surface-container card-state elevation-1 hover:elevation-2 group"
+        >
+          <h3
+            class="font-bold text-lg mb-2 text-on-surface group-hover:text-primary transition-colors"
+          >
+            {t.pillars.methodology.name}
+          </h3>
+          <p class="text-sm text-on-surface-variant mb-3">
+            {t.pillars.methodology.description}
+          </p>
+          <p class="text-xs text-on-surface-variant/60">
+            {t.pillars.methodology.subsectionsLabel}
+          </p>
+        </a>
+
+        <a
+          href={`${baseUrl}/${t.pillars.synthesis.slug}/`}
+          class="p-6 shape-lg bg-surface-container card-state elevation-1 hover:elevation-2 group"
+        >
+          <h3
+            class="font-bold text-lg mb-2 text-on-surface group-hover:text-primary transition-colors"
+          >
+            {t.pillars.synthesis.name}
+          </h3>
+          <p class="text-sm text-on-surface-variant mb-3">
+            {t.pillars.synthesis.description}
+          </p>
+          <p class="text-xs text-on-surface-variant/60">
+            {t.pillars.synthesis.subsectionsLabel}
+          </p>
+        </a>
+      </div>
+    </section>
+
+    <!-- Latest Articles -->
+    {recentPosts.length > 0 && (
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between mb-8">
+          <h2 class="text-2xl font-bold text-on-surface">{t.ui.latestArticles}</h2>
+          <a
+            href={`${baseUrl}/blog/`}
+            class="flex items-center gap-1 text-label-large font-medium link-state"
+          >
+            {t.ui.viewAll}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </a>
+        </div>
+
+        <!-- M3 Grid Spacing: gap-4 (16dp mobile), md:gap-6 (24dp desktop/tablet) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {recentPosts.map((post) => <ArticleCard post={post} locale="en" />)}
+        </div>
+      </section>
+    )}
+
+    <!-- Newsletter - Level 2 (Z=3dp, Hero card priority) -->
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-20">
+      <div class="shape-xl p-12 relative overflow-hidden bg-primary-container text-on-primary-container elevation-2">
+        <div class="relative z-10">
+          <h2 class="text-3xl font-bold mb-4">{t.ui.newsletterTitle}</h2>
+          <p class="mb-8 max-w-lg mx-auto opacity-80">
+            {t.ui.newsletterDescription}
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <!-- M3 Input: shape-xs (4px), px-4 py-3 (16dp/12dp spacing) -->
+            <input
+              type="email"
+              placeholder={t.ui.newsletterPlaceholder}
+              disabled
+              class="flex-grow px-4 py-3 shape-xs bg-surface text-on-surface input-state opacity-50 cursor-not-allowed"
+            />
+            <button
+              disabled
+              class="px-6 py-3 shape-full bg-primary/30 text-on-primary text-label-large font-medium opacity-50 cursor-not-allowed"
+            >
+              {t.ui.comingSoon}
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

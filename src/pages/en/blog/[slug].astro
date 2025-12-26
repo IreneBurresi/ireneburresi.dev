@@ -1,0 +1,39 @@
+---
+import { type CollectionEntry } from 'astro:content';
+import BlogPostLayout from '@/layouts/BlogPostLayout.astro';
+import { getLocalizedPosts, getBaseSlug } from '@/lib/content';
+
+export async function getStaticPaths() {
+  const enPosts = await getLocalizedPosts('en');
+  const itPosts = await getLocalizedPosts('it');
+
+  // Generate paths for English translations
+  const enPaths = enPosts.map(post => ({
+    params: { slug: getBaseSlug(post.slug) },
+    props: { post, isFallback: false },
+  }));
+
+  // Generate fallback paths for Italian posts without English translation
+  const enSlugs = new Set(enPosts.map(p => getBaseSlug(p.slug)));
+  const fallbackPaths = itPosts
+    .filter(p => !enSlugs.has(getBaseSlug(p.slug)))
+    .map(post => ({
+      params: { slug: getBaseSlug(post.slug) },
+      props: { post, isFallback: true },
+    }));
+
+  return [...enPaths, ...fallbackPaths];
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  isFallback: boolean;
+}
+
+const { post, isFallback } = Astro.props;
+const { Content, headings } = await post.render();
+---
+
+<BlogPostLayout post={post} headings={headings} locale="en" isFallback={isFallback}>
+  <Content />
+</BlogPostLayout>

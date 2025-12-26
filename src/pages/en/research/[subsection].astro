@@ -1,0 +1,43 @@
+---
+import PillarLayout from '@/layouts/PillarLayout.astro';
+import { getLocalizedPosts } from '@/lib/content';
+import { useTranslations } from '@/lib/i18n/translations';
+
+const t = useTranslations('en');
+const pillarData = t.pillars.research;
+
+export async function getStaticPaths() {
+  const t = useTranslations('en');
+  const pillarData = t.pillars.research;
+
+  return Object.values(pillarData.subsections).map((subsection) => ({
+    params: { subsection: subsection.slug },
+  }));
+}
+
+const { subsection } = Astro.params;
+
+const subsectionData = Object.values(pillarData.subsections).find(
+  (s) => s.slug === subsection
+);
+
+const allPosts = await getLocalizedPosts('en', ({ data }) =>
+  data.pillar === 'research' && data.subsection === subsection
+);
+
+const sortedPosts = allPosts.sort((a, b) => {
+  const dateA = new Date(a.data.publishedAt);
+  const dateB = new Date(b.data.publishedAt);
+  return dateB.getTime() - dateA.getTime();
+});
+---
+
+<PillarLayout
+  pillarName={pillarData.name}
+  pillarSlug={pillarData.slug}
+  hero={subsectionData?.subtitle || pillarData.description}
+  subsections={pillarData.subsections}
+  posts={sortedPosts}
+  currentSubsection={subsection}
+  locale="en"
+/>
