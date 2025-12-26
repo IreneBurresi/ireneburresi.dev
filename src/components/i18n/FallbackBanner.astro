@@ -1,0 +1,79 @@
+---
+/**
+ * Fallback Banner Component
+ * Displays a notification when English content is not available and showing Italian fallback
+ */
+import { useTranslations } from '@/lib/i18n/translations';
+import { getAlternateLanguageUrl } from '@/lib/i18n/utils';
+
+interface Props {
+  show: boolean;
+}
+
+const { show } = Astro.props;
+
+if (!show) {
+  // Don't render anything if not showing
+  return null;
+}
+
+const t = useTranslations('en');
+const italianUrl = getAlternateLanguageUrl(Astro.url, 'it');
+---
+
+<div
+  class="w-full bg-tertiary-container text-on-tertiary-container py-4 px-6 rounded-2xl mb-8 border-l-4 border-tertiary"
+  role="alert"
+  aria-live="polite"
+>
+  <div class="flex items-start gap-4">
+    <!-- Info Icon -->
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="flex-shrink-0 mt-0.5"
+      aria-hidden="true"
+    >
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M12 16v-4"></path>
+      <path d="M12 8h.01"></path>
+    </svg>
+
+    <div class="flex-1">
+      <h3 class="font-bold text-title-medium mb-1">
+        {t.fallbackBanner.title}
+      </h3>
+      <p class="text-body-small mb-3">
+        {t.fallbackBanner.message}
+      </p>
+      <a
+        href={italianUrl}
+        class="inline-flex items-center gap-2 px-4 py-2 bg-tertiary text-on-tertiary rounded-full text-label-large font-medium hover:bg-tertiary/80 transition-colors focus:outline-none focus:ring-2 focus:ring-tertiary focus:ring-offset-2"
+      >
+        {t.fallbackBanner.switchToItalian}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14"></path>
+          <path d="m12 5 7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
