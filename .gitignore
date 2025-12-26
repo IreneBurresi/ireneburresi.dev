@@ -50,6 +50,13 @@ Desktop.ini
 coverage/
 .nyc_output/
 
+# Lighthouse reports
+.lighthouseci/
+lighthouse-report.html
+
+# Metadata tools generated files
+docs/metadata-dashboard.html
+
 # Temporary files
 *.tmp
 *.temp

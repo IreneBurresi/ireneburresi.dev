@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Pre-commit hook: valida metadati articoli blog
+echo "🔍 Validazione metadati in corso..."
+
+# Run lint-staged (testa solo file modificati)
+npx lint-staged
+
+# Run typecheck
+npm run typecheck
+
+echo "✅ Validazione completata!"

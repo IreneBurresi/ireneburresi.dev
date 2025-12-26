@@ -35,7 +35,7 @@ const sortedPosts = allPosts.sort((a, b) => {
 <PillarLayout
   pillarName={pillarData.name}
   pillarSlug={pillarData.slug}
-  hero={subsectionData?.subtitle || pillarData.description}
+  hero={subsectionData?.subtitle || pillarData.hero}
   subsections={pillarData.subsections}
   posts={sortedPosts}
   currentSubsection={subsection}

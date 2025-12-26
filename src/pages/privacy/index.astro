@@ -1,0 +1,141 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Navbar from '@/components/layout/Navbar.astro';
+import { SITE } from '@/consts/site';
+
+const title = 'Privacy Policy';
+const description = 'Informativa sulla privacy e sul trattamento dei dati personali.';
+const lastUpdated = '21 Dicembre 2024';
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6">
+    <div class="bg-surface-container-low rounded-[40px] px-6 pt-2 pb-16 relative overflow-hidden elevation-0">
+      <Navbar />
+
+      <div class="mt-12 max-w-3xl mx-auto md:px-12 relative z-10">
+        <h1 class="text-display-small md:text-display-medium font-bold text-on-surface mb-4">
+          Privacy Policy
+        </h1>
+        <p class="text-body-medium text-on-surface-variant mb-12">
+          Ultimo aggiornamento: {lastUpdated}
+        </p>
+
+        <article class="prose prose-lg max-w-none text-on-surface space-y-12">
+
+          <!-- Titolare -->
+          <section>
+            <h2 class="text-headline-medium font-bold mb-4">Titolare del Trattamento</h2>
+            <p class="text-body-large text-on-surface-variant">
+              Il titolare del trattamento dei dati e <strong>{SITE.author.name}</strong>,
+              raggiungibile attraverso i canali indicati nella <a href="/about/" class="text-primary hover:underline">pagina About</a>.
+            </p>
+          </section>
+
+          <!-- Dati raccolti -->
+          <section>
+            <h2 class="text-headline-medium font-bold mb-4">Dati Raccolti</h2>
+
+            <div class="p-6 rounded-2xl bg-primary-container/30 border border-primary/20 mb-6">
+              <p class="text-body-large text-on-surface font-medium">
+                Questo sito non raccoglie dati personali degli utenti.
+              </p>
+            </div>
+
+            <p class="text-body-large text-on-surface-variant mb-4">
+              In particolare:
+            </p>
+            <ul class="list-disc list-inside text-body-large text-on-surface-variant space-y-2">
+              <li>Non sono presenti sistemi di analytics o tracciamento</li>
+              <li>Non vengono utilizzati cookie di profilazione</li>
+              <li>Non sono presenti form di contatto o raccolta email</li>
+              <li>Non sono presenti sistemi di commenti</li>
+              <li>Non vengono registrati indirizzi IP a livello applicativo</li>
+            </ul>
+          </section>
+
+          <!-- LocalStorage -->
+          <section>
+            <h2 class="text-headline-medium font-bold mb-4">Archiviazione Locale (LocalStorage)</h2>
+            <p class="text-body-large text-on-surface-variant mb-4">
+              Il sito utilizza il <strong>localStorage</strong> del browser esclusivamente per memorizzare
+              la preferenza del tema (chiaro/scuro). Questo dato:
+            </p>
+            <ul class="list-disc list-inside text-body-large text-on-surface-variant space-y-2">
+              <li>Rimane nel tuo browser e non viene mai trasmesso a server esterni</li>
+              <li>Non contiene informazioni personali</li>
+              <li>Puo essere cancellato in qualsiasi momento dalle impostazioni del browser</li>
+            </ul>
+            <p class="text-body-medium text-on-surface-variant mt-4 opacity-70">
+              Il localStorage non e tecnicamente un cookie e non richiede consenso secondo la normativa EU.
+            </p>
+          </section>
+
+          <!-- Hosting -->
+          <section>
+            <h2 class="text-headline-medium font-bold mb-4">Hosting e Infrastruttura</h2>
+            <p class="text-body-large text-on-surface-variant mb-4">
+              Il sito e ospitato su <strong>Vercel Inc.</strong> (San Francisco, USA).
+              Come qualsiasi servizio di hosting, Vercel potrebbe registrare nei propri log:
+            </p>
+            <ul class="list-disc list-inside text-body-large text-on-surface-variant space-y-2">
+              <li>Indirizzo IP del visitatore</li>
+              <li>Data e ora della richiesta</li>
+              <li>URL richiesto</li>
+              <li>User-Agent del browser</li>
+            </ul>
+            <p class="text-body-large text-on-surface-variant mt-4">
+              Questi log sono gestiti da Vercel secondo la loro
+              <a
+                href="https://vercel.com/legal/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary hover:underline"
+              >Privacy Policy</a>.
+              Il titolare di questo sito non ha accesso a tali dati.
+            </p>
+          </section>
+
+          <!-- Link esterni -->
+          <section>
+            <h2 class="text-headline-medium font-bold mb-4">Link Esterni</h2>
+            <p class="text-body-large text-on-surface-variant">
+              Il sito contiene link a siti esterni (GitHub, LinkedIn, fonti citate negli articoli).
+              Questi siti hanno proprie privacy policy indipendenti.
+              Il titolare non e responsabile del trattamento dei dati effettuato da tali siti.
+            </p>
+          </section>
+
+          <!-- Diritti -->
+          <section>
+            <h2 class="text-headline-medium font-bold mb-4">I Tuoi Diritti</h2>
+            <p class="text-body-large text-on-surface-variant mb-4">
+              Ai sensi del GDPR (Regolamento UE 2016/679), hai diritto di:
+            </p>
+            <ul class="list-disc list-inside text-body-large text-on-surface-variant space-y-2">
+              <li>Accedere ai tuoi dati personali</li>
+              <li>Richiederne la rettifica o la cancellazione</li>
+              <li>Opporti al trattamento</li>
+              <li>Richiedere la portabilita dei dati</li>
+              <li>Proporre reclamo all'Autorita Garante per la protezione dei dati personali</li>
+            </ul>
+            <p class="text-body-large text-on-surface-variant mt-4">
+              Poiche questo sito non raccoglie dati personali, tali diritti non trovano applicazione pratica nel presente contesto.
+            </p>
+          </section>
+
+          <!-- Modifiche -->
+          <section>
+            <h2 class="text-headline-medium font-bold mb-4">Modifiche alla Privacy Policy</h2>
+            <p class="text-body-large text-on-surface-variant">
+              Questa informativa puo essere aggiornata periodicamente.
+              La data dell'ultimo aggiornamento e indicata in cima alla pagina.
+              Si consiglia di consultare periodicamente questa pagina.
+            </p>
+          </section>
+
+        </article>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

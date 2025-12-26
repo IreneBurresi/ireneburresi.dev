@@ -1,0 +1,48 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Navbar from '@/components/layout/Navbar.astro';
+
+const query = Astro.url.searchParams.get('q') || '';
+
+const title = query ? `Risultati per "${query}"` : 'Cerca';
+const description = 'Cerca tra tutti gli articoli del blog.';
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  robots={{ index: false, follow: true }}
+>
+  <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6">
+    <div class="bg-surface-container-low rounded-[40px] px-6 pt-2 pb-16 relative overflow-hidden elevation-0">
+      <Navbar />
+
+      <div class="mt-12 max-w-3xl mx-auto relative z-10">
+        <h1 class="text-display-small md:text-display-medium font-bold text-on-surface mb-8">
+          Cerca
+        </h1>
+
+        <div id="search-page" data-initial-query={query}>
+          <noscript>
+            <p class="text-body-large text-on-surface-variant">
+              La ricerca richiede JavaScript per funzionare.
+            </p>
+          </noscript>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Open search modal with initial query if present
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchPage = document.getElementById('search-page');
+    const initialQuery = searchPage?.dataset.initialQuery;
+
+    if (initialQuery) {
+      // Dispatch event to open search modal with query
+      window.dispatchEvent(new CustomEvent('open-search'));
+    }
+  });
+</script>

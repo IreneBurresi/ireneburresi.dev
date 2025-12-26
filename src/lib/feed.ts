@@ -80,3 +80,9 @@ export function escapeXml(str: string): string {
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&apos;');
 }
+
+// Re-export per uso nei feed pillar
+export { sortPostsByDate } from '@/lib/utils';
+export { SITE } from '@/consts/site';
+export { PILLARS } from '@/lib/constants';
+export type { PillarKey } from '@/lib/constants';

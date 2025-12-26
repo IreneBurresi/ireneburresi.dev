@@ -17,7 +17,7 @@ const t = useTranslations('en');
 const baseUrl = '/en';
 
 const title = t.nav.about;
-const description = t.about.description;
+const description = t.about.bio;
 const canonicalUrl = canonicalFromPath('/en/about/', new URL(SITE.url)).toString();
 
 // Fetch latest posts
@@ -53,45 +53,20 @@ const jsonLd = {
         <h1 class="text-display-small md:text-display-medium font-bold text-on-surface mb-6">
           {t.about.title}
         </h1>
-        <p class="text-headline-small text-on-surface-variant mb-12 max-w-3xl">
-          {t.about.subtitle}
+        <p class="text-headline-small text-on-surface-variant mb-8">
+          {t.about.role}
         </p>
 
         <div class="prose prose-lg max-w-none">
-          <p class="text-body-large text-on-surface-variant leading-relaxed mb-8">
-            {t.about.intro}
+          <p class="text-body-large text-on-surface-variant leading-relaxed mb-12">
+            {t.about.bio}
           </p>
 
           <h2 class="text-headline-medium font-bold text-on-surface mt-12 mb-6">
-            {t.about.expertiseTitle}
-          </h2>
-          <ul class="space-y-3 text-on-surface-variant">
-            {t.about.expertiseList.map((item: string) => (
-              <li class="flex items-start gap-3">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="text-primary mt-1 flex-shrink-0"
-                >
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-
-          <h2 class="text-headline-medium font-bold text-on-surface mt-12 mb-6">
-            {t.about.contactTitle}
+            Get in Touch
           </h2>
           <p class="text-body-large text-on-surface-variant leading-relaxed mb-4">
-            {t.about.contactText}
+            Feel free to connect with me on social media or check out my work on GitHub.
           </p>
           <div class="flex gap-4">
             <a

@@ -1,0 +1,50 @@
+name: Validate Blog Metadata
+
+on:
+  pull_request:
+    paths:
+      - 'src/content/blog/**'
+      - 'src/content/config.ts'
+      - 'src/consts/schema.ts'
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/content/blog/**'
+
+jobs:
+  validate:
+    name: Validate Metadata
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run typecheck
+        run: npm run typecheck
+
+      - name: Run content validation tests
+        run: npm run test:content
+
+      - name: Analyze metadata
+        run: npm run metadata:analyze
+
+      - name: Validate images
+        run: npm run images:validate
+        continue-on-error: true
+
+      - name: Post results
+        if: always()
+        run: |
+          echo "✅ Metadata validation completed"
+          echo "Check logs above for any warnings"

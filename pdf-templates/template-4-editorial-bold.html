@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>AI 2026: Anno della Resa dei Conti</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm 1.8cm;
+            background: #fdf7ff;
+            @bottom-center {
+                content: counter(page);
+                font-size: 14pt;
+                color: #65558f;
+                font-weight: 900;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-size: 11.5pt;
+            line-height: 1.6;
+            color: #1d1b20;
+            background: #fdf7ff;
+        }
+
+        /* Hero header */
+        .hero {
+            background: linear-gradient(135deg, #65558f 0%, #4d3d75 50%, #8c4a60 100%);
+            margin: -2cm -1.8cm 0 -1.8cm;
+            padding: 48px 32px;
+            color: #ffffff;
+        }
+
+        .label {
+            font-size: 11pt;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: #cfbdfe;
+        }
+
+        h1 {
+            font-size: 42pt;
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
+
+        .lead {
+            font-size: 15pt;
+            line-height: 1.4;
+            font-weight: 300;
+            max-width: 90%;
+            color: #e9ddff;
+        }
+
+        .meta-bar {
+            background: #322f35;
+            margin: 0 -1.8cm;
+            padding: 16px 32px;
+            color: #cfbdfe;
+            font-size: 10pt;
+            font-weight: 600;
+            display: table;
+            width: calc(100% + 3.6cm);
+        }
+
+        .meta-item {
+            display: inline-block;
+            margin-right: 32px;
+        }
+
+        .meta-item strong {
+            color: #ffffff;
+        }
+
+        /* Content */
+        .content {
+            margin-top: 32px;
+        }
+
+        /* Massive stat callout */
+        .stat-hero {
+            background: linear-gradient(135deg, #8c4a60 0%, #703349 100%);
+            color: #ffffff;
+            padding: 40px;
+            margin: 32px 0;
+            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(140, 74, 96, 0.3);
+        }
+
+        .stat-hero-number {
+            font-size: 72pt;
+            font-weight: 900;
+            line-height: 1;
+            display: block;
+            margin-bottom: 16px;
+            color: #ffb0c8;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .stat-hero-text {
+            font-size: 14pt;
+            font-weight: 700;
+            line-height: 1.4;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Section headers */
+        h2 {
+            font-size: 28pt;
+            font-weight: 900;
+            color: #65558f;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+
+        h2::before {
+            content: "";
+            display: block;
+            width: 60px;
+            height: 6px;
+            background: linear-gradient(90deg, #65558f 0%, #8c4a60 100%);
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            font-size: 16pt;
+            font-weight: 800;
+            color: #8c4a60;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Paragraphs */
+        p {
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+
+        strong {
+            font-weight: 800;
+            color: #4d3d75;
+            background: #e9ddff;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        em {
+            font-style: italic;
+            color: #703349;
+        }
+
+        /* Impact box */
+        .impact-box {
+            background: #e9ddff;
+            border-left: 8px solid #65558f;
+            padding: 24px 28px;
+            margin: 24px 0;
+        }
+
+        .impact-box-title {
+            font-size: 13pt;
+            font-weight: 900;
+            color: #4d3d75;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+
+        .impact-box p {
+            font-size: 12pt;
+            line-height: 1.6;
+            color: #1d1b20;
+            margin-bottom: 8px;
+        }
+
+        /* Quote */
+        .quote-large {
+            font-size: 18pt;
+            font-weight: 700;
+            line-height: 1.4;
+            color: #4d3d75;
+            margin: 32px 0;
+            padding: 32px;
+            background: #fef7ff;
+            border-left: 8px solid #8c4a60;
+            font-style: italic;
+        }
+
+        .quote-source {
+            font-size: 12pt;
+            font-weight: 600;
+            color: #8c4a60;
+            margin-top: 16px;
+            font-style: normal;
+        }
+
+        /* Data grid */
+        .data-grid {
+            display: table;
+            width: 100%;
+            margin: 24px 0;
+        }
+
+        .data-item {
+            display: table-cell;
+            width: 33.33%;
+            padding: 20px;
+            text-align: center;
+            background: #fef7ff;
+            border: 3px solid #e9ddff;
+        }
+
+        .data-value {
+            font-size: 32pt;
+            font-weight: 900;
+            color: #65558f;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .data-label {
+            font-size: 9pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #49454e;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
+        }
+
+        /* Divider */
+        .divider {
+            height: 4px;
+            background: linear-gradient(90deg, #65558f 0%, #8c4a60 100%);
+            margin: 40px 0;
+        }
+
+        /* Footer */
+        .sources-section {
+            margin-top: 56px;
+            padding-top: 32px;
+            border-top: 6px solid #65558f;
+        }
+
+        .sources-title {
+            font-size: 20pt;
+            font-weight: 900;
+            color: #65558f;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .source {
+            background: #f2ecf4;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-left: 4px solid #8c4a60;
+            font-size: 9.5pt;
+            line-height: 1.5;
+        }
+
+        .source strong {
+            color: #4d3d75;
+            background: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="label">Sintesi • Review Trimestrali</div>
+        <h1>Da evangelismo a valutazione</h1>
+        <div class="lead">
+            Il 2026 sarà l'anno della resa dei conti per l'AI enterprise. Analisi critica delle previsioni di Stanford HAI e dei dati di fallimento che nessuno vuole guardare.
+        </div>
+    </div>
+
+    <div class="meta-bar">
+        <span class="meta-item"><strong>Autore:</strong> Irene Burresi</span>
+        <span class="meta-item"><strong>Data:</strong> 20 Dicembre 2025</span>
+        <span class="meta-item"><strong>Lettura:</strong> 12 min</span>
+    </div>
+
+    <div class="content">
+        <div class="stat-hero">
+            <span class="stat-hero-number">42%</span>
+            <div class="stat-hero-text">
+                Delle aziende ha abbandonato<br>i progetti AI nel 2025
+            </div>
+        </div>
+
+        <p>A metà dicembre 2025, nove faculty dello Stanford Human-Centered Artificial Intelligence hanno pubblicato le loro previsioni per il 2026. Non è il solito esercizio di futurologia accademica, ma una dichiarazione collettiva con un messaggio inequivocabile: <strong>la festa sta finendo</strong>.</p>
+
+        <p>James Landay, co-direttore di HAI, apre con una frase che suona quasi provocatoria in un'epoca di annunci trionfalistici: "Non ci sarà AGI quest'anno." Il punto, però, è quello che aggiunge subito dopo: le aziende inizieranno ad ammettere pubblicamente che l'AI non ha ancora prodotto gli aumenti di produttività promessi, se non in nicchie specifiche come la programmazione e i call center.</p>
+
+        <div class="impact-box">
+            <div class="impact-box-title">⚠ Reality Check</div>
+            <p>Non è una previsione sul futuro. È la fotografia di qualcosa che sta già succedendo. I dati sono inequivocabili e il 2026 sarà l'anno in cui non potremo più ignorarli.</p>
+        </div>
+
+        <h2>I numeri che nessuno vuole guardare</h2>
+
+        <p>A luglio 2025, il MIT Project NANDA ha pubblicato un report diventato virale per una singola statistica devastante: il <strong>95% dei progetti AI enterprise non genera alcun ritorno misurabile</strong>. Il numero è stato contestato, la metodologia ha i suoi limiti, la definizione di "successo" è discutibile. Ma non è un dato isolato.</p>
+
+        <div class="data-grid">
+            <div class="data-item">
+                <span class="data-value">95%</span>
+                <div class="data-label">Progetti senza ROI misurabile</div>
+            </div>
+            <div class="data-item">
+                <span class="data-value">46%</span>
+                <div class="data-label">POC abbandonati prima della produzione</div>
+            </div>
+            <div class="data-item">
+                <span class="data-value">80%</span>
+                <div class="data-label">Tasso di fallimento totale</div>
+            </div>
+        </div>
+
+        <p>Nello stesso periodo, S&P Global ha rilevato che il 42% delle aziende ha abbandonato la maggior parte delle proprie iniziative AI nel 2025. Nel 2024 la percentuale era il 17%. <strong>Il tasso di abbandono è più che raddoppiato in un anno</strong>.</p>
+
+        <p>Secondo RAND Corporation, oltre l'80% dei progetti AI fallisce, <em>il doppio del tasso di fallimento dei progetti IT tradizionali</em>. Gartner riporta che solo il 48% dei progetti AI arriva in produzione, e oltre il 30% dei progetti GenAI verrà abbandonato dopo il proof of concept entro fine 2025.</p>
+
+        <div class="divider"></div>
+
+        <h2>I canarini nella miniera</h2>
+
+        <p>Se i tassi di fallimento sono il sintomo, il lavoro di Erik Brynjolfsson offre una diagnosi più precisa. "Canaries in the Coal Mine", pubblicato ad agosto 2025 dal Digital Economy Lab di Stanford, è probabilmente lo studio più rigoroso oggi disponibile sull'impatto dell'AI sul mercato del lavoro.</p>
+
+        <div class="stat-hero">
+            <span class="stat-hero-number">-20%</span>
+            <div class="stat-hero-text">
+                Calo occupazione sviluppatori<br>22-25 anni dal lancio di ChatGPT
+            </div>
+        </div>
+
+        <p>Il paper usa dati di payroll di ADP, il più grande fornitore di servizi di buste paga negli Stati Uniti, che copre oltre 25 milioni di lavoratori. L'obiettivo è tracciare i cambiamenti occupazionali nelle professioni esposte all'intelligenza artificiale.</p>
+
+        <p>Quello che emerge è netto. L'occupazione per software developer tra i 22 e i 25 anni è calata del <strong>20% dal picco di fine 2022</strong>, più o meno dal lancio di ChatGPT, a luglio 2025. Non è un dato isolato: i lavoratori early-career nelle occupazioni più esposte all'AI mostrano un declino relativo del 13% rispetto ai colleghi in ruoli meno esposti.</p>
+
+        <div class="quote-large">
+            "Sembra che ciò che i lavoratori giovani sanno si sovrapponga a ciò che i LLM possono rimpiazzare."
+            <div class="quote-source">— Erik Brynjolfsson, Stanford Digital Economy Lab</div>
+        </div>
+
+        <p>Il dato più interessante è la divergenza per età. Mentre i giovani perdono terreno, i lavoratori over 30 nelle stesse categorie ad alta esposizione hanno visto una crescita occupazionale tra il 6% e il 12%.</p>
+
+        <div class="impact-box">
+            <div class="impact-box-title">📊 Implicazione chiave</div>
+            <p>L'AI sta erodendo le posizioni entry-level più rapidamente di quanto crei nuovi ruoli. I "canarini nella miniera" stanno già mostrando sintomi di un cambiamento più ampio che coinvolgerà l'intero mercato del lavoro.</p>
+        </div>
+
+        <div class="sources-section">
+            <div class="sources-title">Fonti</div>
+            <div class="source">
+                <strong>Stanford HAI:</strong> Stanford AI Experts Predict What Will Happen in 2026
+            </div>
+            <div class="source">
+                <strong>Erik Brynjolfsson:</strong> Canaries in the Coal Mine (Stanford Digital Economy Lab, 2025)
+            </div>
+            <div class="source">
+                <strong>MIT Project NANDA:</strong> State of AI in Business 2025
+            </div>
+            <div class="source">
+                <strong>RAND Corporation:</strong> The Root Causes of Failure for Artificial Intelligence Projects
+            </div>
+            <div class="source">
+                <strong>S&P Global Market Intelligence:</strong> Generative AI Shows Rapid Growth But Yields Mixed Results
+            </div>
+        </div>
+    </div>
+</body>
+</html>

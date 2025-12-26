@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>AI 2026: Anno della Resa dei Conti - Technical Report</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm 2cm 2cm 2cm;
+            @top-left {
+                content: "Technical Report TR-2025-12-20";
+                font-size: 8pt;
+                color: #004f4f;
+                font-family: 'Courier New', monospace;
+            }
+            @top-right {
+                content: "ireneburresi.dev";
+                font-size: 8pt;
+                color: #006a6a;
+                font-weight: 600;
+            }
+            @bottom-left {
+                content: "Classification: Public";
+                font-size: 8pt;
+                color: #49454e;
+            }
+            @bottom-right {
+                content: "Page " counter(page);
+                font-size: 8pt;
+                color: #004f4f;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', 'Lucida Console', monospace;
+            font-size: 10pt;
+            line-height: 1.6;
+            color: #1d1b20;
+            background: #ffffff;
+        }
+
+        /* Document header */
+        .doc-header {
+            border: 3px solid #006a6a;
+            padding: 24px;
+            margin-bottom: 32px;
+            background: #f0fafa;
+        }
+
+        .doc-id {
+            font-size: 9pt;
+            color: #004f4f;
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-family: 'Courier New', monospace;
+        }
+
+        h1 {
+            font-size: 20pt;
+            font-weight: 700;
+            color: #006a6a;
+            margin-bottom: 16px;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .doc-meta {
+            font-size: 9pt;
+            color: #49454e;
+            line-height: 1.8;
+            margin-top: 16px;
+            border-top: 1px solid #9cf1f0;
+            padding-top: 12px;
+        }
+
+        .doc-meta-row {
+            margin-bottom: 4px;
+        }
+
+        .doc-meta-label {
+            display: inline-block;
+            width: 120px;
+            color: #004f4f;
+            font-weight: 700;
+        }
+
+        /* Executive summary */
+        .exec-summary {
+            background: #9cf1f0;
+            border-left: 6px solid #006a6a;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+        }
+
+        .exec-summary-title {
+            font-size: 11pt;
+            font-weight: 700;
+            color: #004f4f;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .exec-summary p {
+            font-size: 10pt;
+            line-height: 1.7;
+            color: #1d1b20;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Section headers */
+        h2 {
+            font-size: 13pt;
+            font-weight: 700;
+            color: #006a6a;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #006a6a;
+            padding-bottom: 6px;
+            font-family: 'Courier New', monospace;
+        }
+
+        h2::before {
+            content: "§ ";
+            color: #80d5d4;
+        }
+
+        h3 {
+            font-size: 11pt;
+            font-weight: 700;
+            color: #004f4f;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        h3::before {
+            content: "» ";
+            color: #80d5d4;
+        }
+
+        /* Paragraphs */
+        p {
+            margin-bottom: 12px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: justify;
+        }
+
+        /* Code/data blocks */
+        .data-block {
+            background: #f8f9fa;
+            border: 1px solid #cac4cf;
+            padding: 16px;
+            margin: 16px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            line-height: 1.5;
+        }
+
+        .data-block-title {
+            font-weight: 700;
+            color: #006a6a;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-size: 8.5pt;
+            letter-spacing: 0.5px;
+        }
+
+        /* Statistics table */
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 9.5pt;
+            background: #ffffff;
+            border: 2px solid #006a6a;
+        }
+
+        .stats-table th {
+            background: #006a6a;
+            color: #ffffff;
+            padding: 10px;
+            text-align: left;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            text-transform: uppercase;
+        }
+
+        .stats-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e7e0eb;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stats-table tr:nth-child(even) {
+            background: #f0fafa;
+        }
+
+        .stats-table .metric {
+            font-weight: 700;
+            color: #006a6a;
+        }
+
+        /* Alert box */
+        .alert {
+            background: #fff3cd;
+            border: 2px solid #856404;
+            padding: 16px 20px;
+            margin: 20px 0;
+        }
+
+        .alert-title {
+            font-weight: 700;
+            color: #856404;
+            margin-bottom: 8px;
+            font-size: 10pt;
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+        }
+
+        .alert-title::before {
+            content: "⚠ ";
+        }
+
+        .alert p {
+            font-size: 9.5pt;
+            color: #1d1b20;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Info box */
+        .info-box {
+            background: #e9f7f7;
+            border: 2px solid #006a6a;
+            padding: 16px 20px;
+            margin: 20px 0;
+        }
+
+        .info-box-title {
+            font-weight: 700;
+            color: #004f4f;
+            margin-bottom: 8px;
+            font-size: 10pt;
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+        }
+
+        .info-box-title::before {
+            content: "ℹ ";
+        }
+
+        .info-box p {
+            font-size: 9.5pt;
+            color: #1d1b20;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Metric inline */
+        .metric-inline {
+            background: #9cf1f0;
+            color: #004f4f;
+            padding: 2px 6px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            border-radius: 3px;
+        }
+
+        strong {
+            font-weight: 700;
+            color: #004f4f;
+        }
+
+        em {
+            font-style: italic;
+            color: #49454e;
+        }
+
+        /* References */
+        .references {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 3px solid #006a6a;
+        }
+
+        .references h2 {
+            margin-top: 0;
+        }
+
+        .ref-item {
+            font-size: 8.5pt;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            padding-left: 30px;
+            text-indent: -30px;
+            font-family: Arial, sans-serif;
+        }
+
+        .ref-id {
+            font-weight: 700;
+            color: #006a6a;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Horizontal rule */
+        hr {
+            border: none;
+            height: 2px;
+            background: #9cf1f0;
+            margin: 24px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="doc-header">
+        <div class="doc-id">TECHNICAL REPORT TR-2025-12-20</div>
+        <h1>Analisi Predittiva AI Enterprise 2026</h1>
+        <div class="doc-meta">
+            <div class="doc-meta-row">
+                <span class="doc-meta-label">TITOLO:</span>
+                Da evangelismo a valutazione: cosa aspettarsi dall'AI nel 2026 secondo Stanford HAI
+            </div>
+            <div class="doc-meta-row">
+                <span class="doc-meta-label">AUTORE:</span>
+                Irene Burresi, Lead AI Professional
+            </div>
+            <div class="doc-meta-row">
+                <span class="doc-meta-label">DATA:</span>
+                2025-12-20
+            </div>
+            <div class="doc-meta-row">
+                <span class="doc-meta-label">CATEGORIA:</span>
+                Sintesi / Review Trimestrali
+            </div>
+            <div class="doc-meta-row">
+                <span class="doc-meta-label">VERSIONE:</span>
+                1.0
+            </div>
+            <div class="doc-meta-row">
+                <span class="doc-meta-label">CLASSIFICAZIONE:</span>
+                Public
+            </div>
+        </div>
+    </div>
+
+    <div class="exec-summary">
+        <div class="exec-summary-title">Executive Summary</div>
+        <p>Analisi approfondita delle previsioni 2026 di Stanford HAI, confrontate con i dati di fallimento dei progetti AI enterprise (42% di abbandono secondo S&P Global, 95% senza ROI misurabile secondo MIT NANDA). Include valutazione del track record delle previsioni passate e implicazioni per decisori aziendali. Il report documenta una divergenza crescente tra adozione tecnologica e risultati misurabili.</p>
+    </div>
+
+    <div class="alert">
+        <div class="alert-title">Critical Finding</div>
+        <p>Il tasso di abbandono dei progetti AI è più che raddoppiato in un anno (dal 17% al 42%). I dati indicano una crisi di fiducia imminente nel settore enterprise.</p>
+    </div>
+
+    <h2>1. Contesto e obiettivi</h2>
+
+    <p>A metà dicembre 2025, nove faculty dello Stanford Human-Centered Artificial Intelligence hanno pubblicato le loro previsioni per il 2026. Non è il solito esercizio di futurologia accademica, ma una dichiarazione collettiva con un messaggio inequivocabile: la festa sta finendo.</p>
+
+    <p>James Landay, co-direttore di HAI, apre con una dichiarazione programmatica: <em>"Non ci sarà AGI quest'anno."</em> Le aziende inizieranno ad ammettere pubblicamente che l'AI non ha ancora prodotto gli aumenti di produttività promessi, se non in nicchie specifiche come la programmazione e i call center.</p>
+
+    <div class="info-box">
+        <div class="info-box-title">Metodologia</div>
+        <p>Questo report analizza le previsioni Stanford HAI 2026 attraverso il confronto con dati quantitativi provenienti da MIT Project NANDA, S&P Global, RAND Corporation, e Stanford Digital Economy Lab. L'analisi copre il periodo 2022-2025 con proiezioni fino al 2026.</p>
+    </div>
+
+    <h2>2. Analisi quantitativa dei fallimenti</h2>
+
+    <h3>2.1 Dataset e metriche</h3>
+
+    <p>Il MIT Project NANDA (luglio 2025) ha pubblicato dati aggregati su <span class="metric-inline">N = 847</span> progetti AI enterprise. La statistica chiave: il <span class="metric-inline">95%</span> dei progetti non genera alcun ritorno misurabile.</p>
+
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th>Metrica</th>
+                <th>Valore</th>
+                <th>Anno</th>
+                <th>Fonte</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="metric">PROJ_NO_ROI</td>
+                <td>95.0%</td>
+                <td>2025</td>
+                <td>MIT NANDA</td>
+            </tr>
+            <tr>
+                <td class="metric">ABANDON_RATE</td>
+                <td>42.0%</td>
+                <td>2025</td>
+                <td>S&P Global</td>
+            </tr>
+            <tr>
+                <td class="metric">ABANDON_RATE</td>
+                <td>17.0%</td>
+                <td>2024</td>
+                <td>S&P Global</td>
+            </tr>
+            <tr>
+                <td class="metric">POC_ABANDONED</td>
+                <td>46.0%</td>
+                <td>2025</td>
+                <td>S&P Global</td>
+            </tr>
+            <tr>
+                <td class="metric">FAILURE_RATE</td>
+                <td>80.0%</td>
+                <td>2025</td>
+                <td>RAND Corp</td>
+            </tr>
+            <tr>
+                <td class="metric">PROD_RATE</td>
+                <td>48.0%</td>
+                <td>2025</td>
+                <td>Gartner</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>2.2 Trend analysis</h3>
+
+    <div class="data-block">
+        <div class="data-block-title">Year-over-Year Comparison</div>
+        <pre>
+ABANDON_RATE_2024 = 17.0%
+ABANDON_RATE_2025 = 42.0%
+DELTA = +25.0 percentage points
+GROWTH_RATE = +147.06%
+
+Interpretation: Abandonment rate more than doubled YoY
+Risk Level: HIGH
+Recommendation: Immediate review of project portfolio required
+        </pre>
+    </div>
+
+    <h3>2.3 Cause primarie dei fallimenti</h3>
+
+    <p>Secondo l'analisi aggregata di Informatica, RAND Corporation e S&P Global:</p>
+
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th>Causa</th>
+                <th>Prevalenza</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="metric">DATA_QUALITY</td>
+                <td>43.0%</td>
+            </tr>
+            <tr>
+                <td class="metric">TECH_MATURITY</td>
+                <td>43.0%</td>
+            </tr>
+            <tr>
+                <td class="metric">SKILL_GAP</td>
+                <td>35.0%</td>
+            </tr>
+            <tr>
+                <td class="metric">INTEGRATION_COMPLEXITY</td>
+                <td>N/A</td>
+            </tr>
+            <tr>
+                <td class="metric">ROI_MISMATCH</td>
+                <td>N/A</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>3. Impatto sul mercato del lavoro</h2>
+
+    <h3>3.1 Employment Data Analysis (Brynjolfsson et al.)</h3>
+
+    <p>Il paper "Canaries in the Coal Mine" (Stanford Digital Economy Lab, agosto 2025) utilizza dati di payroll ADP con coverage di <span class="metric-inline">N = 25M</span> lavoratori USA.</p>
+
+    <div class="data-block">
+        <div class="data-block-title">Software Developer Employment (Age 22-25)</div>
+        <pre>
+BASELINE_PERIOD = Q4 2022 (ChatGPT launch)
+MEASUREMENT_PERIOD = Q3 2025
+EMPLOYMENT_DELTA = -20.0%
+COHORT = Early-career workers
+EXPOSURE_LEVEL = High AI exposure
+
+Control Group (Low AI exposure):
+EMPLOYMENT_DELTA = -7.0%
+
+Relative Impact = -13.0 percentage points
+        </pre>
+    </div>
+
+    <h3>3.2 Age Divergence Pattern</h3>
+
+    <p>Divergenza significativa per età anagrafica:</p>
+
+    <table class="stats-table">
+        <thead>
+            <tr>
+                <th>Cohort Age</th>
+                <th>Employment Δ</th>
+                <th>AI Exposure</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="metric">22-25 years</td>
+                <td>-20.0%</td>
+                <td>High</td>
+            </tr>
+            <tr>
+                <td class="metric">30+ years</td>
+                <td>+6.0% to +12.0%</td>
+                <td>High</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="alert">
+        <div class="alert-title">Interpretation</div>
+        <p>L'AI sta sostituendo competenze entry-level più rapidamente di quanto crei nuovi ruoli. Pattern coerente con displacement tecnologico asimmetrico per livello di seniority.</p>
+    </div>
+
+    <h2>4. Conclusioni e raccomandazioni</h2>
+
+    <p>L'analisi dei dati 2025 evidenzia una divergenza critica tra adozione (in crescita) e risultati misurabili (in calo). Il 2026 rappresenterà un punto di inflessione per l'AI enterprise.</p>
+
+    <div class="info-box">
+        <div class="info-box-title">Raccomandazioni operative</div>
+        <p><strong>1. Metriche:</strong> Definire KPI di successo pre-deployment con criteri misurabili<br>
+        <strong>2. Make-or-Buy:</strong> Valutare vendor specializzati (67% success rate) vs sviluppo interno (33%)<br>
+        <strong>3. Timeline:</strong> Target 90 giorni per mid-market, ottimizzare processo decisionale enterprise<br>
+        <strong>4. Shadow IT:</strong> Analizzare adozione spontanea per identificare use case di valore</p>
+    </div>
+
+    <div class="references">
+        <h2>References</h2>
+
+        <div class="ref-item">
+            <span class="ref-id">[1]</span> Stanford Human-Centered Artificial Intelligence (2025). "Stanford AI Experts Predict What Will Happen in 2026". https://hai.stanford.edu/news/stanford-ai-experts-predict-what-will-happen-in-2026
+        </div>
+
+        <div class="ref-item">
+            <span class="ref-id">[2]</span> Brynjolfsson, E. et al. (2025). "Canaries in the Coal Mine: Six Facts about the Recent Employment Effects of AI". Stanford Digital Economy Lab. https://digitaleconomy.stanford.edu/publications/canaries-in-the-coal-mine/
+        </div>
+
+        <div class="ref-item">
+            <span class="ref-id">[3]</span> MIT Project NANDA (2025). "State of AI in Business 2025". https://projectnanda.org/
+        </div>
+
+        <div class="ref-item">
+            <span class="ref-id">[4]</span> RAND Corporation. "The Root Causes of Failure for Artificial Intelligence Projects". Report RRA2680-1. https://www.rand.org/pubs/research_reports/RRA2680-1.html
+        </div>
+
+        <div class="ref-item">
+            <span class="ref-id">[5]</span> S&P Global Market Intelligence (2025). "Generative AI Shows Rapid Growth But Yields Mixed Results". https://www.spglobal.com/market-intelligence/
+        </div>
+    </div>
+</body>
+</html>

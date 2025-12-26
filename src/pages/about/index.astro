@@ -1,17 +1,24 @@
 ---
 /**
- * Pagina About - E-E-A-T forte per SEO
+ * Pagina About - Portfolio Style
  * Include JSON-LD Person per disambiguazione e authority
  */
+import { getCollection } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Navbar from '@/components/layout/Navbar.astro';
+import ArticleCard from '@/components/blog/ArticleCard.astro';
 import { SITE } from '@/consts/site';
 import { buildSiteGraph, buildWebPageSchema } from '@/lib/seo/structuredData';
 import { canonicalFromPath } from '@/lib/seo/url';
+import { sortPostsByDate } from '@/lib/utils';
 
 const title = 'Chi Sono';
-const description = `${SITE.author.name} - ${SITE.author.jobTitle}. Blog tecnico su AI Engineering, architetture RAG, e governance dell'intelligenza artificiale.`;
+const description = `${SITE.author.name} - ${SITE.author.jobTitle}. Data Scientist specializzata in AI Generativa, RAG e soluzioni enterprise.`;
 const canonicalUrl = canonicalFromPath('/about/', new URL(SITE.url)).toString();
+
+// Fetch latest posts
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const latestPosts = sortPostsByDate(allPosts).slice(0, 3);
 
 // JSON-LD: grafo sito + WebPage
 const siteGraph = buildSiteGraph();
@@ -25,6 +32,92 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [...siteGraph['@graph'], webPage],
 };
+
+// Data
+const experiences = [
+  {
+    title: 'Lead AI Professional',
+    company: 'Value Partners S.p.A.',
+    period: 'Ottobre 2025 - Presente',
+    type: 'Full Remote',
+    current: true,
+    description: [
+      'Progettazione e implementazione di soluzioni AI avanzate per clienti in ambito legale, medico e assicurativo',
+      'Sviluppo e ottimizzazione di pipeline di Data Extraction (OCR, NLP) e RAG ibridi',
+      'Gestione del team con responsabilita organizzative e di leadership',
+      'Coordinamento della definizione delle WBS, gestione dei colloqui tecnici e mentoring',
+    ],
+  },
+  {
+    title: 'Data Scientist & AI Engineer',
+    company: 'Value Partners S.p.A.',
+    period: 'Settembre 2023 - Ottobre 2025',
+    type: 'Full Remote',
+    current: false,
+    description: [
+      'Sviluppo di soluzioni AI per estrazione automatica di dati e documenti complessi',
+      'Progettazione e implementazione di chatbot avanzati con Azure AI e Google VertexAI',
+      'Ottimizzazione e monitoraggio dei modelli ML/LLM con reportistica dedicata',
+      'Creazione di workflow automatizzati combinando GenAI e ML',
+    ],
+  },
+  {
+    title: 'Tirocinante Data Science',
+    company: 'Value Partners S.p.A.',
+    period: 'Maggio - Settembre 2023',
+    type: 'Full Remote',
+    current: false,
+    description: [],
+  },
+  {
+    title: 'Tirocinante Curriculare',
+    company: 'Value Partners S.p.A.',
+    period: 'Gennaio - Aprile 2023',
+    type: 'Full Remote',
+    current: false,
+    description: [],
+  },
+];
+
+const skills = {
+  'AI & Machine Learning': [
+    'Generative AI',
+    'Fine-tuning LLM',
+    'RAG Systems',
+    'Agenti AI',
+    'Data Extraction',
+    'OCR & NLP',
+  ],
+  'Cloud & Infrastructure': [
+    'AWS',
+    'Azure AI',
+    'Google Cloud / VertexAI',
+    'Microservizi',
+    'Serverless',
+  ],
+  'Development': [
+    'Python',
+    'TypeScript',
+    'Java',
+    'PostgreSQL',
+    'MongoDB',
+    'Neo4J',
+  ],
+  'Leadership & Metodologia': [
+    'Team Leadership',
+    'Mentoring',
+    'Agile & Scrum',
+    'TDD',
+    'Pytest',
+  ],
+};
+
+const certifications = [
+  { name: 'Certificazione AI ACT', status: 'In corso' },
+  { name: 'Scrum Master', status: 'In programma' },
+  { name: 'Data Science', provider: 'Udemy', status: 'Completato' },
+  { name: 'Deep Learning', provider: 'Coursera', status: 'Completato' },
+];
 ---
 
 <BaseLayout
@@ -34,111 +127,463 @@ const jsonLd = {
   jsonLd={jsonLd}
 >
   <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6">
+    <!-- Hero Section -->
     <div class="bg-surface-container-low rounded-[40px] px-6 pt-2 pb-16 relative overflow-hidden elevation-0">
+      <!-- Background Pattern -->
+      <div class="absolute inset-0 opacity-[0.03] pointer-events-none">
+        <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="dot-grid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+              <circle cx="2" cy="2" r="1.5" fill="currentColor" class="text-primary"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#dot-grid)"/>
+        </svg>
+      </div>
+
+      <!-- Radial Gradient -->
+      <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/3 translate-x-1/3 pointer-events-none"></div>
+
       <Navbar />
 
-      <div class="mt-12 max-w-3xl mx-auto md:px-12 relative z-10">
-        <!-- Header con avatar -->
-        <div class="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
-          <img
-            src="/images/avatar.jpg"
-            alt={SITE.author.name}
-            class="w-32 h-32 rounded-full border-4 border-surface-container-high object-cover"
-            width="128"
-            height="128"
-            loading="eager"
-          />
-          <div>
+      <!-- Hero Content -->
+      <div class="mt-12 max-w-5xl mx-auto px-4 md:px-12 relative z-10">
+        <div class="flex flex-col lg:flex-row items-center lg:items-start gap-10">
+          <!-- Avatar -->
+          <div class="flex-shrink-0">
+            <div class="relative">
+              <img
+                src="/images/avatar.png"
+                alt={SITE.author.name}
+                class="w-40 h-40 lg:w-52 lg:h-52 rounded-full border-4 border-primary/20 object-cover elevation-2"
+                width="208"
+                height="208"
+                loading="eager"
+              />
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="text-center lg:text-left flex-1">
+            <span class="inline-block px-3 py-1 text-xs font-medium uppercase tracking-wide text-primary bg-primary/10 rounded-full mb-4">
+              AI & Data Science
+            </span>
             <h1 class="text-display-small md:text-display-medium font-bold text-on-surface mb-2">
               {SITE.author.name}
             </h1>
-            <p class="text-headline-small text-on-surface-variant mb-4">
+            <p class="text-headline-small text-primary mb-4 font-medium">
               {SITE.author.jobTitle}
             </p>
-            <div class="flex gap-4">
-              {SITE.author.sameAs.map((url) => {
-                const isGithub = url.includes('github');
-                const isLinkedin = url.includes('linkedin');
-                const label = isGithub ? 'GitHub' : isLinkedin ? 'LinkedIn' : 'Profile';
-                return (
-                  <a
-                    href={url}
-                    target="_blank"
-                    rel="me noopener noreferrer"
-                    class="px-4 py-2 rounded-full bg-secondary-container text-on-secondary-container text-label-large font-medium hover:bg-secondary-container/80 transition-colors"
-                  >
-                    {label}
-                  </a>
-                );
-              })}
+            <p class="text-body-large text-on-surface-variant mb-6 max-w-2xl">
+              Data Scientist con solida esperienza nello sviluppo e nella messa in produzione di soluzioni di <strong class="text-on-surface">AI Generativa</strong>, Data Extraction, Hybrid RAG, e Chatbot avanzati. Traduco le esigenze aziendali in soluzioni tecnologiche innovative con approccio agile e orientato al business.
+            </p>
+
+            <!-- Social Links -->
+            <div class="flex flex-wrap justify-center lg:justify-start gap-3">
+              <a
+                href="https://www.linkedin.com/in/ireneburresi/"
+                target="_blank"
+                rel="me noopener noreferrer"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0A66C2] text-white text-label-large font-medium hover:bg-[#0A66C2]/90 transition-colors elevation-1 hover:elevation-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+                LinkedIn
+              </a>
+              <a
+                href="https://github.com/ireneburresi"
+                target="_blank"
+                rel="me noopener noreferrer"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#24292e] text-white text-label-large font-medium hover:bg-[#24292e]/90 transition-colors elevation-1 hover:elevation-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                GitHub
+              </a>
+              <a
+                href="mailto:info@ireneburresi.dev"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-secondary-container text-on-secondary-container text-label-large font-medium hover:bg-secondary-container/80 transition-colors elevation-1 hover:elevation-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="20" height="16" x="2" y="4" rx="2"/>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                </svg>
+                Email
+              </a>
+              <a
+                href="/cv/"
+                class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-primary text-primary text-label-large font-medium hover:bg-primary hover:text-on-primary transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" x2="8" y1="13" y2="13"/>
+                  <line x1="16" x2="8" y1="17" y2="17"/>
+                  <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                Curriculum
+              </a>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <article class="prose prose-lg max-w-none text-on-surface">
-          <section class="mb-12">
-            <h2 class="text-headline-medium font-bold mb-4">Di cosa scrivo</h2>
-            <p class="text-body-large text-on-surface-variant mb-4">
-              Questo blog esplora l'intelligenza artificiale da prospettive multiple:
-              implementazione tecnica, ricerca scientifica, impatto economico e governance.
-            </p>
+    <!-- Main Content -->
+    <div class="max-w-5xl mx-auto mt-16 px-4 md:px-12 space-y-20">
+
+      <!-- Vision & Mission -->
+      <section>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="p-8 rounded-2xl bg-primary-container/30 border border-primary/10">
+            <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="6"/>
+                <circle cx="12" cy="12" r="2"/>
+              </svg>
+            </div>
+            <h2 class="text-headline-small font-bold text-on-surface mb-3">Vision</h2>
             <p class="text-body-large text-on-surface-variant">
-              Mi concentro su contenuti <strong>actionable</strong>: guide implementative,
-              analisi di paper, framework decisionali e casi studio reali.
-              Ogni articolo e pensato per essere utile sia a chi implementa che a chi decide.
+              Rendere l'intelligenza artificiale accessibile e utile per le aziende di ogni dimensione, trasformando complessita tecnologica in valore di business tangibile.
             </p>
-          </section>
+          </div>
+          <div class="p-8 rounded-2xl bg-secondary-container/30 border border-secondary/10">
+            <div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary">
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
+            </div>
+            <h2 class="text-headline-small font-bold text-on-surface mb-3">Mission</h2>
+            <p class="text-body-large text-on-surface-variant">
+              Creare soluzioni AI che risolvono problemi reali, combinando ricerca scientifica, best practices ingegneristiche e una profonda comprensione delle esigenze aziendali.
+            </p>
+          </div>
+        </div>
+      </section>
 
-          <section class="mb-12">
-            <h2 class="text-headline-medium font-bold mb-4">Competenze</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {SITE.author.knowsAbout.map((topic) => (
-                <a
-                  href={topic.wikidata}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="p-4 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors"
-                >
-                  <span class="text-title-medium font-medium">{topic.name}</span>
-                </a>
+      <!-- Filosofia di lavoro -->
+      <section>
+        <h2 class="text-headline-medium font-bold text-on-surface mb-6 flex items-center gap-3">
+          <span class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+          </span>
+          Filosofia di lavoro
+        </h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="p-6 rounded-2xl bg-surface-container elevation-1 text-center">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+                <path d="m15 5 3 3"/>
+              </svg>
+            </div>
+            <h3 class="text-title-medium font-bold text-on-surface mb-2">Dal codice alla strategia</h3>
+            <p class="text-body-medium text-on-surface-variant">
+              L'AI ha valore solo se risolve problemi reali. Parto sempre dal business case, non dalla tecnologia.
+            </p>
+          </div>
+          <div class="p-6 rounded-2xl bg-surface-container elevation-1 text-center">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
+                <path d="M22 12A10 10 0 0 0 12 2v10z"/>
+              </svg>
+            </div>
+            <h3 class="text-title-medium font-bold text-on-surface mb-2">Misurare, sempre</h3>
+            <p class="text-body-medium text-on-surface-variant">
+              Niente "AI magic". Ogni progetto ha KPI definiti prima del kickoff, non dopo.
+            </p>
+          </div>
+          <div class="p-6 rounded-2xl bg-surface-container elevation-1 text-center">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="m16 10-4 4-4-4"/>
+              </svg>
+            </div>
+            <h3 class="text-title-medium font-bold text-on-surface mb-2">Iterare velocemente</h3>
+            <p class="text-body-medium text-on-surface-variant">
+              MVP in settimane, non mesi. Fallire presto costa meno che fallire tardi.
+            </p>
+          </div>
+          <div class="p-6 rounded-2xl bg-surface-container elevation-1 text-center">
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <h3 class="text-title-medium font-bold text-on-surface mb-2">Crescere insieme</h3>
+            <p class="text-body-medium text-on-surface-variant">
+              Il successo di un team si misura dalla crescita delle persone, non solo dei progetti.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Di cosa scrivo -->
+      <section>
+        <h2 class="text-headline-medium font-bold text-on-surface mb-6 flex items-center gap-3">
+          <span class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
+            </svg>
+          </span>
+          Di cosa scrivo
+        </h2>
+        <div class="p-8 rounded-2xl bg-surface-container elevation-1">
+          <p class="text-body-large text-on-surface-variant mb-4">
+            Questo blog esplora l'intelligenza artificiale da prospettive multiple:
+            implementazione tecnica, ricerca scientifica, impatto economico e governance.
+          </p>
+          <p class="text-body-large text-on-surface-variant mb-6">
+            Mi concentro su contenuti <strong class="text-on-surface">actionable</strong>: guide implementative,
+            analisi di paper, framework decisionali e casi studio reali.
+            Ogni articolo e pensato per essere utile sia a chi implementa che a chi decide.
+          </p>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div class="p-3 rounded-xl bg-surface-container-high text-center">
+              <span class="text-title-medium font-medium text-on-surface">Tecnica</span>
+            </div>
+            <div class="p-3 rounded-xl bg-surface-container-high text-center">
+              <span class="text-title-medium font-medium text-on-surface">Ricerca</span>
+            </div>
+            <div class="p-3 rounded-xl bg-surface-container-high text-center">
+              <span class="text-title-medium font-medium text-on-surface">Business</span>
+            </div>
+            <div class="p-3 rounded-xl bg-surface-container-high text-center">
+              <span class="text-title-medium font-medium text-on-surface">Governance</span>
+            </div>
+            <div class="p-3 rounded-xl bg-surface-container-high text-center">
+              <span class="text-title-medium font-medium text-on-surface">Metodologia</span>
+            </div>
+            <div class="p-3 rounded-xl bg-surface-container-high text-center">
+              <span class="text-title-medium font-medium text-on-surface">Altro</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Competenze -->
+      <section>
+        <h2 class="text-headline-medium font-bold text-on-surface mb-6 flex items-center gap-3">
+          <span class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+              <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+            </svg>
+          </span>
+          Competenze
+        </h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          {Object.entries(skills).map(([category, items]) => (
+            <div class="p-6 rounded-2xl bg-surface-container elevation-1">
+              <h3 class="text-title-large font-bold text-on-surface mb-4">{category}</h3>
+              <div class="flex flex-wrap gap-2">
+                {items.map((skill) => (
+                  <span class="px-3 py-1.5 rounded-full bg-primary/10 text-primary text-label-large font-medium">
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Esperienza -->
+      <section>
+        <h2 class="text-headline-medium font-bold text-on-surface mb-6 flex items-center gap-3">
+          <span class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+              <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+              <line x1="16" x2="16" y1="2" y2="6"/>
+              <line x1="8" x2="8" y1="2" y2="6"/>
+              <line x1="3" x2="21" y1="10" y2="10"/>
+            </svg>
+          </span>
+          Esperienza
+        </h2>
+        <div class="relative">
+          <!-- Timeline line -->
+          <div class="absolute left-[19px] top-0 bottom-0 w-0.5 bg-outline/20 hidden md:block"></div>
+
+          <div class="space-y-6">
+            {experiences.map((exp, index) => (
+              <div class="relative flex gap-6">
+                <!-- Timeline dot -->
+                <div class="hidden md:flex flex-shrink-0 w-10 h-10 rounded-full bg-surface-container border-2 border-primary items-center justify-center z-10">
+                  {exp.current ? (
+                    <div class="w-3 h-3 rounded-full bg-primary animate-pulse"></div>
+                  ) : (
+                    <div class="w-2 h-2 rounded-full bg-outline"></div>
+                  )}
+                </div>
+
+                <!-- Content -->
+                <div class={`flex-1 p-6 rounded-2xl ${exp.current ? 'bg-primary-container/30 border border-primary/20' : 'bg-surface-container'} elevation-1`}>
+                  <div class="flex flex-wrap items-start justify-between gap-2 mb-2">
+                    <div>
+                      <h3 class="text-title-large font-bold text-on-surface">{exp.title}</h3>
+                      <p class="text-body-large text-primary font-medium">{exp.company}</p>
+                    </div>
+                    <div class="flex flex-col items-end gap-1">
+                      <span class="text-label-large text-on-surface-variant">{exp.period}</span>
+                      <span class="px-2 py-0.5 text-xs rounded-full bg-surface-container-high text-on-surface-variant">
+                        {exp.type}
+                      </span>
+                    </div>
+                  </div>
+                  {exp.description.length > 0 && (
+                    <ul class="mt-4 space-y-2">
+                      {exp.description.map((item) => (
+                        <li class="flex gap-2 text-body-medium text-on-surface-variant">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0 mt-1 text-primary">
+                            <polyline points="9 11 12 14 22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                          </svg>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- Formazione -->
+      <section>
+        <h2 class="text-headline-medium font-bold text-on-surface mb-6 flex items-center gap-3">
+          <span class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </span>
+          Formazione
+        </h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- Laurea -->
+          <div class="p-6 rounded-2xl bg-surface-container elevation-1">
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                  <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-title-large font-bold text-on-surface">Laurea Triennale in Informatica</h3>
+                <p class="text-body-large text-primary font-medium">Universita di Pisa</p>
+                <p class="text-label-large text-on-surface-variant mt-1">Aprile 2023</p>
+                <p class="text-body-medium text-on-surface-variant mt-3">
+                  <strong>Tesi:</strong> Studio, Applicazione e Confronto di Diverse Metodologie per l'Estrazione dei Dati in Progetti NLP
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Certificazioni -->
+          <div class="p-6 rounded-2xl bg-surface-container elevation-1">
+            <h3 class="text-title-large font-bold text-on-surface mb-4">Certificazioni</h3>
+            <div class="space-y-3">
+              {certifications.map((cert) => (
+                <div class="flex items-center justify-between p-3 rounded-xl bg-surface-container-high">
+                  <div>
+                    <p class="text-title-medium font-medium text-on-surface">{cert.name}</p>
+                    {cert.provider && (
+                      <p class="text-body-small text-on-surface-variant">{cert.provider}</p>
+                    )}
+                  </div>
+                  <span class={`px-2 py-1 text-xs rounded-full ${cert.status === 'Completato' ? 'bg-tertiary-container text-on-tertiary-container' : 'bg-secondary-container text-on-secondary-container'}`}>
+                    {cert.status}
+                  </span>
+                </div>
               ))}
             </div>
-          </section>
+          </div>
+        </div>
+      </section>
 
-          <section class="mb-12">
-            <h2 class="text-headline-medium font-bold mb-4">Struttura del Blog</h2>
-            <p class="text-body-large text-on-surface-variant mb-4">
-              I contenuti sono organizzati in sei pillar tematici:
-            </p>
-            <ul class="list-disc list-inside text-body-large text-on-surface-variant space-y-2">
-              <li><strong>Ingegneria AI</strong> - Architetture, implementazioni e deployment</li>
-              <li><strong>Ricerca e Frontiere</strong> - Analisi paper e breakthrough</li>
-              <li><strong>Business e ROI</strong> - Economia e strategia AI</li>
-              <li><strong>Governance e Sicurezza</strong> - Compliance, ethics, security</li>
-              <li><strong>Metodologia</strong> - Workflow e produttivita</li>
-              <li><strong>Sintesi</strong> - Analisi cross-domain e trend</li>
-            </ul>
-          </section>
+      <!-- Latest Posts -->
+      {latestPosts.length > 0 && (
+        <section>
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-headline-medium font-bold text-on-surface flex items-center gap-3">
+              <span class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+                  <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/>
+                  <path d="M18 14h-8"/>
+                  <path d="M15 18h-5"/>
+                  <path d="M10 6h8v4h-8V6Z"/>
+                </svg>
+              </span>
+              Ultimi Articoli
+            </h2>
+            <a
+              href="/blog/"
+              class="flex items-center gap-1 text-label-large font-medium link-state"
+            >
+              Vedi tutti
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"/>
+                <path d="m12 5 7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {latestPosts.map((post) => <ArticleCard post={post} />)}
+          </div>
+        </section>
+      )}
 
-          <section class="mb-12">
-            <h2 class="text-headline-medium font-bold mb-4">Contatti</h2>
-            <p class="text-body-large text-on-surface-variant">
-              Per collaborazioni, domande tecniche o feedback sui contenuti,
-              puoi trovarmi sui profili social linkati sopra.
-            </p>
-          </section>
+      <!-- Contatti -->
+      <section class="pb-8">
+        <div class="p-8 md:p-12 rounded-2xl bg-primary-container/50 text-center">
+          <h2 class="text-headline-medium font-bold text-on-surface mb-4">Lavoriamo insieme?</h2>
+          <p class="text-body-large text-on-surface-variant mb-8 max-w-2xl mx-auto">
+            Per collaborazioni, consulenze su progetti AI, o semplicemente per discutere di tecnologia,
+            non esitare a contattarmi. Sono sempre aperta a nuove sfide e opportunita.
+          </p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a
+              href="mailto:info@ireneburresi.dev"
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-on-primary text-label-large font-medium hover:bg-primary/90 transition-colors elevation-1 hover:elevation-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="20" height="16" x="2" y="4" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+              info@ireneburresi.dev
+            </a>
+            <a
+              href="https://www.linkedin.com/in/ireneburresi/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-surface text-on-surface text-label-large font-medium hover:bg-surface-container transition-colors elevation-1 hover:elevation-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+              Connettiti su LinkedIn
+            </a>
+          </div>
+        </div>
+      </section>
 
-          <section>
-            <h2 class="text-headline-medium font-bold mb-4">Licenza</h2>
-            <p class="text-body-large text-on-surface-variant">
-              I contenuti di questo blog sono rilasciati sotto
-              <a href="/licenza/" class="text-primary hover:underline">Creative Commons BY 4.0</a>.
-              Per dettagli su utilizzo AI e training, consulta la
-              <a href="/licenza/" class="text-primary hover:underline">pagina licenza</a>.
-            </p>
-          </section>
-        </article>
-      </div>
     </div>
   </div>
 </BaseLayout>

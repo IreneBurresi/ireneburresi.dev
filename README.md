@@ -91,6 +91,9 @@ npm run dev
 | `npm run lint` | Astro check |
 | `npm run typecheck` | TypeScript check |
 | `npm run validate` | Build + full test suite |
+| `npm run audit:seo` | Full SEO audit (Lighthouse CI) |
+| `npm run audit:perf` | Performance audit with Core Web Vitals |
+| `npm run audit:quick` | Quick SEO+Performance check |
 
 ### Testing
 
@@ -107,6 +110,47 @@ npm run test
 
 # Expected output: 86 tests passed
 ```
+
+### SEO Audit
+
+The blog includes automated SEO and performance auditing with Lighthouse CI:
+
+```bash
+# Full SEO audit on multiple pages
+npm run audit:seo
+
+# Performance-focused audit with Core Web Vitals
+npm run audit:perf
+
+# Quick headless audit (SEO + Performance)
+npm run audit:quick
+```
+
+**What gets tested:**
+
+- **Core Web Vitals**: LCP, CLS, INP (Google ranking signals)
+- **SEO Technical**: Meta tags, robots.txt, canonical, structured data
+- **Accessibility**: WCAG AA compliance, color contrast, alt text
+- **Performance**: Resource optimization, image formats, compression
+
+**Configuration**: See [lighthouserc.cjs](./lighthouserc.cjs) for thresholds and URLs.
+
+**Requirements**: Chrome/Chromium must be installed. Install via:
+```bash
+# macOS
+brew install --cask google-chrome
+
+# Ubuntu/Debian
+sudo apt install chromium-browser
+
+# Or use Chrome you already have installed
+```
+
+**Full Guide**: [docs/SEO_AUDIT_GUIDE.md](./docs/SEO_AUDIT_GUIDE.md) includes:
+- Lighthouse CI usage and interpretation
+- Core Web Vitals optimization strategies
+- Screaming Frog setup for technical crawling
+- Complete SEO checklist
 
 ## Configuration
 
@@ -129,7 +173,7 @@ summary: "Description 120-160 characters"
 publishedAt: "2024-12-20"
 author:
   name: "Irene Burresi"
-  avatar: "/images/avatar.jpg"
+  avatar: "/images/avatar.png"
   role: "AI Engineer"
 pillar: "engineering"
 subsection: "implementations"

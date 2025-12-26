@@ -30,7 +30,7 @@ export interface Pillar {
 // Struttura dei 6 Pillar del blog AI
 export const PILLARS = {
   engineering: {
-    name: 'Ingegneria AI',
+    name: 'Tecnica',
     slug: 'ingegneria-ai',
     menuLabel: 'Architetture, implementazioni e deployment di sistemi in produzione',
     hero: 'Progettazione e implementazione di sistemi AI in produzione. RAG, orchestrazione di agent, scelte architetturali e pattern consolidati per deployment scalabili.',
@@ -53,7 +53,7 @@ export const PILLARS = {
     },
   },
   research: {
-    name: 'Ricerca e Frontiere',
+    name: 'Ricerca',
     slug: 'ricerca',
     menuLabel: 'Analisi di paper, breakthrough tecnologici e direzioni emergenti',
     hero: 'Analisi della ricerca accademica e industriale: paper rilevanti, breakthrough tecnologici e direzioni emergenti nel campo dell\'AI.',
@@ -76,7 +76,7 @@ export const PILLARS = {
     },
   },
   business: {
-    name: 'Business e ROI',
+    name: 'Business',
     slug: 'business',
     menuLabel: 'Analisi economica, valutazione ROI e framework strategici',
     hero: 'Analisi economica e strategica dell\'AI: valutazione ROI, strutture di costo, casi studio aziendali e framework decisionali per investimenti tecnologici.',
@@ -99,7 +99,7 @@ export const PILLARS = {
     },
   },
   governance: {
-    name: 'Governance e Sicurezza',
+    name: 'Governance',
     slug: 'governance',
     menuLabel: 'Regolamentazione, sicurezza informatica e AI ethics',
     hero: 'Aspetti regolamentari, sicurezza informatica e AI ethics: compliance normativa, gestione dei rischi e framework per AI responsabile.',
@@ -122,7 +122,7 @@ export const PILLARS = {
     },
   },
   methodology: {
-    name: 'Metodologia e Produttività',
+    name: 'Metodologia',
     slug: 'metodologia',
     menuLabel: 'Workflow di ricerca, deep work e setup operativo',
     hero: 'Metodologie di lavoro per professionisti AI: workflow di ricerca, gestione della conoscenza, produttività e strumenti operativi.',
@@ -145,7 +145,7 @@ export const PILLARS = {
     },
   },
   synthesis: {
-    name: 'Sintesi e Analisi Cross-Domain',
+    name: 'Altro',
     slug: 'sintesi',
     menuLabel: 'Review trimestrali, trend analysis e scenario planning',
     hero: 'Articoli di sintesi che integrano prospettive multiple: analisi trimestrali, trend cross-domain e scenario planning basato su dati.',

@@ -1,0 +1,220 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Navbar from '@/components/layout/Navbar.astro';
+import { SITE } from '@/consts/site';
+import { PILLARS } from '@/lib/constants';
+
+const title = 'Feed RSS';
+const description = 'Iscriviti ai feed RSS del blog per ricevere gli aggiornamenti nel tuo reader preferito.';
+
+// Build pillar feeds list
+const pillarFeeds = Object.values(PILLARS).map(pillar => ({
+  name: pillar.name,
+  slug: pillar.slug,
+  url: `/${pillar.slug}/rss.xml`,
+}));
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6">
+    <div class="bg-surface-container-low rounded-[40px] px-6 pt-2 pb-16 relative overflow-hidden elevation-0">
+      <Navbar />
+
+      <div class="mt-12 max-w-3xl mx-auto md:px-12 relative z-10">
+        <h1 class="text-display-small md:text-display-medium font-bold text-on-surface mb-4">
+          Feed RSS
+        </h1>
+        <p class="text-body-large text-on-surface-variant mb-12">
+          Resta aggiornato sugli ultimi articoli usando il tuo feed reader preferito.
+        </p>
+
+        <!-- Main Feeds -->
+        <section class="mb-12">
+          <h2 class="text-headline-medium font-bold text-on-surface mb-6">Feed Principali</h2>
+
+          <div class="grid gap-4">
+            <!-- RSS 2.0 -->
+            <a
+              href="/rss.xml"
+              class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container hover:bg-surface-container-high transition-colors group"
+            >
+              <div class="w-12 h-12 rounded-xl bg-primary-container flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-on-primary-container">
+                  <path d="M4 11a9 9 0 0 1 9 9"/>
+                  <path d="M4 4a16 16 0 0 1 16 16"/>
+                  <circle cx="5" cy="19" r="1"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-title-medium font-medium text-on-surface group-hover:text-primary transition-colors">RSS 2.0</h3>
+                <p class="text-body-small text-on-surface-variant">Formato standard, compatibile con tutti i reader</p>
+              </div>
+              <code class="text-label-small text-on-surface-variant bg-surface-container-highest px-2 py-1 rounded hidden sm:block">/rss.xml</code>
+            </a>
+
+            <!-- Atom -->
+            <a
+              href="/atom.xml"
+              class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container hover:bg-surface-container-high transition-colors group"
+            >
+              <div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-on-secondary-container">
+                  <circle cx="12" cy="12" r="1"/>
+                  <path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z"/>
+                  <path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-title-medium font-medium text-on-surface group-hover:text-primary transition-colors">Atom 1.0</h3>
+                <p class="text-body-small text-on-surface-variant">Standard W3C, ricco di metadati</p>
+              </div>
+              <code class="text-label-small text-on-surface-variant bg-surface-container-highest px-2 py-1 rounded hidden sm:block">/atom.xml</code>
+            </a>
+
+            <!-- JSON Feed -->
+            <a
+              href="/feed.json"
+              class="flex items-center gap-4 p-4 rounded-2xl bg-surface-container hover:bg-surface-container-high transition-colors group"
+            >
+              <div class="w-12 h-12 rounded-xl bg-tertiary-container flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-on-tertiary-container">
+                  <path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/>
+                  <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+                  <path d="m5 12-3 3 3 3"/>
+                  <path d="m9 18 3-3-3-3"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-title-medium font-medium text-on-surface group-hover:text-primary transition-colors">JSON Feed</h3>
+                <p class="text-body-small text-on-surface-variant">Formato moderno per sviluppatori</p>
+              </div>
+              <code class="text-label-small text-on-surface-variant bg-surface-container-highest px-2 py-1 rounded hidden sm:block">/feed.json</code>
+            </a>
+          </div>
+        </section>
+
+        <!-- Pillar Feeds -->
+        <section class="mb-12">
+          <h2 class="text-headline-medium font-bold text-on-surface mb-4">Feed per Categoria</h2>
+          <p class="text-body-medium text-on-surface-variant mb-6">
+            Sottoscrivi solo le categorie che ti interessano.
+          </p>
+
+          <div class="grid gap-3">
+            {pillarFeeds.map(feed => (
+              <a
+                href={feed.url}
+                class="flex items-center justify-between p-3 rounded-xl bg-surface-container hover:bg-surface-container-high transition-colors group"
+              >
+                <span class="text-title-small font-medium text-on-surface group-hover:text-primary transition-colors">{feed.name}</span>
+                <code class="text-label-small text-on-surface-variant bg-surface-container-highest px-2 py-1 rounded">{feed.url}</code>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <!-- Terms of Use -->
+        <section class="mb-12">
+          <h2 class="text-headline-medium font-bold text-on-surface mb-6">Termini di Utilizzo</h2>
+
+          <div class="space-y-6">
+            <div class="p-6 rounded-2xl bg-surface-container">
+              <h3 class="text-title-large font-bold text-on-surface mb-3 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
+                  <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                  <path d="m9 12 2 2 4-4"/>
+                </svg>
+                Uso Consentito
+              </h3>
+              <ul class="space-y-2 text-body-medium text-on-surface-variant">
+                <li class="flex items-start gap-2">
+                  <span class="text-primary mt-1">•</span>
+                  <span><strong>Lettura personale</strong> — Usa qualsiasi feed reader (Feedly, Inoreader, NetNewsWire, etc.)</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary mt-1">•</span>
+                  <span><strong>Aggregazione</strong> — Includi i feed in aggregatori e dashboard personali</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-primary mt-1">•</span>
+                  <span><strong>Condivisione</strong> — Condividi singoli articoli con link all'originale</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-surface-container">
+              <h3 class="text-title-large font-bold text-on-surface mb-3 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary">
+                  <path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Z"/>
+                  <path d="M15 3v4a2 2 0 0 0 2 2h4"/>
+                </svg>
+                Riproduzione con Attribuzione
+              </h3>
+              <p class="text-body-medium text-on-surface-variant mb-4">
+                I contenuti sono rilasciati sotto licenza <a href="https://creativecommons.org/licenses/by/4.0/deed.it" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">CC BY 4.0</a>.
+                Puoi riprodurre estratti o articoli completi a condizione che:
+              </p>
+              <ul class="space-y-2 text-body-medium text-on-surface-variant">
+                <li class="flex items-start gap-2">
+                  <span class="text-secondary mt-1">1.</span>
+                  <span>Citi l'autore (<strong>{SITE.author.name}</strong>)</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-secondary mt-1">2.</span>
+                  <span>Includi un link all'articolo originale</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-secondary mt-1">3.</span>
+                  <span>Indichi eventuali modifiche apportate</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-tertiary-container/30 border border-tertiary/20">
+              <h3 class="text-title-large font-bold text-on-surface mb-3 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-tertiary">
+                  <path d="M12 9v4"/>
+                  <path d="M12 17h.01"/>
+                  <path d="M3.586 3.586A2 2 0 0 0 3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 1.414-.586"/>
+                  <path d="m21 21-18-18"/>
+                </svg>
+                Uso Non Consentito
+              </h3>
+              <ul class="space-y-2 text-body-medium text-on-surface-variant">
+                <li class="flex items-start gap-2">
+                  <span class="text-tertiary mt-1">•</span>
+                  <span>Scraping massivo per training di modelli AI senza accordo</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-tertiary mt-1">•</span>
+                  <span>Ripubblicazione sistematica senza attribuzione</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="text-tertiary mt-1">•</span>
+                  <span>Uso commerciale dei contenuti senza licenza esplicita</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="text-center">
+          <p class="text-body-medium text-on-surface-variant mb-4">
+            Per domande sull'uso dei contenuti, consulta la pagina
+          </p>
+          <a
+            href="/licenza/"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-on-primary text-label-large font-medium hover:bg-primary/90 transition-colors"
+          >
+            Licenza e Termini Completi
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"/>
+              <path d="m12 5 7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

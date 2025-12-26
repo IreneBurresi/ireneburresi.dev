@@ -111,6 +111,11 @@
   --md-sys-color-inverse-on-surface: #f5eff7;  /* Neutral 95 - Light text */
   --md-sys-color-inverse-primary: #cfbdfe;  /* Primary Tone 80 - Light purple */
 
+  /* Footer Colors - Fixed dark surface (always dark regardless of theme) */
+  --md-sys-color-footer-surface: #322f35;  /* Neutral 20 - Always dark */
+  --md-sys-color-footer-on-surface: #f5eff7;  /* Neutral 95 - Always light text */
+  --md-sys-color-footer-primary: #cfbdfe;  /* Primary Tone 80 - Accent on dark */
+
   /* Material 3 Shape - Corner Radius Scale
    * Extra Small (4px):  Tooltips, dense dropdowns, snackbars
    * Small (8px):        Chips, date picker cells, minimal dialogs
@@ -256,6 +261,11 @@
   --md-sys-color-inverse-surface: #e7e0e8;  /* Neutral 90 - Light surface */
   --md-sys-color-inverse-on-surface: #322f35;  /* Neutral 20 - Dark text */
   --md-sys-color-inverse-primary: #65558f;  /* Primary Tone 40 - Original primary */
+
+  /* Footer Colors - Fixed dark surface (same as light mode) */
+  --md-sys-color-footer-surface: #322f35;  /* Neutral 20 - Always dark */
+  --md-sys-color-footer-on-surface: #f5eff7;  /* Neutral 95 - Always light text */
+  --md-sys-color-footer-primary: #cfbdfe;  /* Primary Tone 80 - Accent on dark */
 }
 
 /* Map Material Design 3 tokens to Tailwind CSS variables */
@@ -326,6 +336,11 @@
   --color-inverse-surface: var(--md-sys-color-inverse-surface);
   --color-inverse-on-surface: var(--md-sys-color-inverse-on-surface);
   --color-inverse-primary: var(--md-sys-color-inverse-primary);
+
+  /* Footer colors (fixed dark) */
+  --color-footer-surface: var(--md-sys-color-footer-surface);
+  --color-footer-on-surface: var(--md-sys-color-footer-on-surface);
+  --color-footer-primary: var(--md-sys-color-footer-primary);
 
   /* Radius */
   --radius-sm: calc(var(--radius) - 4px);

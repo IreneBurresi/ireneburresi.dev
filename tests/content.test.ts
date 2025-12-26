@@ -247,3 +247,253 @@ describe('Lunghezza contenuti', () => {
     }
   });
 });
+
+// ============================================================================
+// ADVANCED VALIDATION TESTS
+// ============================================================================
+
+describe('Advanced Metadata Validation', () => {
+  const posts = getAllBlogPosts();
+
+  if (posts.length === 0) {
+    it.skip('nessun post trovato', () => {});
+    return;
+  }
+
+  it('genre è tra quelli consigliati', () => {
+    const validGenres = [
+      'Analysis',
+      'Tutorial',
+      'Review',
+      'Case Study',
+      'Opinion',
+      'Research',
+      'News',
+      'Comparison',
+      'Guide',
+    ];
+
+    const invalidGenres: string[] = [];
+
+    for (const post of posts) {
+      const fm = extractFrontmatter(post);
+      if (fm.genre && !validGenres.includes(fm.genre as string)) {
+        invalidGenres.push(`${post}: "${fm.genre}"`);
+      }
+    }
+
+    if (invalidGenres.length > 0) {
+      console.warn(
+        `⚠️  Genre non validi:\n  ${invalidGenres.join('\n  ')}\n  Valori consentiti: ${validGenres.join(', ')}`
+      );
+    }
+
+    expect(invalidGenres.length).toBe(0);
+  });
+
+  it('citation contiene solo URL validi', () => {
+    const errors: string[] = [];
+
+    for (const post of posts) {
+      const content = readFileSync(post, 'utf-8');
+
+      if (content.includes('citation:')) {
+        // Parse citation array
+        const citationMatch = content.match(/citation:\s*\n((?:\s*-\s*"[^"]+"\s*\n?)+)/);
+        if (citationMatch) {
+          const urls = citationMatch[1].match(/"([^"]+)"/g) || [];
+          for (const urlQuoted of urls) {
+            const url = urlQuoted.replace(/"/g, '');
+            try {
+              new URL(url);
+              if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                errors.push(`${post}: URL senza protocollo HTTP/S: ${url}`);
+              }
+            } catch {
+              errors.push(`${post}: URL non valido: ${url}`);
+            }
+          }
+        }
+      }
+    }
+
+    if (errors.length > 0) {
+      console.error(`❌ URL citation non validi:\n  ${errors.join('\n  ')}`);
+    }
+
+    expect(errors.length).toBe(0);
+  });
+
+  it('relatedSlugs puntano ad articoli esistenti', () => {
+    const allSlugs = posts.map((p) => {
+      const filename = p.split('/').pop() || '';
+      return filename.replace(/\.mdx?$/, '');
+    });
+
+    const errors: string[] = [];
+
+    for (const post of posts) {
+      const content = readFileSync(post, 'utf-8');
+      if (content.includes('relatedSlugs:')) {
+        const relatedMatch = content.match(/relatedSlugs:\s*\[(.*?)\]/s);
+        if (relatedMatch) {
+          const slugs = relatedMatch[1]
+            .split(',')
+            .map((s) => s.trim().replace(/["']/g, ''))
+            .filter((s) => s.length > 0);
+
+          for (const slug of slugs) {
+            if (!allSlugs.includes(slug)) {
+              errors.push(`${post}: slug "${slug}" non trovato`);
+            }
+          }
+        }
+      }
+    }
+
+    if (errors.length > 0) {
+      console.error(`❌ relatedSlugs non validi:\n  ${errors.join('\n  ')}`);
+    }
+
+    expect(errors.length).toBe(0);
+  });
+
+  it('coverImage punta a file esistente', () => {
+    const errors: string[] = [];
+
+    for (const post of posts) {
+      const fm = extractFrontmatter(post);
+      if (fm.coverImage) {
+        const imagePath = join(process.cwd(), 'public', fm.coverImage as string);
+        if (!existsSync(imagePath)) {
+          errors.push(`${post}: ${fm.coverImage} non trovato`);
+        }
+      }
+    }
+
+    if (errors.length > 0) {
+      console.error(`❌ coverImage mancanti:\n  ${errors.join('\n  ')}`);
+    }
+
+    expect(errors.length).toBe(0);
+  });
+
+  it('articoli hanno 3-6 tag (raccomandato)', () => {
+    const warnings: string[] = [];
+
+    for (const post of posts) {
+      const content = readFileSync(post, 'utf-8');
+      const tagsMatch = content.match(/tags:\s*\[(.*?)\]/);
+
+      if (tagsMatch) {
+        const tags = tagsMatch[1]
+          .split(',')
+          .map((t) => t.trim().replace(/["']/g, ''))
+          .filter((t) => t.length > 0);
+
+        const count = tags.length;
+        if (count < 3 || count > 6) {
+          warnings.push(`${post}: ${count} tag (raccomandato 3-6)`);
+        }
+      }
+    }
+
+    if (warnings.length > 0) {
+      console.warn(`⚠️  Articoli fuori range tag:\n  ${warnings.join('\n  ')}`);
+    }
+  });
+
+  it('secondaryPillars sono validi', () => {
+    const errors: string[] = [];
+
+    for (const post of posts) {
+      const content = readFileSync(post, 'utf-8');
+      if (content.includes('secondaryPillars:')) {
+        const secondaryMatch = content.match(/secondaryPillars:\s*\[(.*?)\]/);
+        if (secondaryMatch) {
+          const pillars = secondaryMatch[1]
+            .split(',')
+            .map((p) => p.trim().replace(/["']/g, ''))
+            .filter((p) => p.length > 0);
+
+          for (const pillar of pillars) {
+            if (!VALID_PILLARS.includes(pillar)) {
+              errors.push(`${post}: secondary pillar "${pillar}" non valido`);
+            }
+          }
+        }
+      }
+    }
+
+    if (errors.length > 0) {
+      console.error(`❌ secondaryPillars non validi:\n  ${errors.join('\n  ')}`);
+    }
+
+    expect(errors.length).toBe(0);
+  });
+
+  it('inLanguage usa codici ISO 639-1 validi', () => {
+    const validLangCodes = ['it', 'en', 'es', 'fr', 'de', 'pt'];
+    const errors: string[] = [];
+
+    for (const post of posts) {
+      const fm = extractFrontmatter(post);
+      if (fm.inLanguage && !validLangCodes.includes(fm.inLanguage as string)) {
+        errors.push(`${post}: "${fm.inLanguage}" non è un codice ISO 639-1 valido`);
+      }
+    }
+
+    if (errors.length > 0) {
+      console.error(
+        `❌ Codici lingua non validi:\n  ${errors.join('\n  ')}\n  Valori consentiti: ${validLangCodes.join(', ')}`
+      );
+    }
+
+    expect(errors.length).toBe(0);
+  });
+
+  it('summary ha lunghezza ideale per SEO (120-160 caratteri)', () => {
+    const warnings: string[] = [];
+
+    for (const post of posts) {
+      const fm = extractFrontmatter(post);
+      const summary = (fm.summary || fm.description) as string;
+
+      if (summary) {
+        const len = summary.length;
+        if (len < 120) {
+          warnings.push(`${post}: summary troppo corto (${len} caratteri)`);
+        } else if (len > 160) {
+          warnings.push(`${post}: summary troppo lungo (${len} caratteri)`);
+        }
+      }
+    }
+
+    if (warnings.length > 0) {
+      console.warn(
+        `⚠️  Summary fuori range SEO ideale (120-160):\n  ${warnings.join('\n  ')}`
+      );
+    }
+  });
+
+  it('nessun draft in produzione', () => {
+    const drafts: string[] = [];
+
+    for (const post of posts) {
+      const fm = extractFrontmatter(post);
+      if (fm.draft === true || fm.draft === 'true') {
+        drafts.push(post);
+      }
+    }
+
+    if (drafts.length > 0 && process.env.CI) {
+      throw new Error(
+        `❌ ${drafts.length} articoli in draft trovati in CI:\n  ${drafts.join('\n  ')}`
+      );
+    }
+
+    if (drafts.length > 0) {
+      console.warn(`⚠️  ${drafts.length} articoli in draft trovati (OK in locale)`);
+    }
+  });
+});

@@ -31,6 +31,10 @@ export async function GET(context: APIContext) {
       const published = toISOString(p.data.publishedAt);
       const modified = p.data.updatedAt ? toISOString(p.data.updatedAt) : published;
 
+      const categories = p.data.tags
+        .map((tag: string) => `  <category term="${escapeXml(tag)}"/>`)
+        .join('\n');
+
       return `<entry>
   <title>${escapeXml(p.data.title)}</title>
   <link href="${escapeXml(url)}"/>
@@ -40,6 +44,7 @@ export async function GET(context: APIContext) {
   <summary>${escapeXml(p.data.summary)}</summary>
   <content type="html">${escapeXml(html)}</content>
   <author><name>${escapeXml(p.data.author.name)}</name></author>
+${categories}
 </entry>`;
     })
     .join('\n');

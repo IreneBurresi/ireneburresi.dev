@@ -15,7 +15,7 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: `${pillar.name} | ${SITE.name}`,
-    description: pillar.description,
+    description: pillar.hero,
     site,
     items: posts.map((post) => ({
       title: post.data.title,
