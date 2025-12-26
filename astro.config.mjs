@@ -27,6 +27,13 @@ export default defineConfig({
     sitemap({
       // Escludi pagine utility dalla sitemap
       filter: (page) => !page.includes('/404') && !page.includes('/500'),
+      i18n: {
+        defaultLocale: 'it',
+        locales: {
+          it: 'it-IT',
+          en: 'en-US',
+        },
+      },
     }),
     preact(),
     pagefind(),
