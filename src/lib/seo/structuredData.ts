@@ -24,12 +24,17 @@ import type {
   ImageObject,
   ContactPoint,
   PostalAddress,
+  FAQPage,
+  Question,
+  Answer,
+  HowTo,
+  HowToStep,
 } from 'schema-dts';
 import { SITE } from '@/consts/site';
 import { PERSON, ORGANIZATION, WEBSITE, tagsToThings } from '@/consts/schema';
 
 // Schema.org graph structure
-type SchemaItem = Thing | Person | Organization | WebSite | WebPage | BlogPosting | Blog | BreadcrumbList | CollectionPage;
+type SchemaItem = Thing | Person | Organization | WebSite | WebPage | BlogPosting | Blog | BreadcrumbList | CollectionPage | FAQPage | HowTo;
 
 export type JsonLdGraph = {
   '@context': 'https://schema.org';
@@ -350,16 +355,18 @@ function toIsoDuration(readingTime: string): string {
  * BlogPosting schema completo
  *
  * Proprietà incluse:
- * - Core: headline, name, description, abstract
+ * - Core: headline, name, description, abstract, alternativeHeadline
  * - Dates: datePublished, dateModified, copyrightYear
  * - Author/Publisher: author, publisher, copyrightHolder
  * - Content: wordCount, timeRequired
- * - Media: image, thumbnailUrl
+ * - Media: image, thumbnailUrl, video
  * - Classification: keywords, articleSection, inLanguage, genre
+ * - Educational: educationalLevel, learningResourceType, teaches (prerequisites)
  * - Licensing: license, isAccessibleForFree
- * - Relations: isPartOf (Blog), mainEntityOfPage
+ * - Relations: isPartOf (Blog), mainEntityOfPage, isBasedOn
  * - Semantic: about (topics with Wikidata), mentions (related articles)
  * - Actions: potentialAction (ReadAction)
+ * - Community: discussionUrl
  * - Accessibility: speakable
  */
 export function buildArticleSchema(params: {
@@ -367,9 +374,11 @@ export function buildArticleSchema(params: {
   title: string;
   description: string;
   abstract?: string; // Abstract separato per Schema.org (opzionale)
+  alternativeHeadline?: string; // Titolo alternativo
   datePublished: string;
   dateModified?: string;
   imageUrl?: string;
+  videoUrl?: string; // URL video associato
   tags?: string[];
   section?: string;
   wordCount?: number;
@@ -378,6 +387,12 @@ export function buildArticleSchema(params: {
   inLanguage?: string; // Override lingua articolo
   genre?: string; // Genere articolo (es. "Analysis", "Tutorial")
   citation?: string[]; // Array di URL delle fonti
+  isBasedOn?: string[]; // Array di URL articoli/fonti base
+  keywords?: string[]; // Keywords aggiuntive
+  discussionUrl?: string; // URL discussione community
+  educationalLevel?: string; // Livello educativo
+  learningResourceType?: string; // Tipo risorsa educativa
+  prerequisites?: string[]; // Prerequisiti conoscenze
 }): BlogPosting {
   // Costruisci about con riferimenti Wikidata dai tags
   const aboutThings = params.tags ? tagsToThings(params.tags) : [];
@@ -390,6 +405,9 @@ export function buildArticleSchema(params: {
     name: params.title,
     description: params.description,
     abstract: params.abstract ?? params.description, // Usa abstract custom se disponibile
+
+    // Alternative headline per social
+    ...(params.alternativeHeadline && { alternativeHeadline: params.alternativeHeadline }),
 
     // Dates
     datePublished: params.datePublished,
@@ -410,10 +428,20 @@ export function buildArticleSchema(params: {
     isPartOf: { '@id': BLOG_ID },
 
     // Classification
-    keywords: params.tags?.join(', '),
+    keywords: params.keywords?.join(', ') ?? params.tags?.join(', '),
     articleSection: params.section,
     inLanguage: params.inLanguage ?? SITE.lang,
     genre: params.genre ?? 'Technology',
+
+    // Educational metadata
+    ...(params.educationalLevel && { educationalLevel: params.educationalLevel }),
+    ...(params.learningResourceType && { learningResourceType: params.learningResourceType }),
+    ...(params.prerequisites && params.prerequisites.length > 0 && {
+      teaches: params.prerequisites.map(prereq => ({
+        '@type': 'DefinedTerm',
+        name: prereq,
+      })),
+    }),
 
     // Citation (fonti)
     ...(params.citation && params.citation.length > 0 && {
@@ -422,6 +450,17 @@ export function buildArticleSchema(params: {
         url,
       })),
     }),
+
+    // isBasedOn (articoli/fonti base)
+    ...(params.isBasedOn && params.isBasedOn.length > 0 && {
+      isBasedOn: params.isBasedOn.map((url) => ({
+        '@type': 'CreativeWork',
+        url,
+      })),
+    }),
+
+    // Discussion URL (community)
+    ...(params.discussionUrl && { discussionUrl: params.discussionUrl }),
 
     // Licensing & Access
     license: WEBSITE.license,
@@ -436,10 +475,22 @@ export function buildArticleSchema(params: {
       })),
     }),
 
-    // Media
+    // Media: Image
     ...(params.imageUrl && {
       image: buildImageObject(params.imageUrl, params.title),
       thumbnailUrl: params.imageUrl,
+    }),
+
+    // Media: Video
+    ...(params.videoUrl && {
+      video: {
+        '@type': 'VideoObject',
+        url: params.videoUrl,
+        embedUrl: params.videoUrl,
+        name: params.title,
+        description: params.description,
+        thumbnailUrl: params.imageUrl,
+      },
     }),
 
     // Content metrics
@@ -589,17 +640,85 @@ export function buildBlogListingSchema(params: {
 }
 
 /**
+ * FAQ schema per domande frequenti
+ *
+ * Genera FAQPage schema.org per rich snippets.
+ * Usare quando l'articolo contiene 2+ Q&A pairs.
+ *
+ * @see https://schema.org/FAQPage
+ * @see https://developers.google.com/search/docs/appearance/structured-data/faqpage
+ */
+export function buildFAQSchema(params: {
+  id: string;
+  faqs: Array<{ question: string; answer: string }>;
+}): FAQPage {
+  const mainEntity: Question[] = params.faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    } as Answer,
+  }));
+
+  return {
+    '@type': 'FAQPage',
+    '@id': `${params.id}#faq`,
+    mainEntity,
+  } as FAQPage;
+}
+
+/**
+ * HowTo schema per guide step-by-step
+ *
+ * Genera HowTo schema.org per rich snippets.
+ * Usare per tutorial e guide pratiche.
+ *
+ * @see https://schema.org/HowTo
+ * @see https://developers.google.com/search/docs/appearance/structured-data/how-to
+ */
+export function buildHowToSchema(params: {
+  id: string;
+  howto: {
+    name: string;
+    description?: string;
+    totalTime?: string;
+    steps: Array<{ name: string; text: string; url?: string }>;
+  };
+}): HowTo {
+  const steps: HowToStep[] = params.howto.steps.map((step, index) => ({
+    '@type': 'HowToStep',
+    position: index + 1,
+    name: step.name,
+    text: step.text,
+    ...(step.url && { url: `${params.id}${step.url}` }),
+  })) as HowToStep[];
+
+  return {
+    '@type': 'HowTo',
+    '@id': `${params.id}#howto`,
+    name: params.howto.name,
+    ...(params.howto.description && { description: params.howto.description }),
+    ...(params.howto.totalTime && { totalTime: params.howto.totalTime }),
+    step: steps,
+  } as HowTo;
+}
+
+/**
  * Grafo completo per un articolo
  * Include: Person, Org, WebSite, Blog, BlogPosting, Breadcrumb
+ * Opzionalmente: FAQPage, HowTo
  */
 export function buildArticleGraph(params: {
   canonicalUrl: string;
   title: string;
   description: string;
   abstract?: string;
+  alternativeHeadline?: string;
   datePublished: string;
   dateModified?: string;
   imageUrl?: string;
+  videoUrl?: string;
   tags?: string[];
   section?: string;
   wordCount?: number;
@@ -609,6 +728,20 @@ export function buildArticleGraph(params: {
   inLanguage?: string;
   genre?: string;
   citation?: string[];
+  isBasedOn?: string[];
+  keywords?: string[];
+  discussionUrl?: string;
+  educationalLevel?: string;
+  learningResourceType?: string;
+  prerequisites?: string[];
+  // NEW: FAQ and HowTo schemas
+  faq?: Array<{ question: string; answer: string }>;
+  howto?: {
+    name: string;
+    description?: string;
+    totalTime?: string;
+    steps: Array<{ name: string; text: string; url?: string }>;
+  };
 }): JsonLdGraph {
   const graph: SchemaItem[] = [
     buildPersonSchema(),
@@ -620,6 +753,16 @@ export function buildArticleGraph(params: {
 
   if (params.breadcrumbs?.length) {
     graph.push(buildBreadcrumbSchema(params.breadcrumbs));
+  }
+
+  // Add FAQ schema if present
+  if (params.faq && params.faq.length > 0) {
+    graph.push(buildFAQSchema({ id: params.canonicalUrl, faqs: params.faq }));
+  }
+
+  // Add HowTo schema if present
+  if (params.howto) {
+    graph.push(buildHowToSchema({ id: params.canonicalUrl, howto: params.howto }));
   }
 
   return {

@@ -19,9 +19,32 @@ export interface Props {
   description?: string;
   canonical?: string;
 
+  // SEO Advanced
+  metaTitle?: string; // Override for <title> tag, defaults to title
+  focusKeyword?: string; // Primary focus keyword for SEO
+
   // Preview
   ogType?: 'website' | 'article';
   ogImage?: string;
+
+  // OG/Twitter customization
+  ogCustom?: {
+    title?: string;
+    description?: string;
+    image?: string;
+    imageAlt?: string;
+  };
+  twitterCustom?: {
+    title?: string;
+    description?: string;
+    image?: string;
+    imageAlt?: string;
+  };
+
+  // Navigation
+  prevUrl?: string; // Previous page URL (for pagination/series)
+  nextUrl?: string; // Next page URL (for pagination/series)
+  preconnect?: string[]; // Domains to preconnect for performance
 
   // Article metadata
   publishedTime?: string;
@@ -47,6 +70,8 @@ const props = Astro.props;
 const site = Astro.site;
 if (!site) throw new Error('Astro.site mancante: configura `site` in astro.config.mjs');
 
+// SEO fields with fallbacks
+const metaTitle = props.metaTitle ?? props.title;
 const description = props.description ?? SITE.description;
 
 const canonicalUrl = props.canonical
@@ -55,6 +80,24 @@ const canonicalUrl = props.canonical
 
 const ogType = props.ogType ?? 'website';
 const ogImageUrl = toAbsoluteUrl(props.ogImage ?? SITE.og.defaultImagePath, site);
+
+// OG customization with cascading fallbacks
+const ogTitle = props.ogCustom?.title ?? metaTitle;
+const ogDescription = props.ogCustom?.description ?? description;
+const ogImage = props.ogCustom?.image
+  ? toAbsoluteUrl(props.ogCustom.image, site)
+  : ogImageUrl;
+const ogImageAlt = props.ogCustom?.imageAlt ?? props.title;
+
+// Twitter customization with fallbacks to OG then defaults
+const twitterTitle = props.twitterCustom?.title ?? props.ogCustom?.title ?? metaTitle;
+const twitterDescription = props.twitterCustom?.description ?? props.ogCustom?.description ?? description;
+const twitterImage = props.twitterCustom?.image
+  ? toAbsoluteUrl(props.twitterCustom.image, site)
+  : props.ogCustom?.image
+  ? toAbsoluteUrl(props.ogCustom.image, site)
+  : ogImageUrl;
+const twitterImageAlt = props.twitterCustom?.imageAlt ?? props.ogCustom?.imageAlt ?? props.title;
 
 // Robots policy per massima visibilita in SERP
 const robots: RobotsPolicy = {
@@ -86,9 +129,22 @@ const jsonLdPayload = props.jsonLd
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>{props.title}</title>
+<title>{metaTitle}</title>
 <meta name="description" content={description} />
+{props.focusKeyword && <meta name="keywords" content={props.focusKeyword} />}
 <link rel="canonical" href={canonicalUrl.toString()} />
+
+<!-- Resource hints for performance -->
+{props.preconnect?.map((domain) => (
+  <>
+    <link rel="preconnect" href={domain} />
+    <link rel="dns-prefetch" href={domain} />
+  </>
+))}
+
+<!-- Pagination links -->
+{props.prevUrl && <link rel="prev" href={toAbsoluteUrl(props.prevUrl, site).toString()} />}
+{props.nextUrl && <link rel="next" href={toAbsoluteUrl(props.nextUrl, site).toString()} />}
 
 <!-- hreflang tags for multilingual SEO -->
 {props.alternateUrls?.map(({ locale, url }) => (
@@ -157,11 +213,11 @@ const jsonLdPayload = props.jsonLd
 <!-- OpenGraph -->
 <meta property="og:type" content={ogType} />
 <meta property="og:site_name" content={SITE.name} />
-<meta property="og:title" content={props.title} />
-<meta property="og:description" content={description} />
+<meta property="og:title" content={ogTitle} />
+<meta property="og:description" content={ogDescription} />
 <meta property="og:url" content={canonicalUrl.toString()} />
-<meta property="og:image" content={ogImageUrl.toString()} />
-<meta property="og:image:alt" content={props.title} />
+<meta property="og:image" content={ogImage.toString()} />
+<meta property="og:image:alt" content={ogImageAlt} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:type" content="image/png" />
@@ -172,10 +228,10 @@ const jsonLdPayload = props.jsonLd
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
 {SITE.social.twitter && <meta name="twitter:site" content={SITE.social.twitter} />}
-<meta name="twitter:title" content={props.title} />
-<meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={ogImageUrl.toString()} />
-<meta name="twitter:image:alt" content={props.title} />
+<meta name="twitter:title" content={twitterTitle} />
+<meta name="twitter:description" content={twitterDescription} />
+<meta name="twitter:image" content={twitterImage.toString()} />
+<meta name="twitter:image:alt" content={twitterImageAlt} />
 
 <!-- Article extras (per og:type article) -->
 {props.publishedTime && <meta property="article:published_time" content={props.publishedTime} />}

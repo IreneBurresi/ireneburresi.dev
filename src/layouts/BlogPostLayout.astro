@@ -57,15 +57,20 @@ const ogImage = toAbsoluteUrl(displayImage, new URL(SITE.url)).toString();
 const pillarSlug = getPillarSlug(data.pillar as keyof typeof t.pillars, currentLocale);
 const sectionName = t.pillars[data.pillar as keyof typeof t.pillars]?.name ?? data.pillar;
 
+// Meta description per SEO (usa description se presente, altrimenti summary)
+const metaDescription = data.description ?? data.summary;
+
 // JSON-LD strutturato per l'articolo
 const articleJsonLd = buildArticleGraph({
   canonicalUrl,
   title: data.title,
-  description: data.summary,
+  description: metaDescription,
   abstract: data.abstract,
+  alternativeHeadline: data.alternativeHeadline,
   datePublished: pubDateISO,
   dateModified: modDateISO,
   imageUrl: ogImage,
+  videoUrl: data.video,
   tags: data.tags,
   section: sectionName,
   wordCount,
@@ -73,6 +78,15 @@ const articleJsonLd = buildArticleGraph({
   inLanguage: data.inLanguage,
   genre: data.genre,
   citation: data.citation,
+  isBasedOn: data.isBasedOn,
+  keywords: data.keywords,
+  discussionUrl: data.discussionUrl,
+  educationalLevel: data.educationalLevel,
+  learningResourceType: data.learningResourceType,
+  prerequisites: data.prerequisites,
+  // NEW: FAQ and HowTo schemas
+  faq: data.faq,
+  howto: data.howto,
   breadcrumbs: [
     { name: 'Home', url: `${SITE.url}${baseUrl}/` },
     { name: sectionName, url: `${SITE.url}${baseUrl}/${pillarSlug}/` },
@@ -83,7 +97,7 @@ const articleJsonLd = buildArticleGraph({
 
 <BaseLayout
   title={data.title}
-  description={data.summary}
+  description={metaDescription}
   image={displayImage}
   type="article"
   canonical={canonicalUrl}
@@ -93,6 +107,13 @@ const articleJsonLd = buildArticleGraph({
   tags={data.tags}
   section={sectionName}
   locale={currentLocale}
+  metaTitle={data.meta_title}
+  focusKeyword={data.focus_keyword}
+  ogCustom={data.og}
+  twitterCustom={data.twitter}
+  preconnect={data.preconnect}
+  prevUrl={data.prev}
+  nextUrl={data.next}
 >
   <!-- Big Colored Container - Level 0 with tinted surface (no shadow, just color) -->
   <div class="w-full max-w-[1600px] mx-auto p-4 md:p-6">

@@ -34,24 +34,6 @@ export async function getLocalizedPosts(
 }
 
 /**
- * Check if a post has a translation in the target locale
- *
- * @param post - The blog post entry
- * @param targetLocale - The locale to check for
- * @returns True if translation exists
- *
- * @example
- * const post = await getEntry('blog', 'my-article');
- * const hasEnglish = hasTranslation(post, 'en'); // true if availableIn includes 'en'
- */
-export function hasTranslation(
-  post: CollectionEntry<'blog'>,
-  targetLocale: Locale,
-): boolean {
-  return post.data.availableIn?.includes(targetLocale) ?? false;
-}
-
-/**
  * Get the slug for a post's translation in a different locale
  * For English posts, removes the .en suffix
  * For Italian posts seeking English, adds the .en suffix

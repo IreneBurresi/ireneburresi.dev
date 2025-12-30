@@ -7,104 +7,32 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import Navbar from '@/components/layout/Navbar.astro';
 import { SITE } from '@/consts/site';
 import { canonicalFromPath } from '@/lib/seo/url';
+import {
+  CONTACT,
+  getExperiencesForLocale,
+  getSkillsForLocale,
+  getCertificationsForLocale,
+  getEducationForLocale,
+  LANGUAGES,
+  ABOUT,
+  getLocalized,
+} from '@/data/profile';
 
 const title = 'Curriculum Vitae';
 const description = `Curriculum Vitae di ${SITE.author.name} - ${SITE.author.jobTitle}`;
 const canonicalUrl = canonicalFromPath('/cv/', new URL(SITE.url)).toString();
 
-// Dati CV
+// Data - imported from centralized profile data
+const locale = 'it';
+const experiences = getExperiencesForLocale(locale);
+const skills = getSkillsForLocale(locale);
+const certifications = getCertificationsForLocale(locale);
+const education = getEducationForLocale(locale);
+const languages = LANGUAGES[locale];
 const contact = {
-  email: 'info@ireneburresi.dev',
-  linkedin: 'linkedin.com/in/ireneburresi',
-  github: 'github.com/ireneburresi',
-  website: 'ireneburresi.dev',
-  location: 'Italia (Full Remote)',
+  ...CONTACT,
+  location: getLocalized(CONTACT.location, locale),
 };
-
-const experiences = [
-  {
-    title: 'Lead AI Professional',
-    company: 'Value Partners S.p.A.',
-    period: 'Ottobre 2025 - Presente',
-    type: 'Full Remote',
-    current: true,
-    description: [
-      'Progettazione e implementazione di soluzioni AI avanzate per clienti in ambito legale, medico e assicurativo',
-      'Sviluppo e ottimizzazione di pipeline di Data Extraction (OCR, NLP) e RAG ibridi',
-      'Gestione del team con responsabilita organizzative e di leadership',
-      'Coordinamento della definizione delle WBS, gestione dei colloqui tecnici e mentoring',
-    ],
-  },
-  {
-    title: 'Data Scientist & AI Engineer',
-    company: 'Value Partners S.p.A.',
-    period: 'Settembre 2023 - Ottobre 2025',
-    type: 'Full Remote',
-    current: false,
-    description: [
-      'Sviluppo di soluzioni AI per estrazione automatica di dati e documenti complessi',
-      'Progettazione e implementazione di chatbot avanzati con Azure AI e Google VertexAI',
-      'Ottimizzazione e monitoraggio dei modelli ML/LLM con reportistica dedicata',
-      'Creazione di workflow automatizzati combinando GenAI e ML',
-    ],
-  },
-  {
-    title: 'Tirocinante Data Science',
-    company: 'Value Partners S.p.A.',
-    period: 'Maggio - Settembre 2023',
-    type: 'Full Remote',
-    current: false,
-    description: [],
-  },
-  {
-    title: 'Tirocinante Curriculare',
-    company: 'Value Partners S.p.A.',
-    period: 'Gennaio - Aprile 2023',
-    type: 'Full Remote',
-    current: false,
-    description: [],
-  },
-];
-
-const skills = {
-  'AI & Machine Learning': [
-    'Generative AI',
-    'Fine-tuning LLM',
-    'RAG Systems',
-    'Agenti AI',
-    'Data Extraction',
-    'OCR & NLP',
-  ],
-  'Cloud & Infrastructure': [
-    'AWS',
-    'Azure AI',
-    'Google Cloud / VertexAI',
-    'Microservizi',
-    'Serverless',
-  ],
-  'Development': [
-    'Python',
-    'TypeScript',
-    'Java',
-    'PostgreSQL',
-    'MongoDB',
-    'Neo4J',
-  ],
-  'Leadership & Metodologia': [
-    'Team Leadership',
-    'Mentoring',
-    'Agile & Scrum',
-    'TDD',
-    'Pytest',
-  ],
-};
-
-const certifications = [
-  { name: 'Certificazione AI ACT', status: 'In corso' },
-  { name: 'Scrum Master', status: 'In programma' },
-  { name: 'Data Science', provider: 'Udemy', status: 'Completato' },
-  { name: 'Deep Learning', provider: 'Coursera', status: 'Completato' },
-];
 ---
 
 <BaseLayout
@@ -155,6 +83,12 @@ const certifications = [
             </svg>
             {contact.email}
           </a>
+          <a href={`tel:${contact.phone}`} class="flex items-center gap-1.5 hover:text-primary transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+            {contact.phone}
+          </a>
           <a href={`https://${contact.linkedin}`} target="_blank" rel="noopener noreferrer" class="flex items-center gap-1.5 hover:text-primary transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
@@ -183,10 +117,7 @@ const certifications = [
           Profilo Professionale
         </h2>
         <p class="text-body-large text-on-surface-variant leading-relaxed print:text-base">
-          Data Scientist con solida esperienza nello sviluppo e nella messa in produzione di soluzioni di
-          <strong class="text-on-surface">AI Generativa</strong>, Data Extraction, Hybrid RAG, e Chatbot avanzati.
-          Lead AI Professional con responsabilita di leadership su team tecnici.
-          Traduco le esigenze aziendali in soluzioni tecnologiche innovative con approccio agile e orientato al business.
+          {getLocalized(ABOUT.bio, locale)}
         </p>
       </section>
 
@@ -195,9 +126,15 @@ const certifications = [
         <h2 class="text-headline-small font-bold text-on-surface mb-6 pb-2 border-b-2 border-primary print:text-xl print:border-gray-400 print:mb-4">
           Esperienza Professionale
         </h2>
-        <div class="space-y-6 print:space-y-4">
+        <div class="relative space-y-6 print:space-y-4">
+          <!-- Timeline line -->
+          <div class="absolute left-0 top-2 bottom-2 w-0.5 bg-primary/30 print:bg-gray-300"></div>
+
           {experiences.map((exp) => (
-            <div class="relative">
+            <div class="relative pl-6 print:pl-6">
+              <!-- Timeline dot -->
+              <div class="absolute left-0 top-2 w-2 h-2 rounded-full bg-primary print:bg-gray-600 -translate-x-[3px]"></div>
+
               <div class="flex flex-wrap items-baseline justify-between gap-2 mb-2">
                 <div>
                   <h3 class="text-title-large font-bold text-on-surface print:text-lg">{exp.title}</h3>
@@ -211,9 +148,9 @@ const certifications = [
               {exp.description.length > 0 && (
                 <ul class="mt-3 space-y-1.5 print:mt-2 print:space-y-1">
                   {exp.description.map((item) => (
-                    <li class="flex gap-2 text-body-medium text-on-surface-variant print:text-sm">
-                      <span class="text-primary print:text-gray-500">•</span>
-                      {item}
+                    <li class="flex gap-3 text-body-medium text-on-surface-variant print:text-sm">
+                      <span class="flex-shrink-0 text-primary print:text-gray-500 leading-[1.6]">•</span>
+                      <span class="flex-1">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -230,13 +167,15 @@ const certifications = [
         </h2>
         <div class="flex flex-wrap items-baseline justify-between gap-2">
           <div>
-            <h3 class="text-title-large font-bold text-on-surface print:text-lg">Laurea Triennale in Informatica</h3>
-            <p class="text-body-large text-primary font-medium print:text-base print:text-gray-700">Universita di Pisa</p>
-            <p class="text-body-medium text-on-surface-variant mt-2 print:text-sm">
-              <strong>Tesi:</strong> Studio, Applicazione e Confronto di Diverse Metodologie per l'Estrazione dei Dati in Progetti NLP
-            </p>
+            <h3 class="text-title-large font-bold text-on-surface print:text-lg">{education.degree}</h3>
+            <p class="text-body-large text-primary font-medium print:text-base print:text-gray-700">{education.institution}</p>
+            {education.thesis && (
+              <p class="text-body-medium text-on-surface-variant mt-2 print:text-sm">
+                <strong>Tesi:</strong> {education.thesis}
+              </p>
+            )}
           </div>
-          <span class="text-label-large text-on-surface-variant print:text-sm">Aprile 2023</span>
+          <span class="text-label-large text-on-surface-variant print:text-sm">{education.date}</span>
         </div>
       </section>
 
@@ -246,11 +185,11 @@ const certifications = [
           Competenze Tecniche
         </h2>
         <div class="grid md:grid-cols-2 gap-4 print:gap-3">
-          {Object.entries(skills).map(([category, items]) => (
+          {skills.map(({ category, skills: skillList }) => (
             <div>
               <h3 class="text-title-medium font-bold text-on-surface mb-2 print:text-base">{category}</h3>
               <p class="text-body-medium text-on-surface-variant print:text-sm">
-                {items.join(' • ')}
+                {skillList.join(' • ')}
               </p>
             </div>
           ))}
@@ -271,7 +210,7 @@ const certifications = [
                   <p class="text-body-small text-on-surface-variant print:text-xs">{cert.provider}</p>
                 )}
               </div>
-              <span class={`px-2 py-1 text-xs rounded-full print:bg-gray-200 print:text-gray-700 ${cert.status === 'Completato' ? 'bg-tertiary-container text-on-tertiary-container' : 'bg-secondary-container text-on-secondary-container'}`}>
+              <span class={`px-2 py-1 text-xs rounded-full print:bg-gray-200 print:text-gray-700 ${cert.status.includes('Completato') || cert.status.includes('Completed') ? 'bg-tertiary-container text-on-tertiary-container' : 'bg-secondary-container text-on-secondary-container'}`}>
                 {cert.status}
               </span>
             </div>
@@ -285,14 +224,12 @@ const certifications = [
           Lingue
         </h2>
         <div class="flex flex-wrap gap-6 print:gap-4">
-          <div>
-            <span class="text-title-medium font-medium text-on-surface print:text-sm">Italiano</span>
-            <span class="text-body-medium text-on-surface-variant ml-2 print:text-sm">Madrelingua</span>
-          </div>
-          <div>
-            <span class="text-title-medium font-medium text-on-surface print:text-sm">Inglese</span>
-            <span class="text-body-medium text-on-surface-variant ml-2 print:text-sm">Professionale (B2)</span>
-          </div>
+          {languages.map((lang) => (
+            <div>
+              <span class="text-title-medium font-medium text-on-surface print:text-sm">{lang.name}</span>
+              <span class="text-body-medium text-on-surface-variant ml-2 print:text-sm">{lang.level}</span>
+            </div>
+          ))}
         </div>
       </section>
 

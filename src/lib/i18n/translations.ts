@@ -19,6 +19,8 @@ export const translations = {
       description:
         'Analisi tecnica, ricerca accademica e strategia aziendale nel campo dell\'Intelligenza Artificiale. Architetture RAG, analisi di paper, valutazione ROI e compliance normativa.',
       cta: 'Esplora i Contenuti',
+      exploreCta: 'Esplora Tecnica',
+      researchCta: 'Scopri la Ricerca',
     },
 
     // Pillars
@@ -28,6 +30,8 @@ export const translations = {
         slug: 'ingegneria-ai',
         menuLabel: 'Architetture, implementazioni e deployment di sistemi in produzione',
         hero: 'Progettazione e implementazione di sistemi AI in produzione. RAG, orchestrazione di agent, scelte architetturali e pattern consolidati per deployment scalabili.',
+        description: 'Architetture, implementazioni e sistemi',
+        subsectionsLabel: '3 sottosezioni • RAG, orchestrazione, troubleshooting',
         subsections: {
           implementations: {
             name: 'Implementazioni e Casi Studio',
@@ -54,6 +58,8 @@ export const translations = {
         slug: 'ricerca',
         menuLabel: 'Analisi di paper, breakthrough tecnologici e direzioni emergenti',
         hero: 'Analisi della ricerca accademica e industriale: paper rilevanti, breakthrough tecnologici e direzioni emergenti nel campo dell\'AI.',
+        description: 'Paper, trend e stato dell\'arte',
+        subsectionsLabel: '3 sottosezioni • Paper analysis, panoramiche, critiche',
         subsections: {
           papers: {
             name: 'Analisi Paper',
@@ -80,6 +86,8 @@ export const translations = {
         slug: 'business',
         menuLabel: 'Analisi economica, valutazione ROI e framework strategici',
         hero: 'Analisi economica e strategica dell\'AI: valutazione ROI, strutture di costo, casi studio aziendali e framework decisionali per investimenti tecnologici.',
+        description: 'Economia, strategia e ROI',
+        subsectionsLabel: '3 sottosezioni • TCO, market intelligence, framework',
         subsections: {
           costBenefit: {
             name: 'Analisi Costi-Benefici',
@@ -106,6 +114,8 @@ export const translations = {
         slug: 'governance',
         menuLabel: 'Regolamentazione, sicurezza informatica e AI ethics',
         hero: 'Aspetti regolamentari, sicurezza informatica e AI ethics: compliance normativa, gestione dei rischi e framework per AI responsabile.',
+        description: 'Compliance, sicurezza ed etica',
+        subsectionsLabel: '3 sottosezioni • AI Act, security, etica',
         subsections: {
           compliance: {
             name: 'Regolamentazione e Compliance',
@@ -132,6 +142,8 @@ export const translations = {
         slug: 'metodologia',
         menuLabel: 'Workflow di ricerca, deep work e setup operativo',
         hero: 'Metodologie di lavoro per professionisti AI: workflow di ricerca, gestione della conoscenza, produttività e strumenti operativi.',
+        description: 'Ricerca, focus e tooling',
+        subsectionsLabel: '3 sottosezioni • Workflow, deep work, strumenti',
         subsections: {
           research: {
             name: 'Workflow di Ricerca',
@@ -158,6 +170,8 @@ export const translations = {
         slug: 'sintesi',
         menuLabel: 'Review trimestrali, trend analysis e scenario planning',
         hero: 'Articoli di sintesi che integrano prospettive multiple: analisi trimestrali, trend cross-domain e scenario planning basato su dati.',
+        description: 'Sintesi e analisi integrate',
+        subsectionsLabel: '3 sottosezioni • Review, trend analysis, scenario',
         subsections: {
           quarterlyReviews: {
             name: 'Review Trimestrali',
@@ -191,6 +205,8 @@ export const translations = {
       toc: 'Indice',
       backToTop: 'Torna su',
       featured: 'In evidenza',
+      featuredStory: 'Featured Story',
+      latestArticles: 'Latest Articles',
       recent: 'Articoli Recenti',
       related: 'Articoli Correlati',
       discoverMore: 'Scopri di più',
@@ -198,6 +214,7 @@ export const translations = {
       viewAll: 'Vedi tutti',
       noArticles: 'Nessun articolo disponibile',
       noArticlesYet: 'Gli articoli per questa sezione saranno pubblicati presto',
+      browseByPillar: 'Esplora per Pillar',
       rssFeed: 'Feed RSS per',
       subscribeRss: 'Iscriviti al feed RSS di',
       search: 'Cerca',
@@ -218,6 +235,7 @@ export const translations = {
       license: 'Licenza',
       rss: 'RSS Feed',
       newsletter: 'Newsletter',
+      newsletterTitle: 'Stay in the loop',
       newsletterDescription:
         'Ricevi aggiornamenti settimanali su tech e design. No spam.',
       newsletterPlaceholder: 'La tua email...',
@@ -281,6 +299,8 @@ export const translations = {
       description:
         'Technical analysis, academic research, and business strategy in Artificial Intelligence. RAG architectures, paper analysis, ROI evaluation, and regulatory compliance.',
       cta: 'Explore Content',
+      exploreCta: 'Explore Engineering',
+      researchCta: 'Discover Research',
     },
 
     // Pillars (with English slugs and translations)
@@ -290,6 +310,8 @@ export const translations = {
         slug: 'ai-engineering',
         menuLabel: 'Architectures, implementations, and production system deployment',
         hero: 'Design and implementation of production AI systems. RAG, agent orchestration, architectural decisions, and proven patterns for scalable deployments.',
+        description: 'Architectures, implementations, and systems',
+        subsectionsLabel: '3 subsections • RAG, orchestration, troubleshooting',
         subsections: {
           implementations: {
             name: 'Implementations & Case Studies',
@@ -316,6 +338,8 @@ export const translations = {
         slug: 'research',
         menuLabel: 'Paper analysis, technological breakthroughs, and emerging directions',
         hero: 'Analysis of academic and industrial research: relevant papers, technological breakthroughs, and emerging directions in AI.',
+        description: 'Papers, trends, and state of the art',
+        subsectionsLabel: '3 subsections • Paper analysis, overviews, critiques',
         subsections: {
           papers: {
             name: 'Paper Analysis',
@@ -342,6 +366,8 @@ export const translations = {
         slug: 'business',
         menuLabel: 'Economic analysis, ROI evaluation, and strategic frameworks',
         hero: 'Economic and strategic AI analysis: ROI evaluation, cost structures, business case studies, and decision frameworks for technology investments.',
+        description: 'Economics, strategy, and ROI',
+        subsectionsLabel: '3 subsections • TCO, market intelligence, frameworks',
         subsections: {
           costBenefit: {
             name: 'Cost-Benefit Analysis',
@@ -368,6 +394,8 @@ export const translations = {
         slug: 'governance',
         menuLabel: 'Regulation, cybersecurity, and AI ethics',
         hero: 'Regulatory aspects, cybersecurity, and AI ethics: regulatory compliance, risk management, and frameworks for responsible AI.',
+        description: 'Compliance, security, and ethics',
+        subsectionsLabel: '3 subsections • AI Act, security, ethics',
         subsections: {
           compliance: {
             name: 'Regulation & Compliance',
@@ -394,6 +422,8 @@ export const translations = {
         slug: 'methodology',
         menuLabel: 'Research workflow, deep work, and operational setup',
         hero: 'Work methodologies for AI professionals: research workflow, knowledge management, productivity, and operational tools.',
+        description: 'Research, focus, and tooling',
+        subsectionsLabel: '3 subsections • Workflow, deep work, tools',
         subsections: {
           research: {
             name: 'Research Workflow',
@@ -420,6 +450,8 @@ export const translations = {
         slug: 'synthesis',
         menuLabel: 'Quarterly reviews, trend analysis, and scenario planning',
         hero: 'Synthesis articles integrating multiple perspectives: quarterly analyses, cross-domain trends, and data-driven scenario planning.',
+        description: 'Synthesis and integrated analysis',
+        subsectionsLabel: '3 subsections • Reviews, trend analysis, scenarios',
         subsections: {
           quarterlyReviews: {
             name: 'Quarterly Reviews',
@@ -453,6 +485,8 @@ export const translations = {
       toc: 'Table of Contents',
       backToTop: 'Back to top',
       featured: 'Featured',
+      featuredStory: 'Featured Story',
+      latestArticles: 'Latest Articles',
       recent: 'Recent Articles',
       related: 'Related Articles',
       discoverMore: 'Discover more',
@@ -460,6 +494,7 @@ export const translations = {
       viewAll: 'View all',
       noArticles: 'No articles available',
       noArticlesYet: 'Articles for this section will be published soon',
+      browseByPillar: 'Browse by Pillar',
       rssFeed: 'RSS feed for',
       subscribeRss: 'Subscribe to the RSS feed of',
       search: 'Search',
@@ -480,6 +515,7 @@ export const translations = {
       license: 'License',
       rss: 'RSS Feed',
       newsletter: 'Newsletter',
+      newsletterTitle: 'Stay in the loop',
       newsletterDescription:
         'Get weekly updates on tech and design. No spam.',
       newsletterPlaceholder: 'Your email...',

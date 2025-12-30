@@ -159,9 +159,8 @@ function generateHTML() {
   const sortedMonths = Object.entries(monthCount).sort((a, b) => a[0].localeCompare(b[0]));
 
   // Featured and draft counts
-  const featuredCount = allMetadata.filter((fm) => fm.featured === true || fm.featured === 'true')
-    .length;
-  const draftCount = allMetadata.filter((fm) => fm.draft === true || fm.draft === 'true').length;
+  const featuredCount = allMetadata.filter((fm) => fm.featured === true).length;
+  const draftCount = allMetadata.filter((fm) => fm.draft === true).length;
 
   // Generate HTML
   const html = `<!DOCTYPE html>

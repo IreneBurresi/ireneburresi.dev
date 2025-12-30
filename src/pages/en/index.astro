@@ -275,15 +275,15 @@ const recentPosts = sortedPosts.slice(0, 3);
     <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-20">
       <div class="shape-xl p-12 relative overflow-hidden bg-primary-container text-on-primary-container elevation-2">
         <div class="relative z-10">
-          <h2 class="text-3xl font-bold mb-4">{t.ui.newsletterTitle}</h2>
+          <h2 class="text-3xl font-bold mb-4">{t.footer.newsletterTitle}</h2>
           <p class="mb-8 max-w-lg mx-auto opacity-80">
-            {t.ui.newsletterDescription}
+            {t.footer.newsletterDescription}
           </p>
           <div class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <!-- M3 Input: shape-xs (4px), px-4 py-3 (16dp/12dp spacing) -->
             <input
               type="email"
-              placeholder={t.ui.newsletterPlaceholder}
+              placeholder={t.footer.newsletterPlaceholder}
               disabled
               class="flex-grow px-4 py-3 shape-xs bg-surface text-on-surface input-state opacity-50 cursor-not-allowed"
             />
@@ -291,7 +291,7 @@ const recentPosts = sortedPosts.slice(0, 3);
               disabled
               class="px-6 py-3 shape-full bg-primary/30 text-on-primary text-label-large font-medium opacity-50 cursor-not-allowed"
             >
-              {t.ui.comingSoon}
+              {t.footer.comingSoon}
             </button>
           </div>
         </div>

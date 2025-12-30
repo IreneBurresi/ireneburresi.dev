@@ -235,8 +235,8 @@ function analyze() {
 
   // Featured/Draft
   console.log('\n🎯 STATO ARTICOLI');
-  const featured = allMetadata.filter((fm) => fm.featured === true || fm.featured === 'true').length;
-  const draft = allMetadata.filter((fm) => fm.draft === true || fm.draft === 'true').length;
+  const featured = allMetadata.filter((fm) => fm.featured === true).length;
+  const draft = allMetadata.filter((fm) => fm.draft === true).length;
 
   console.log(`  Featured:  ${featured} articoli`);
   console.log(`  Draft:     ${draft} articoli ${draft > 0 ? '⚠️' : ''}`);
