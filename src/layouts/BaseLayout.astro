@@ -94,6 +94,9 @@ const structuredData = jsonLd ?? buildSiteGraph();
     </script>
 
     <ViewTransitions />
+
+    <!-- Vercel Web Analytics -->
+    <Analytics />
   </head>
   <body>
     <main class="min-h-screen">
@@ -101,6 +104,5 @@ const structuredData = jsonLd ?? buildSiteGraph();
     </main>
     <Footer locale={currentLocale} />
     <SearchModal client:load />
-    <Analytics />
   </body>
 </html>
