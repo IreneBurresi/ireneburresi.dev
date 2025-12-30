@@ -1,5 +1,6 @@
 ---
 import { ViewTransitions } from 'astro:transitions';
+import Analytics from '@vercel/analytics/astro';
 import BaseHead from '@/components/seo/BaseHead.astro';
 import type { RobotsPolicy } from '@/components/seo/BaseHead.astro';
 import Footer from '@/components/layout/Footer.astro';
@@ -92,6 +93,7 @@ const structuredData = jsonLd ?? buildSiteGraph();
       document.documentElement.classList.toggle('dark', theme === 'dark');
     </script>
 
+    <Analytics />
     <ViewTransitions />
   </head>
   <body>
