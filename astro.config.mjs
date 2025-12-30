@@ -4,19 +4,12 @@ import sitemap from '@astrojs/sitemap';
 import preact from '@astrojs/preact';
 import tailwindcss from '@tailwindcss/vite';
 import pagefind from 'astro-pagefind';
-import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://ireneburresi.dev',
   // SEO: URL policy coerente - trailing slash sempre
   trailingSlash: 'always',
-  output: 'static',
-  adapter: vercel({
-    webAnalytics: {
-      enabled: true,
-    },
-  }),
   integrations: [
     mdx(),
     sitemap({

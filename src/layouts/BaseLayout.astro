@@ -4,6 +4,7 @@ import BaseHead from '@/components/seo/BaseHead.astro';
 import type { RobotsPolicy } from '@/components/seo/BaseHead.astro';
 import Footer from '@/components/layout/Footer.astro';
 import SearchModal from '@/components/search/SearchModal';
+import Analytics from '@vercel/analytics/astro';
 import { SITE } from '@/consts/site';
 import { buildSiteGraph } from '@/lib/seo/structuredData';
 import { getLocaleFromUrl } from '@/lib/i18n/utils';
@@ -100,5 +101,6 @@ const structuredData = jsonLd ?? buildSiteGraph();
     </main>
     <Footer locale={currentLocale} />
     <SearchModal client:load />
+    <Analytics />
   </body>
 </html>
